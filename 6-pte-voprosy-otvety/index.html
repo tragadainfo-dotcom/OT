@@ -61,7 +61,7 @@ mark{background:#ffe27a;color:#111;border-radius:3px}
 .v-ok{color:var(--ok)}.v-bad{color:var(--bad)}
 .linkb{border:0;background:transparent;color:var(--accent);text-decoration:underline;padding:0}
 .score{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;font-weight:700;border-bottom:1px solid var(--line);margin-bottom:12px}
-.res{font-size:1.1rem;font-weight:700;margin:14px 0}
+.cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px}.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 14px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}.muted{color:var(--muted);font-size:.88rem}.res{font-size:1.1rem;font-weight:700;margin:14px 0}
 </style>
 </head>
 <body>
@@ -621,9 +621,10 @@ VIII, см. вопрос 17) и отдельного распоряжения н
 <div class="bar">
 <select id="topic"><option value="0">Все темы</option><option value="1">1. Что включает техническая эксплуатация (п. 4, разд. II)</option><option value="2">2. Техническое освидетельствование (п. 8, разд. II)</option><option value="3">3. Ввод в работу нового оборудования (разд. III, п. 13)</option><option value="4">4. Задачи оперативно-технологического управления (п. 57, разд. VIII)</option><option value="5">5. Требования к персоналу (разд. IV)</option><option value="6">6. Аккумуляторные установки (разд. XXXV, п. 514–527)</option><option value="7">7. Охлаждение трансформаторов и реакторов, температура масла (п. 472, …</option><option value="8">8. Параллельная работа трансформаторов (п. 485)</option><option value="9">9. Перекомпенсация и недокомпенсация (п. 623, разд. XLII)</option><option value="10">10. Когда нужна компенсация ёмкостного тока ДГР (п. 621)</option><option value="11">11. Чем отличается диспетчерский персонал от оперативного</option><option value="12">12. Чем отличается рабочая комиссия от приёмной (приёмочной)</option><option value="13">13. Какие системы должны быть проверены (введены) до ввода в работу</option><option value="14">14. Чем отличается бланк переключений от программы переключений</option><option value="15">15. Какие работы нельзя выполнять по распоряжению</option><option value="16">16. Какие работы можно проводить по распоряжению (в том числе по перечн…</option><option value="17">17. Перечень работ в порядке текущей эксплуатации. Кем утверждается</option><option value="18">18. На кого распространяется ПОТ ЭУ</option><option value="19">19. Специальные работы (в том числе работы под напряжением и под наведё…</option><option value="20">20. Заземления: какие устанавливаются</option><option value="21">21. Перегрузочная способность силовых трансформаторов, как устанавливае…</option></select>
 <select id="kind"><option value="all">Все типы вопросов</option><option value="s">Один верный ответ</option><option value="m">Несколько верных ответов</option><option value="x">Сопоставление</option></select>
-<select id="cnt"><option value="0">Все вопросы</option><option value="10">10 случайных</option><option value="20">20 случайных</option></select>
+<label class="cntl">Вопросов: <input type="number" id="cnt" min="1" step="1" inputmode="numeric" placeholder="все"></label>
 <button class="btn pri" id="start">Начать</button>
 </div>
+<div class="bar" id="chips"><span class="muted">Быстрый выбор:</span><button class="chip" data-c="5">5</button><button class="chip" data-c="10">10</button><button class="chip" data-c="20">20</button><button class="chip" data-c="30">30</button><button class="chip" data-c="50">50</button><button class="chip" data-c="">Все</button><span class="muted" id="avail"></span></div>
 <p class="lead">Варианты ответов похожи и отличаются деталями (числа, порядок, условия). В вопросах «выберите все верные» засчитывается только точный выбор: ни одного лишнего и ни одного пропущенного. Варианты перемешиваются при каждом запуске.</p>
 <div class="score" id="score" hidden></div>
 <div id="qs"></div>
@@ -960,9 +961,9 @@ function finish(box,ok,q){box.classList.add('done');done++;if(ok)right++;
  var e=box.querySelector('.exp');e.innerHTML='<div class="verdict '+(ok?'v-ok':'v-bad')+'">'+(ok?'Верно.':'Неверно.')+'</div>'+q.e+' <button class="linkb" data-n="'+q.n+'">Открыть в справочнике, вопрос '+q.n+'</button>';
  e.querySelector('.linkb').onclick=function(){openQ(q.n)};upd()}
 function build(){
- var tp=+$('topic').value,kd=$('kind').value,cn=+$('cnt').value;
+ var tp=+$('topic').value,kd=$('kind').value,cn=Math.max(0,Math.floor(+$('cnt').value)||0);
  var L=Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)});
- if(cn){L=shuf(L).slice(0,cn)}
+ L=cn&&cn<L.length?shuf(L).slice(0,cn):shuf(L);
  var box=$('qs');box.innerHTML='';$('final').textContent='';total=L.length;done=0;right=0;$('score').hidden=false;
  if(!L.length){$('score').textContent='По выбранным условиям вопросов нет.';return}
  L.forEach(function(q,i){var d=document.createElement('div');d.className='q';
@@ -981,6 +982,10 @@ function build(){
    bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(r,li){var s=r.querySelector('select'),good=s.value!==''&&q.r[+s.value]===q.r[q.a[li]];r.classList.add(good?'ok':'bad');if(!good){ok=false;s.insertAdjacentHTML('afterend','')}s.disabled=true;if(!good){r.querySelector('span').textContent=q.l[li]+' → верно: '+q.r[q.a[li]]}});bt.remove();finish(d,ok,q)};
    d.appendChild(bt);d.appendChild(ex)}
   box.appendChild(d)});upd();$('score').scrollIntoView({block:'start'})}
+function filt(){var tp=+$('topic').value,kd=$('kind').value;return Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)})}
+function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='Доступно по выбранным условиям: '+n;var v=c.value;document.querySelectorAll('#chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.c===v)})}
+document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
+['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();
 $('start').onclick=build;
 </script>
 </body>
