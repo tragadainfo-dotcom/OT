@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Работа на высоте</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+:root{
+  --bg:#f4f7fa; --surface:#fff; --surface2:#eaf0f5; --ink:#18232f; --muted:#55646f; --line:#d3dce5;
+  --live:#d9480f; --live-soft:#fde8dc; --earth:#217a45; --earth-soft:#dff1e6;
+  --insul:#0f7c8f; --insul-soft:#d9eff3; --man:#5b46c4; --man-soft:#e8e3f9;
+  --danger:#c4262e; --danger-soft:#fbdedf; --warn-soft:#fdf0cf; --accent:#0f7c8f;
+  --font:"IBM Plex Sans",system-ui,sans-serif; --head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;
+  padding-bottom:64px}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--head);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5.5vw,40px)}
+h2{font-size:clamp(23px,4vw,30px);margin-bottom:10px}
+h3{font-size:19px;margin:0 0 6px}
+p{margin:0 0 10px}
+ul,ol{margin:6px 0 10px;padding-left:22px} li{margin:5px 0}
+section{padding-top:36px}
+.kicker{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:19px;margin-top:12px;max-width:44ch}
+nav.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0;margin-top:18px}
+nav.top .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.top a{flex:0 0 auto;font-size:14px;color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+nav.top a:hover,nav.top a:focus-visible{border-color:var(--accent);outline:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.plain{border-left:5px solid var(--earth);background:var(--earth-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.plain b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--earth);margin-bottom:2px}
+.warn{border-left:5px solid var(--danger);background:var(--danger-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.warn b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--danger);margin-bottom:2px}
+details.rule{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+details.rule summary{cursor:pointer;padding:10px 14px;font-size:15px;font-weight:500;color:var(--accent)}
+details.rule .rq{padding:2px 16px 12px;font-size:15px;color:var(--ink)}
+details.rule .rq p{margin:8px 0;padding-left:12px;border-left:3px solid var(--line)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:8px 0}
+.chain .b{flex:1 1 120px;min-width:110px;border-radius:10px;padding:10px 10px;font-size:15px;font-weight:600;line-height:1.25;border:2px solid transparent;text-align:center;display:flex;align-items:center;justify-content:center}
+.chain .w{background:var(--live-soft);color:var(--live);border-color:var(--live)}
+.chain .i{background:var(--insul-soft);color:var(--insul);border-color:var(--insul)}
+.chain .m{background:var(--man-soft);color:var(--man);border-color:var(--man)}
+.chain .e{background:var(--earth-soft);color:var(--earth);border-color:var(--earth)}
+.chain .ar{flex:0 0 auto;align-self:center;color:var(--muted);font-size:22px}
+.srow{margin:20px 0 6px}
+.srow .lab{font-weight:600;font-size:16px;margin-bottom:2px}
+.srow .lab span{color:var(--muted);font-weight:400;font-size:15px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.scene{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}
+.scene svg{display:block;width:100%;height:auto}
+svg.poster{--live:#d9480f;--earth:#1f7a3f;--insul:#0e8a9e;--float:#6b4fd0;--danger:#c4262e;--ink:#1c2530;--muted:#3b4856;--surface:#fff;--bg:#f7fbff}
+svg.poster text{fill:#1c2530;font-size:12.5px}
+.t-live{fill:var(--live)!important}
+.pulse{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.pulse{animation:none}}
+.tag{display:inline-block;font-size:12.5px;padding:1px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-weight:600;font-size:14px}
+.tscroll{overflow-x:auto}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.gcard svg{background:#fff6d6;border-bottom:3px solid #f08a24;aspect-ratio:160/110;width:100%}
+.gcard .gb{padding:10px 14px;font-size:15px;line-height:1.5}
+.gcard .gb p{margin:4px 0 8px}
+.q{padding:16px 0;border-bottom:1px solid var(--line)}
+.q b{display:block;margin-bottom:8px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;font:inherit;font-size:16px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--earth-soft);border-color:var(--earth)}
+.opt.wrong{background:var(--danger-soft);border-color:var(--danger)}
+.why{margin-top:8px;font-size:15px;color:var(--muted)}
+.btn{font:inherit;font-size:15px;padding:9px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#06222a}
+.res{margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:500}
+.res.ok{background:var(--earth-soft)} .res.mid{background:var(--warn-soft)} .res.bad{background:var(--danger-soft)}
+.step{display:flex;gap:12px;margin:10px 0}
+.step .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+:root[data-theme="dark"] .step .n{color:#06222a}
+.step div{flex:1}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="wrap" style="padding-top:22px">
+  <div class="kicker">Правила по охране труда при работе на высоте · приказ Минтруда № 782н</div>
+  <h1>Работа на высоте</h1>
+  <p class="lead">Простыми словами: кто допускается, когда нужен наряд-допуск, какие бывают системы защиты и что делать при падении.</p>
+  <div class="warn" style="margin-top:14px"><b class="t">Важно</b>Официальный текст приказа мне недоступен. Пособие составлено по открытым пересказам Правил. Номера пунктов указаны, но формулировки не дословные. Перед экзаменом сверьте с текстом действующей редакции.</div>
+</header>
+<nav class="top" aria-label="Разделы"><div class="wrap">
+  <a href="#glavnoe">Главное</a><a href="#kto">Кто допускается</a><a href="#naryad">Наряд-допуск</a><a href="#sistemy">Системы защиты</a><a href="#mesta">Лестницы, леса, люльки</a><a href="#sredstva">Средства защиты</a><a href="#spasenie">Спасение</a><a href="#test">Тест</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="glavnoe">
+  <h2>Главное</h2>
+  <div class="card">
+    <div class="step"><span class="n">1</span><div><b>Работа на высоте</b> — когда есть риск падения с высоты <b>1,8 м и более</b>. <span class="tag">п. 3</span></div></div>
+    <div class="step"><span class="n">2</span><div>Сначала работодатель старается <b>исключить</b> такую работу. Если нельзя — снижает риск: ограждения высотой 1,1 м и выше, леса, подмости, подъёмники, люльки, затем средства защиты. <span class="tag">п. 5, 6</span></div></div>
+    <div class="step"><span class="n">3</span><div>К работе допускают обученных работников с нужной <b>группой по безопасности</b>. Опасные работы выполняют по <b>наряду-допуску</b>. Если человек упал, его надо быстро снять. <span class="tag">п. 7, 14–15, 136</span></div></div>
+  </div>
+  <div class="srow"><div class="lab">Порядок защиты</div>
+    <div class="chain"><div class="b w">1. Исключить работу</div><div class="ar">→</div><div class="b i">2. Ограждения, леса, подмости, люльки</div><div class="ar">→</div><div class="b m">3. Индивидуальные системы защиты</div><div class="ar">→</div><div class="b e">4. Спасение, если упал</div></div></div>
+
+  <div class="card">
+    <h3>Когда это работа на высоте (п. 3)</h3>
+    <ul>
+      <li>Есть риск упасть с высоты 1,8 м и более.</li>
+      <li>Подъём по лестнице выше 5 м при наклоне более 75°.</li>
+      <li>Работа на площадке ближе 2 м от неогражденного перепада или при ограждении ниже 1,1 м.</li>
+      <li>Риск падения с высоты меньше 1,8 м тоже учитывают, если работа идёт над машинами, жидкостью, сыпучими материалами или выступающими предметами.</li>
+    </ul>
+    <p class="note">Это пересказ п. 3. Точные формулировки смотрите в тексте Правил.</p>
+  </div>
+</section>
+
+<section id="kto">
+  <h2>Кто допускается</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Работать на высоте можно с 18 лет, после обучения и подтверждения группы. Чем выше группа, тем больше ответственности.</div>
+  <div class="card"><div class="tscroll"><table>
+    <thead><tr><th>Группа</th><th>Кто</th><th>Как проверяют</th></tr></thead>
+    <tbody>
+    <tr><td><b>1 группа</b></td><td>Работает в составе бригады или под непосредственным контролем назначенного работника <span class="tag">п. 14</span></td><td>Обучение раз в 3 года <span class="tag">п. 23</span></td></tr>
+    <tr><td><b>2 группа</b></td><td>Бригадиры, мастера, руководители стажировки, ответственные исполнители (производители) работ по наряду-допуску <span class="tag">п. 14</span>. Опыт работы на высоте более 1 года <span class="tag">п. 20</span></td><td>Обучение раз в 3 года <span class="tag">п. 23</span></td></tr>
+    <tr><td><b>3 группа</b></td><td>Организуют работы, отвечают за план эвакуации и спасения и за обслуживание СИЗ, выдают наряды-допуски, утверждают ППР и технологические карты, ответственные руководители работ, преподаватели <span class="tag">п. 15</span>. Возраст старше 21 года, опыт более 2 лет <span class="tag">п. 21</span></td><td>Обучение раз в 5 лет <span class="tag">п. 23</span></td></tr>
+    </tbody></table></div></div>
+  <div class="card">
+    <h3>Что ещё важно</h3>
+    <ul>
+      <li>Возраст не моложе 18 лет. <span class="tag">п. 12</span></li>
+      <li><b>Обучение до начала работ</b> нужно тем, кого допускают впервые, кого перевели с другой работы без обучения, и тем, у кого был перерыв в работе на высоте более одного года. <span class="tag">п. 16</span></li>
+      <li>Заочное обучение, только электронное или дистанционное и самоподготовка не допускаются. <span class="tag">п. 17</span></li>
+      <li><b>Стажировка</b> для 1 и 2 групп: не менее двух рабочих дней (смен). Руководитель стажировки с опытом не менее 1 года, у него не более двух стажёров. <span class="tag">п. 28–31</span></li>
+      <li>Проверка знаний без обучения у 1 и 2 групп — не реже 1 раза в год. <span class="tag">п. 32</span></li>
+      <li>Обучение заканчивается экзаменом, после успешной сдачи выдают удостоверение. <span class="tag">п. 24–26</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="naryad">
+  <h2>Наряд-допуск</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Наряд-допуск — письменное разрешение на опасную работу. В нём прописаны меры безопасности, состав бригады и ответственные.</div>
+  <div class="card">
+    <h3>Когда нужен <span class="tag">п. 7, 8, 48, 49</span></h3>
+    <ul>
+      <li>Для работ с высоким риском падения.</li>
+      <li>Для работ без средств подмащивания на высоте 5 м и более.</li>
+      <li>Для работ на площадках у неогражденных перепадов более 5 м или при ограждении ниже 1,1 м.</li>
+      <li>Перечень работ, требующих наряда-допуска, утверждает работодатель.</li>
+      <li>Без наряда — только в исключительных случаях: авария, угроза жизни, ликвидация последствий. Если такая работа длится больше суток, наряд обязателен.</li>
+      <li>Повторяющиеся работы, которые входят в производственный процесс, могут идти без наряда, если меры описаны в технологических картах или инструкциях.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Сроки и хранение <span class="tag">п. 65–67, 74</span></h3>
+    <div class="step"><span class="n">15</span><div>Наряд выдают на срок <b>не более 15 календарных дней</b> со дня начала работ.</div></div>
+    <div class="step"><span class="n">+15</span><div>Продлить можно <b>один раз</b>, не более чем на 15 календарных дней.</div></div>
+    <div class="step"><span class="n">30</span><div>Закрытые наряды хранят <b>30 суток</b>. Наряды по несчастному случаю хранят вместе с материалами расследования.</div></div>
+    <div class="warn"><b class="t">Что делать при новой опасности</b>Если появились опасные факторы, которых в наряде нет, работы прекращают, наряд аннулируют и оформляют новый.</div>
+  </div>
+  <div class="card">
+    <h3>Кто за что отвечает <span class="tag">п. 53–62, 69</span></h3>
+    <ul>
+      <li><b>Выдающий наряд</b> определяет меры, назначает руководителей, принимает закрытый наряд.</li>
+      <li><b>Ответственный руководитель работ</b> проверяет состав бригады и СИЗ, проводит целевой инструктаж, допускает бригаду, закрывает наряд.</li>
+      <li><b>Ответственный исполнитель (производитель работ)</b> всё время на рабочем месте и контролирует бригаду.</li>
+      <li>Перед допуском осматривают рабочее место.</li>
+      <li>Изменили состав бригады меньше чем наполовину — по согласованию с выдавшим наряд. Заменили руководителя или исполнителя, либо изменили больше половины состава — наряд аннулируют, нужен новый.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="sistemy">
+  <h2>Системы защиты от падения</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Система — это набор совместимых СИЗ, который подбирает работодатель по оценке рисков. Бывает четыре вида: удерживающая и позиционирования не дают упасть, страховочная останавливает падение, спасения и эвакуации снимают человека. <span class="tag">п. 116–119</span></div>
+
+  <div class="card">
+    <h3>Удерживающая система <span class="tag">п. 130</span></h3>
+    <div class="scene"><svg id="scA" class="poster" viewBox="0 0 640 400" role="img" aria-label="Работник в привязи, короткий строп не позволяет дойти до края крыши"></svg></div>
+    <div class="plain"><b class="t">Простыми словами</b>Работник привязан так коротко, что до края просто не дойдёт. Падение исключено.</div>
+    <ul><li>Длину стропа или вытяжного каната ограничивают так, чтобы исключить зону возможного падения, участки из хрупкого материала, открываемые люки и отверстия.</li></ul>
+  </div>
+
+  <div class="card">
+    <h3>Система позиционирования <span class="tag">п. 131</span></h3>
+    <div class="scene"><svg id="scC" class="poster" viewBox="0 0 640 400" role="img" aria-label="Работник стоит на выступе, строп позиционирования огибает колонну"></svg></div>
+    <div class="plain"><b class="t">Простыми словами</b>Работник держится в подпоре на конструкции, руки у него свободны. Это не страховка от падения, поэтому рядом нужна ещё и страховочная система.</div>
+    <ul>
+      <li>Применяют, чтобы зафиксировать рабочее положение в подпоре.</li>
+      <li><b>Страховочная система обязательна.</b></li>
+      <li>Строп позиционирования — постоянной или регулируемой длины.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Страховочная система <span class="tag">п. 132, 133</span></h3>
+    <div class="scene"><svg id="scB" class="poster" viewBox="0 0 640 400" role="img" aria-label="Работник на кровле у края, строп с амортизатором закреплён на анкере выше; показано место под работником после остановки падения"></svg></div>
+    <div class="plain"><b class="t">Простыми словами</b>Если работник сорвался, система его остановит и смягчит рывок. Ниже него должно остаться свободное место, чтобы он не ударился о землю.</div>
+    <ul>
+      <li>Применяют, когда по осмотру есть риск падения ниже точки опоры.</li>
+      <li>Привязь только <b>страховочная</b>. Безлямочные предохранительные пояса запрещены.</li>
+      <li>В соединительную подсистему входит амортизатор или устройство, которое его заменяет.</li>
+      <li>Место и тип анкера должны: дать <b>минимальный фактор падения</b>; исключить или уменьшить <b>маятниковую траекторию</b>; обеспечить <b>свободное место под работником</b> после остановки падения. Место считают с учётом роста работника, длины стропа, длины сработавшего амортизатора и всех соединительных элементов.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Из чего состоит система <span class="tag">п. 126–129</span></h3>
+    <ol>
+      <li><b>Анкерное устройство.</b> Тип и место указывают в технологической карте, ППР или наряде-допуске. Анкерные устройства подлежат обязательной сертификации.</li>
+      <li><b>Привязь:</b> страховочная, для удержания, для позиционирования, для работ в положении сидя, спасательная.</li>
+      <li><b>Соединительная подсистема:</b> строп, канат, карабин, амортизатор, устройство втягивающего типа, ползунковое средство на анкерной линии, устройство позиционирования на канатах.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Правила обращения со СИЗ</h3>
+    <ul>
+      <li>СИЗ используют по инструкции изготовителя, без документации применять нельзя. <span class="tag">п. 120</span></li>
+      <li>Работник осматривает СИЗ <b>до и после каждого использования</b>. <span class="tag">п. 124</span></li>
+      <li>Работодатель регулярно проверяет исправность систем и вовремя заменяет элементы с утраченными свойствами. Динамические и статические испытания СИЗ от падения в эксплуатирующих организациях не проводят. <span class="tag">п. 123</span></li>
+      <li>Каска с застёгнутым подбородочным ремнём; обувь с противоскользящими свойствами. <span class="tag">п. 139, 140</span></li>
+    </ul>
+    <div class="warn"><b class="t">Нельзя</b>Допускать к работе без положенных СИЗ или с неисправными. <span class="tag">п. 142</span></div>
+  </div>
+</section>
+
+<section id="mesta">
+  <h2>Лестницы, леса, люльки</h2>
+  <div class="card">
+    <h3>Приставные лестницы <span class="tag">п. 169–175</span></h3>
+    <ul>
+      <li>Работа на высоте более 1,8 м: страховочная система, закреплённая к конструкции или к закреплённой лестнице. Работник стоит на ступени не менее чем в 1 м от верхнего конца.</li>
+      <li>Установка под углом более 75° без дополнительного крепления вверху не допускается.</li>
+      <li>На верхних концах лестниц, которые приставляют к трубам или проводам, нужны крюки-захваты.</li>
+      <li>Без систем безопасности нельзя работать с переносных лестниц и стремянок: над движущимися механизмами, с электро- и пневмоинструментом, при огневых работах, при натяжении проводов.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Леса и подмости <span class="tag">п. 88–102, 107</span></h3>
+    <ul>
+      <li>Леса до 4 м принимает ответственный руководитель работ с записью в журнале. Выше 4 м — комиссия с актом.</li>
+      <li>Осмотр: исполнитель — перед каждой сменой, ответственный за работы — не реже 1 раза в 10 смен.</li>
+      <li>Для работ с лесов высотой 6 м и более нужно не менее двух настилов.</li>
+      <li>Лестницы на лесах — не реже чем через 40 м; угол не более 75°.</li>
+      <li>Леса, не использовавшиеся месяц и более, принимают повторно.</li>
+      <li>Защитные козырьки у проходов выступают не менее чем на 1,5 м.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Люльки <span class="tag">п. 111–113</span></h3>
+    <ul>
+      <li>В люльке не более двух работников.</li>
+      <li>Входить и выходить только на земле.</li>
+      <li>Осмотр: ежедневно перед работой и периодически каждые 10 рабочих дней.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Проходы, проёмы, ограждения <span class="tag">п. 76, 81, 82, 84</span></h3>
+    <ul>
+      <li>Проходы: ширина не менее 0,6 м, высота в свету не менее 1,8 м.</li>
+      <li>Проёмы, в которые можно упасть, ограждают и обозначают знаками.</li>
+      <li>Зоны под местом работ ограждают. При работе по одной вертикали защитные настилы или сетки ставят не дальше чем через 6 м по вертикали.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Погода <span class="tag">п. 45</span></h3>
+    <p>Ветер, гроза, туман, гололёд ограничивают работу на высоте. В открытых местах граница указана как ветер 15 м/с и более, для конструкций с большой парусностью — 10 м/с и более.</p>
+    <p class="note">Точно, запрещена такая работа или допускается только по наряду-допуску с дополнительными мерами, в разных пересказах написано по-разному. Проверьте формулировку п. 45 в официальном тексте.</p>
+  </div>
+</section>
+
+<section id="sredstva">
+  <h2>Средства защиты, как они выглядят</h2>
+  <p>Только то, что названо в Правилах. У каждого указан пункт.</p>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="spasenie">
+  <h2>Спасение</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Падение остановили, но человек завис. Висеть долго нельзя, поэтому план спасения должен снять его <b>не более чем за 10 минут</b>.</div>
+  <div class="card">
+    <ul>
+      <li>План мероприятий по эвакуации и спасению разрабатывает работодатель. <span class="tag">п. 43, 44, 135</span></li>
+      <li>Он должен освободить работника, оставшегося в зависании после остановки падения, в максимально короткий срок, но не более 10 минут. Пример — система самоспасения. <span class="tag">п. 136</span></li>
+      <li>В систему спасения и эвакуации входят: дополнительные или рассчитанные на доп. нагрузку анкеры; резервные системы удержания, позиционирования, доступа или страховочные; средства подъёма и спуска (лебёдки, блоки, спусковые устройства, подъёмники); носилки, шины, средства иммобилизации; аптечка первой помощи. <span class="tag">п. 137</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="test">
+  <h2>Проверь себя</h2>
+  <p>12 вопросов с ситуациями. После ответа показан разбор с пунктом Правил.</p>
+  <div class="card"><div id="quiz"></div><div class="res" id="quizRes" hidden></div><div style="margin-top:14px"><button class="btn" id="quizReset" type="button">Пройти заново</button></div></div>
+</section>
+
+<p class="note" style="margin-top:30px;font-size:14px;color:var(--muted)">Составлено по открытым пересказам приказа Минтруда № 782н «Об утверждении Правил по охране труда при работе на высоте». Это не дословный текст. Номера и значения сверьте с действующей редакцией на официальном сайте.</p>
+</main>
+
+<script>
+var $=function(s,r){return (r||document).querySelector(s)};
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function el(k,inner){return '<g class="el" data-el="'+k+'">'+inner+'</g>';}
+
+/* человек: ноги в (x,y), s - масштаб, p - снаряжение, hR/hL - абсолютные координаты рук */
+function armPts(S,H){
+  var vx=H[0]-S[0],vy=H[1]-S[1],len=Math.sqrt(vx*vx+vy*vy)||1,h=len<54?Math.sqrt(729-(len/2)*(len/2)):0;
+  var nx=-vy/len,ny=vx/len; if(ny<0){nx=-nx;ny=-ny;}
+  return [[S[0]+vx/2+nx*h,S[1]+vy/2+ny*h]];
+}
+function gloveSVG(H,E,kind,suit){
+  var a=Math.atan2(H[1]-E[1],H[0]-E[0])*180/Math.PI;
+  var g='<g transform="translate('+H[0].toFixed(1)+' '+H[1].toFixed(1)+') rotate('+a.toFixed(1)+')">';
+  var hand='M-4 -6.5 L8 -6.5 Q15 -6.5 15 0 Q15 6.5 8 6.5 L-4 6.5 Z';
+  var fing='<path d="M6 -3 L13 -3 M6 0 L14 0 M6 3 L13 3" stroke-width="1" fill="none"';
+  if(suit){
+    g+='<rect x="-10" y="-7" width="10" height="14" rx="2" fill="#3a4450" stroke="#1d242c" stroke-width="1.3"/><path d="'+hand+'" fill="#3a4450" stroke="#1d242c" stroke-width="1.3"/>'+fing+' stroke="#7d8896"/><ellipse cx="2" cy="-9" rx="5" ry="3" fill="#3a4450" stroke="#1d242c" stroke-width="1.2" transform="rotate(-30 2 -9)"/>';
+  } else if(kind==='D'){
+    g+='<rect x="-22" y="-8" width="19" height="16" rx="3" fill="#e9732a" stroke="#7a3208" stroke-width="1.4"/><rect x="-22" y="-8" width="4" height="16" rx="2" fill="#b5501a"/><path d="'+hand+'" fill="#f08a3c" stroke="#7a3208" stroke-width="1.4"/>'+fing+' stroke="#7a3208"/><ellipse cx="2" cy="-9" rx="5" ry="3" fill="#f08a3c" stroke="#7a3208" stroke-width="1.3" transform="rotate(-30 2 -9)"/>';
+  } else if(kind==='DL'){
+    g+='<rect x="-22" y="-8" width="17" height="16" rx="3" fill="#e9732a" stroke="#7a3208" stroke-width="1.4"/><rect x="-22" y="-8" width="4" height="16" rx="2" fill="#b5501a"/><rect x="-7" y="-8" width="5" height="16" rx="2" fill="#8d5f2a" stroke="#5a3a16" stroke-width="1"/><path d="M-4 -7.5 L8 -7.5 Q16 -7.5 16 0 Q16 7.5 8 7.5 L-4 7.5 Z" fill="#d9a35b" stroke="#6b4a1c" stroke-width="1.4"/>'+fing+' stroke="#6b4a1c"/><ellipse cx="2" cy="-10" rx="5.5" ry="3.2" fill="#d9a35b" stroke="#6b4a1c" stroke-width="1.3" transform="rotate(-30 2 -10)"/>';
+  } else if(kind==='L'){
+    g+='<rect x="-9" y="-7" width="8" height="14" rx="2" fill="#2f5fa8" stroke="#16294d" stroke-width="1.3"/><path d="M-4 -7.5 L8 -7.5 Q16 -7.5 16 0 Q16 7.5 8 7.5 L-4 7.5 Z" fill="#d9a35b" stroke="#6b4a1c" stroke-width="1.4"/>'+fing+' stroke="#6b4a1c"/><ellipse cx="2" cy="-10" rx="5.5" ry="3.2" fill="#d9a35b" stroke="#6b4a1c" stroke-width="1.3" transform="rotate(-30 2 -10)"/>';
+  } else {
+    g+='<rect x="-9" y="-7" width="8" height="14" rx="2" fill="#2f5fa8" stroke="#16294d" stroke-width="1.3"/><path d="'+hand+'" fill="#f1c7a0" stroke="#8a5a36" stroke-width="1.3"/>'+fing+' stroke="#8a5a36"/><ellipse cx="2" cy="-9" rx="5" ry="3" fill="#f1c7a0" stroke="#8a5a36" stroke-width="1.2" transform="rotate(-30 2 -9)"/>';
+  }
+  return g+'</g>';
+}
+function worker(o){
+  var x=o.x,y=o.y,s=o.s||1,p=o.p||{};
+  var suit=!!p.suit, C1=suit?'#b9c2cb':'#3566b5', C2=suit?'#98a3ae':'#27508f', OL=suit?'#4f5a66':'#16294d';
+  function Lc(a){return [(a[0]-x)/s,(a[1]-y)/s];}
+  var hr=Lc(o.hR||[x+26*s,y-34*s]), hl=Lc(o.hL||[x-26*s,y-34*s]);
+  var SR=[16,-86],SL=[-16,-86], ER=armPts(SR,hr)[0], EL=armPts(SL,hl)[0];
+  var gk=p.gD?(p.gL?'DL':'D'):(p.gL?'L':'N');
+  var g='<g transform="translate('+x+' '+y+') scale('+s+')" stroke-linejoin="round" stroke-linecap="round">';
+  // ноги
+  g+='<path d="M-16 -58 L-16 -12 L-1.5 -12 L-1.5 -58 Z" fill="'+C2+'" stroke="'+OL+'" stroke-width="1.6"/><path d="M16 -58 L16 -12 L1.5 -12 L1.5 -58 Z" fill="'+C2+'" stroke="'+OL+'" stroke-width="1.6"/>';
+  // обувь
+  if(p.boots||suit){
+    var bc=suit?'#3a4450':'#2c3138';
+    [-1,1].forEach(function(k){var x0=k<0?-20:2;g+='<rect x="'+x0+'" y="-15" width="18" height="15" rx="3.5" fill="'+bc+'" stroke="#0d0f12" stroke-width="1.3"/><rect x="'+x0+'" y="-17" width="18" height="6" rx="2" fill="'+(suit?'#7d8896':'#ece4c8')+'" stroke="#5c5640" stroke-width="1"/><rect x="'+(x0-1)+'" y="-2.5" width="20" height="3" rx="1.5" fill="#0d0f12"/>';});
+  } else {
+    [-1,1].forEach(function(k){var x0=k<0?-20:2;g+='<rect x="'+x0+'" y="-14" width="18" height="14" rx="3.5" fill="#7a5632" stroke="#3d2a15" stroke-width="1.3"/><rect x="'+(x0-1)+'" y="-2.5" width="20" height="3" rx="1.5" fill="#2b1d0e"/>';});
+  }
+  // туловище
+  g+='<path d="M-19 -91 Q-19 -97 -12 -97 L12 -97 Q19 -97 19 -91 L17 -56 L-17 -56 Z" fill="'+C1+'" stroke="'+OL+'" stroke-width="1.8"/>';
+  if(!suit){ g+='<rect x="-10" y="-84" width="20" height="22" rx="2.5" fill="'+C2+'" stroke="'+OL+'" stroke-width="1.2"/><rect x="-6" y="-80" width="12" height="8" rx="1.5" fill="#3d73c5" stroke="'+OL+'" stroke-width="1"/><circle cx="-10" cy="-86" r="2" fill="#e8c24a"/><circle cx="10" cy="-86" r="2" fill="#e8c24a"/><rect x="-17" y="-60" width="34" height="5" fill="#4b3425" stroke="#2a1c12" stroke-width="1"/><rect x="-3" y="-60.5" width="6" height="6" fill="#d8b24a" stroke="#6a521a" stroke-width="1"/>'; }
+  else { g+='<path d="M0 -97 L0 -56 M-17 -76 L17 -76" stroke="#7d8896" stroke-width="1" fill="none"/>'; }
+  // руки
+  function arm(S,E,H){
+    var a='<polyline points="'+S+' '+E+' '+H+'" fill="none" stroke="'+OL+'" stroke-width="13.5"/><polyline points="'+S+' '+E+' '+H+'" fill="none" stroke="'+C1+'" stroke-width="10.5"/>';
+    if(p.sleeves) a+='<polyline points="'+S+' '+E+' '+H+'" fill="none" stroke="#7a3208" stroke-width="18"/><polyline points="'+S+' '+E+' '+H+'" fill="none" stroke="#f2a33a" stroke-width="14.5"/><polyline points="'+S+' '+E+' '+H+'" fill="none" stroke="#ffd08a" stroke-width="3" opacity=".7"/>';
+    if(p.shortS) a+='<polyline points="'+E+' '+H+'" fill="none" stroke="#f1c7a0" stroke-width="9"/>';
+    return a;
+  }
+  g+=arm(SR,ER,hr)+arm(SL,EL,hl);
+  g+='</g>';
+  // перчатки (в абсолютных координатах)
+  var gl='';
+  var Eh=function(E){return [x+E[0]*s,y+E[1]*s]};
+  gl+='<g transform="translate('+x+' '+y+') scale('+s+')">'+gloveSVG(hr,ER,suit?'':gk,suit)+gloveSVG(hl,EL,suit?'':gk,suit)+'</g>';
+  // голова
+  var h='<g transform="translate('+x+' '+y+') scale('+s+')" stroke-linejoin="round" stroke-linecap="round">';
+  h+='<rect x="-4.5" y="-95" width="9" height="8" fill="#e6b88c" stroke="#8a5a36" stroke-width="1"/>';
+  if(suit){
+    h+='<path d="M-15 -103 Q-15 -134 0 -134 Q15 -134 15 -103 Q15 -90 0 -88 Q-15 -90 -15 -103 Z" fill="#b9c2cb" stroke="#4f5a66" stroke-width="1.8"/><rect x="-10" y="-112" width="20" height="17" rx="5" fill="#5c6670" stroke="#2c333b" stroke-width="1.2"/><path d="M-10 -108 L10 -108 M-10 -104 L10 -104 M-10 -100 L10 -100 M-5 -112 L-5 -95 M0 -112 L0 -95 M5 -112 L5 -95" stroke="#8d98a4" stroke-width=".8" fill="none"/>';
+  } else {
+    h+='<circle cx="-12.3" cy="-103" r="3" fill="#f1c7a0" stroke="#8a5a36" stroke-width="1"/><circle cx="12.3" cy="-103" r="3" fill="#f1c7a0" stroke="#8a5a36" stroke-width="1"/><circle cx="0" cy="-103" r="12.5" fill="#f1c7a0" stroke="#8a5a36" stroke-width="1.4"/>';
+    var lk=o.look||[0,0];
+    h+='<circle cx="'+(-4.6+lk[0])+'" cy="'+(-104+lk[1])+'" r="1.5" fill="#222"/><circle cx="'+(4.6+lk[0])+'" cy="'+(-104+lk[1])+'" r="1.5" fill="#222"/>'+(o.look?'<path d="M-7.5 -107 L-2.5 -108.5 M2.5 -108.5 L7.5 -107" stroke="#6b4a30" stroke-width="1.4" fill="none"/>':'<path d="M-7.5 -108 L-2.5 -109 M2.5 -109 L7.5 -108" stroke="#6b4a30" stroke-width="1.2" fill="none"/>')+'<path d="M0 -103 L-1.2 -99 L1 -99" stroke="#b98a62" stroke-width="1" fill="none"/>'+(o.look?'<path d="M-3 -95.5 L3.5 -96" stroke="#8a3b2e" stroke-width="1.5" fill="none"/>':'<path d="M-4.5 -95.5 Q0 -92.5 4.5 -95.5" stroke="#8a3b2e" stroke-width="1.4" fill="none"/>');
+    if(p.helmet) h+='<path d="M-17 -111 Q-17 -135 0 -135 Q17 -135 17 -111 Z" fill="#f28a1f" stroke="#8a4208" stroke-width="1.6"/><path d="M-3 -135 L-3 -112 M3 -135 L3 -112" stroke="#ffb764" stroke-width="2"/><rect x="-20.5" y="-113" width="41" height="5" rx="2.5" fill="#d8700f" stroke="#8a4208" stroke-width="1.3"/><path d="M-12.5 -106 L-13 -97 M12.5 -106 L13 -97" stroke="#6b4a30" stroke-width="1" fill="none"/>';
+    else h+='<path d="M-12.5 -108 Q-12 -116 0 -116 Q12 -116 12.5 -108 Q8 -112 0 -112 Q-8 -112 -12.5 -108 Z" fill="#4a3320" stroke="#2a1c12" stroke-width="1"/>';
+    if(p.goggles) h+='<rect x="-13.5" y="-109" width="27" height="10" rx="4.5" fill="#d3ecff" fill-opacity=".55" stroke="#c4262e" stroke-width="2.2"/><path d="M-13.5 -104 L-16 -104 M13.5 -104 L16 -104" stroke="#c4262e" stroke-width="2"/><path d="M-9 -107 L-5 -107" stroke="#fff" stroke-width="1.4"/>';
+    if(p.shield) h+='<path d="M-18 -112 L18 -112 L17.5 -84 Q0 -79 -17.5 -84 Z" fill="#bfe3ff" fill-opacity=".38" stroke="#6f9fc4" stroke-width="1.5"/><path d="M-12 -108 L-9 -90" stroke="#fff" stroke-width="2" opacity=".8"/>';
+  }
+  h+='</g>';
+  var ppe=el('ppe',h);
+  return g+el('glove',gl)+ppe;
+}
+
+/* ---------- сцена ---------- */
+function harness(x,y,s){
+  var o='stroke="#1c2530" stroke-width="6.5" fill="none"', i='stroke="#ffc400" stroke-width="4.2" fill="none"';
+  function band(d){return '<path d="'+d+'" '+o+'/><path d="'+d+'" '+i+'/>';}
+  return '<g transform="translate('+x+' '+y+') scale('+s+')" stroke-linecap="round" stroke-linejoin="round">'+
+   band('M-12 -96 L-8 -60')+band('M12 -96 L8 -60')+band('M-11 -83 L11 -83')+band('M-17 -62 L17 -62')+band('M-16 -60 Q-9 -45 -2 -58')+band('M16 -60 Q9 -45 2 -58')+
+   '<rect x="-3.5" y="-86" width="7" height="6" rx="1.5" fill="#c9d1d8" stroke="#333" stroke-width="1.2"/>'+
+   '<circle cx="12" cy="-101" r="4" fill="#c9d1d8" stroke="#333" stroke-width="1.6"/></g>';
+}
+function hr(x,y,s){return [x+12*s,y-101*s]}
+function ring(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="4.6" fill="#c9d1d8" stroke="#333" stroke-width="1.8"/>'}
+function lanyard(p0,p1,sag,len){
+  var c=[(p0[0]+p1[0])/2,(p0[1]+p1[1])/2+sag], d='M'+p0[0]+' '+p0[1]+' Q'+c[0]+' '+c[1]+' '+p1[0]+' '+p1[1];
+  var m=[(p0[0]+p1[0])/2,(p0[1]+p1[1])/2+sag/2], ang=Math.atan2(p1[1]-p0[1],p1[0]-p0[0])*180/Math.PI, L=len||34;
+  return '<path d="'+d+'" fill="none" stroke="#1c2530" stroke-width="5" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="#ff9f1c" stroke-width="2.6" stroke-linecap="round"/>'+
+   '<g transform="translate('+m[0]+' '+m[1]+') rotate('+ang+')"><rect x="'+(-L/2)+'" y="-8" width="'+L+'" height="16" rx="5" fill="#e85d04" stroke="#1c2530" stroke-width="2"/><path d="M'+(-L/2+8)+' -8 v16 M'+(-L/2+16)+' -8 v16 M'+(L/2-16)+' -8 v16 M'+(L/2-8)+' -8 v16" stroke="#7a2e00" stroke-width="1.5"/></g>'+ring(p0[0],p0[1])+ring(p1[0],p1[1]);
+}
+function anchorOnSlab(x,y){return '<rect x="'+(x-12)+'" y="'+(y-6)+'" width="24" height="7" rx="2" fill="#6b7580" stroke="#333" stroke-width="1.6"/><path d="M'+(x-6)+' '+(y-6)+' Q'+x+' '+(y-24)+' '+(x+6)+' '+(y-6)+'" fill="none" stroke="#333" stroke-width="5"/><path d="M'+(x-6)+' '+(y-6)+' Q'+x+' '+(y-24)+' '+(x+6)+' '+(y-6)+'" fill="none" stroke="#e0e6eb" stroke-width="2.4"/>';}
+function tx(t,x,y,o){o=o||{};return '<text x="'+x+'" y="'+y+'" text-anchor="'+(o.a||'start')+'" style="font-weight:'+(o.w||700)+';font-size:'+(o.s||13)+'px;fill:'+(o.c||'#1c2530')+'">'+t+'</text>';}
+function frame(id,title,sub,body){
+  return '<defs><linearGradient id="sky'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe8fb"/><stop offset="1" stop-color="#f6fbff"/></linearGradient></defs>'+
+   '<rect x="0" y="0" width="640" height="400" fill="url(#sky'+id+')"/>'+
+   '<text x="320" y="28" text-anchor="middle" style="font-family:var(--head);font-weight:600;font-size:16px;fill:#e8741a;letter-spacing:.5px">ТЕХНИКА БЕЗОПАСНОСТИ · РАБОТА НА ВЫСОТЕ</text>'+
+   '<text x="320" y="48" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#1c2530">'+title+'</text>'+
+   (sub?'<text x="320" y="64" text-anchor="middle" style="font-size:12.5px;fill:#3b4856">'+sub+'</text>':'')+
+   body+'<rect x="3" y="3" width="634" height="394" rx="10" fill="none" stroke="#f08a24" stroke-width="6"/>';
+}
+function ground(){return '<rect x="0" y="340" width="640" height="60" fill="#8b6b4a"/><rect x="0" y="340" width="640" height="9" fill="#6aa84f"/><text x="16" y="388" style="fill:#fff;font-weight:700;font-size:13px">ЗЕМЛЯ</text>';}
+function wp(x,y,s,ghost){var w=worker({x:x,y:y,s:s,p:{helmet:1,boots:1}})+harness(x,y,s);return ghost?'<g opacity=".5">'+w+'</g>':w;}
+function sceneA(){
+  var sy=206, wx=290, s=.95, b=hr(wx,sy,s), an=[110,sy-14];
+  var body=ground()+
+   '<rect x="40" y="'+(sy+12)+'" width="390" height="'+(340-sy-12)+'" fill="#c9ced4" stroke="#5f6a74" stroke-width="2"/><path d="M60 '+(sy+100)+' h350 M60 '+(sy+125)+' h350" stroke="#aeb5bc" stroke-width="1.2"/>'+
+   '<rect x="40" y="'+sy+'" width="400" height="12" fill="#7b858e" stroke="#333" stroke-width="2"/>'+
+   '<rect x="440" y="130" width="150" height="210" fill="#c4262e" opacity=".12"/><rect x="440" y="130" width="150" height="210" fill="none" stroke="#c4262e" stroke-width="2.5" stroke-dasharray="8 6"/>'+
+   tx('зона падения',515,160,{a:'middle',c:'#c4262e'})+tx('(ограждения нет)',515,177,{a:'middle',c:'#c4262e',w:500,s:12})+
+   anchorOnSlab(110,sy)+
+   '<line x1="326" y1="96" x2="326" y2="'+(sy+70)+'" stroke="#1f7a3f" stroke-width="2.5" stroke-dasharray="6 5"/>'+tx('предел стропа',334,92,{c:'#1f7a3f',s:12})+
+   '<line x1="326" y1="'+(sy+50)+'" x2="437" y2="'+(sy+50)+'" stroke="#1c2530" stroke-width="1.6"/><path d="M332 '+(sy+44)+' L326 '+(sy+50)+' L332 '+(sy+56)+' M431 '+(sy+44)+' L437 '+(sy+50)+' L431 '+(sy+56)+'" fill="none" stroke="#1c2530" stroke-width="1.6"/>'+tx('до края не дотянуться',382,sy+42,{a:'middle',s:12})+
+   lanyard(b,an,16,30)+wp(wx,sy,s)+
+   tx('анкер',110,sy-34,{a:'middle'})+tx('короткий строп',190,125,{a:'middle',s:12});
+  return frame('A','Удерживающая система','Не допускает падения: строп короткий, до края не достать (п. 118, 130)',body);
+}
+function sceneB(){
+  var sy=206, wx=230, s=.95, b=hr(wx,sy,s), an=[330,92];
+  var gx=404, gy=292, gb=hr(gx,gy,s);
+  var body=ground()+
+   '<rect x="40" y="'+(sy+12)+'" width="320" height="'+(340-sy-12)+'" fill="#c9ced4" stroke="#5f6a74" stroke-width="2"/><path d="M60 '+(sy+100)+' h280 M60 '+(sy+125)+' h280" stroke="#aeb5bc" stroke-width="1.2"/>'+
+   '<rect x="40" y="'+sy+'" width="330" height="12" fill="#7b858e" stroke="#333" stroke-width="2"/>'+
+   '<rect x="325" y="98" width="10" height="'+(sy-98)+'" fill="#8d97a1" stroke="#333" stroke-width="1.6"/>'+
+   '<circle cx="'+an[0]+'" cy="'+an[1]+'" r="8" fill="#6b7580" stroke="#333" stroke-width="2"/>'+
+   lanyard(gb,an,0,56)+wp(gx,gy,s,true)+
+   lanyard(b,an,14,34)+wp(wx,sy,s)+
+   '<line x1="480" y1="'+gy+'" x2="480" y2="340" stroke="#1c2530" stroke-width="1.8"/><path d="M474 '+(gy+8)+' L480 '+gy+' L486 '+(gy+8)+' M474 332 L480 340 L486 332" fill="none" stroke="#1c2530" stroke-width="1.8"/>'+
+   '<line x1="450" y1="'+gy+'" x2="490" y2="'+gy+'" stroke="#1c2530" stroke-width="1.2" stroke-dasharray="3 3"/>'+
+   tx('под работником',494,300,{s:12})+tx('должно хватать',494,316,{s:12})+tx('места до земли',494,332,{s:12})+
+   tx('анкер выше',342,80,{s:12.5})+tx('амортизатор',284,90,{a:'middle',s:12,c:'#b34700'})+
+   tx('упавший (условно)',452,250,{s:12,c:'#c4262e'});
+  return frame('B','Страховочная система','Останавливает падение: анкер выше, амортизатор, запас места под работником (п. 132, 133)',body);
+}
+function sceneC(){
+  var wx=262, wy=250, s=.95, b=hr(wx,wy,s);
+  var body=ground()+
+   '<rect x="300" y="78" width="30" height="262" fill="#8d97a1" stroke="#333" stroke-width="2"/><path d="M300 110 L330 150 M330 110 L300 150 M300 170 L330 210 M330 170 L300 210 M300 230 L330 270 M330 230 L300 270" stroke="#5f6a74" stroke-width="2"/>'+
+   '<rect x="215" y="'+wy+'" width="85" height="9" fill="#7b858e" stroke="#333" stroke-width="1.8"/>'+
+   '<circle cx="315" cy="70" r="8" fill="#6b7580" stroke="#333" stroke-width="2"/>'+
+   lanyard(b,[315,70],-12,32)+wp(wx,wy,s)+
+   '<path d="M'+(wx+14)+' '+(wy-60*s)+' L335 '+(wy-60*s)+'" stroke="#1c2530" stroke-width="7" stroke-linecap="round"/><path d="M'+(wx+14)+' '+(wy-60*s)+' L335 '+(wy-60*s)+'" stroke="#ffc400" stroke-width="4.5" stroke-linecap="round"/>'+
+   '<path d="M335 '+(wy-60*s-4)+' q10 4 0 8" fill="none" stroke="#1c2530" stroke-width="2.5"/>'+
+   tx('строп позиционирования',370,wy-60*s-6,{s:12.5})+tx('огибает конструкцию:',370,wy-60*s+10,{s:12.5})+tx('руки свободны',370,wy-60*s+26,{s:12.5})+
+   tx('страховочная система',370,118,{s:12.5,c:'#b34700'})+tx('обязательна (п. 131)',370,134,{s:12.5,c:'#b34700'})+
+   '<path d="M366 124 L328 90" stroke="#b34700" stroke-width="1.6"/>';
+  return frame('C','Система позиционирования','Удерживает в рабочем положении в подпоре; страховочная система обязательна (п. 131)',body);
+}
+
+$("#scA").innerHTML=sceneA();$("#scB").innerHTML=sceneB();$("#scC").innerHTML=sceneC();
+var GAL=[
+['Страховочная привязь','Единственная допустимая привязь для страховочной системы. Безлямочные предохранительные пояса запрещены: при падении они травмируют позвоночник и не позволяют долго висеть.','страховочная система','п. 126, 132',
+ '<g stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M60 14 L74 62 M100 14 L86 62" stroke="#1c2530" stroke-width="10"/><path d="M60 14 L74 62 M100 14 L86 62" stroke="#ffc400" stroke-width="7"/><path d="M66 38 L94 38" stroke="#1c2530" stroke-width="10"/><path d="M66 38 L94 38" stroke="#ffc400" stroke-width="7"/><path d="M62 66 L98 66" stroke="#1c2530" stroke-width="10"/><path d="M62 66 L98 66" stroke="#ffc400" stroke-width="7"/><path d="M62 66 Q58 90 72 98 M98 66 Q102 90 88 98" stroke="#1c2530" stroke-width="10"/><path d="M62 66 Q58 90 72 98 M98 66 Q102 90 88 98" stroke="#ffc400" stroke-width="7"/><rect x="74" y="31" width="12" height="14" rx="3" fill="#c9d1d8" stroke="#333" stroke-width="2"/><circle cx="80" cy="12" r="7" fill="#c9d1d8" stroke="#333" stroke-width="3"/></g>'],
+['Строп с амортизатором','Соединяет привязь с анкером. В страховочной системе обязателен амортизатор (или устройство, которое его заменяет).','страховочная система','п. 126, 132',
+ '<g stroke-linecap="round"><path d="M20 55 L140 55" stroke="#1c2530" stroke-width="8"/><path d="M20 55 L140 55" stroke="#ff9f1c" stroke-width="4.5"/><rect x="55" y="40" width="50" height="30" rx="9" fill="#e85d04" stroke="#1c2530" stroke-width="3"/><path d="M68 40 v30 M80 40 v30 M92 40 v30" stroke="#7a2e00" stroke-width="2.5"/><rect x="8" y="42" width="22" height="26" rx="10" fill="none" stroke="#333" stroke-width="5"/><rect x="130" y="42" width="22" height="26" rx="10" fill="none" stroke="#333" stroke-width="5"/></g>'],
+['Карабин и соединительные элементы','Входят в соединительную подсистему вместе со стропом, канатом и амортизатором. Все элементы системы должны быть совместимы.','любая система','п. 126, 119',
+ '<g stroke-linecap="round" stroke-linejoin="round"><rect x="50" y="14" width="60" height="84" rx="28" fill="none" stroke="#333" stroke-width="12"/><rect x="50" y="14" width="60" height="84" rx="28" fill="none" stroke="#d0d7de" stroke-width="7"/><path d="M52 30 L52 60" stroke="#c4262e" stroke-width="7"/><path d="M110 40 L110 76" stroke="#333" stroke-width="3"/></g>'],
+['Анкерное устройство','Точка, к которой крепится система. Тип и место анкера указывают в технологической карте, ППР или наряде-допуске. Анкерные устройства подлежат обязательной сертификации.','любая система','п. 127–129',
+ '<g stroke-linejoin="round"><rect x="20" y="78" width="120" height="14" fill="#8d97a1" stroke="#333" stroke-width="2.5"/><rect x="62" y="64" width="36" height="14" rx="3" fill="#6b7580" stroke="#333" stroke-width="2.5"/><path d="M70 64 Q80 24 90 64" fill="none" stroke="#333" stroke-width="10"/><path d="M70 64 Q80 24 90 64" fill="none" stroke="#e0e6eb" stroke-width="5"/><circle cx="72" cy="71" r="2.5" fill="#333"/><circle cx="88" cy="71" r="2.5" fill="#333"/></g>'],
+['Устройство втягивающего типа','Входит в соединительную подсистему. Для него при расчёте свободного места под работником учитывают страховочный участок.','страховочная система','п. 126, 133',
+ '<g stroke-linejoin="round" stroke-linecap="round"><rect x="50" y="10" width="60" height="50" rx="12" fill="#ffc400" stroke="#333" stroke-width="3"/><circle cx="80" cy="35" r="14" fill="#fff" stroke="#333" stroke-width="3"/><circle cx="80" cy="35" r="5" fill="#6b7580"/><path d="M80 60 L80 92" stroke="#333" stroke-width="5"/><path d="M80 60 L80 92" stroke="#d0d7de" stroke-width="2"/><rect x="72" y="90" width="16" height="14" rx="6" fill="none" stroke="#333" stroke-width="4"/></g>'],
+['Горизонтальная анкерная линия','Для безопасного перехода с места на место. Параметры линии подтверждаются расчётами; натяжение каната делают устройством с индикатором. Работник крепится к линии ползунковым средством.','страховочная система','п. 159–168',
+ '<g stroke-linejoin="round" stroke-linecap="round"><rect x="10" y="30" width="12" height="60" fill="#8d97a1" stroke="#333" stroke-width="2.5"/><rect x="138" y="30" width="12" height="60" fill="#8d97a1" stroke="#333" stroke-width="2.5"/><path d="M22 46 Q80 58 138 46" fill="none" stroke="#333" stroke-width="6"/><path d="M22 46 Q80 58 138 46" fill="none" stroke="#e8741a" stroke-width="3"/><rect x="66" y="46" width="22" height="14" rx="4" fill="#ffc400" stroke="#333" stroke-width="2.5"/><path d="M77 60 L77 86" stroke="#333" stroke-width="5"/><rect x="108" y="40" width="14" height="12" rx="3" fill="#c9d1d8" stroke="#333" stroke-width="2"/></g>'],
+['Каска с подбородочным ремнём','Работникам выдают каски; подбородочный ремень должен быть застёгнут.','любая работа на высоте','п. 139',
+ '<g stroke-linejoin="round" stroke-linecap="round"><path d="M34 70 Q34 22 80 22 Q126 22 126 70 Z" fill="#f28a1f" stroke="#8a4208" stroke-width="3"/><path d="M76 22 L76 70 M84 22 L84 70" stroke="#ffb764" stroke-width="3.5"/><rect x="24" y="68" width="112" height="11" rx="5" fill="#d8700f" stroke="#8a4208" stroke-width="3"/><path d="M46 79 Q48 106 80 106 Q112 106 114 79" fill="none" stroke="#1c2530" stroke-width="4"/><rect x="72" y="100" width="16" height="10" rx="3" fill="#c9d1d8" stroke="#333" stroke-width="2"/></g>'],
+['Противоскользящая обувь','Обувь с противоскользящими свойствами.','любая работа на высоте','п. 140',
+ '<g stroke-linejoin="round" stroke-linecap="round"><path d="M44 20 L84 20 L84 62 L128 74 Q140 78 140 90 L40 90 L40 20 Z" fill="#6b4a2a" stroke="#2b1d0e" stroke-width="3"/><rect x="36" y="86" width="108" height="14" rx="4" fill="#1c2530"/><path d="M46 100 v6 M58 100 v6 M70 100 v6 M82 100 v6 M94 100 v6 M106 100 v6 M118 100 v6 M130 100 v6" stroke="#1c2530" stroke-width="4"/><path d="M56 34 L74 34 M56 46 L74 46" stroke="#e7d7b8" stroke-width="3"/></g>'],
+['Приставная лестница','Выше 1,8 м работать с неё можно только со страховочной системой. Угол установки не больше 75°, на верхних концах лестниц у труб и проводов нужны крюки-захваты.','работа с лестницы','п. 170–175',
+ '<g stroke-linejoin="round" stroke-linecap="round"><path d="M60 100 L98 10 M88 104 L126 14" stroke="#333" stroke-width="9"/><path d="M60 100 L98 10 M88 104 L126 14" stroke="#e7b84a" stroke-width="5.5"/><path d="M69 80 L96 86 M76 62 L103 68 M83 44 L110 50 M90 26 L117 32" stroke="#333" stroke-width="7"/><path d="M69 80 L96 86 M76 62 L103 68 M83 44 L110 50 M90 26 L117 32" stroke="#e7b84a" stroke-width="3.5"/><path d="M98 10 q-8 -6 -2 -8 M126 14 q-8 -6 -2 -8" fill="none" stroke="#333" stroke-width="4"/></g>'],
+['Ограждение высотой 1,1 м и выше','Одна из первых мер снижения риска (после попытки исключить работу). Проёмы, в которые можно упасть, ограждают и обозначают знаками.','коллективная защита','п. 6, 82',
+ '<g stroke-linejoin="round" stroke-linecap="round"><rect x="10" y="94" width="140" height="8" fill="#7b858e" stroke="#333" stroke-width="2"/><path d="M26 94 v-62 M80 94 v-62 M134 94 v-62" stroke="#333" stroke-width="8"/><path d="M26 94 v-62 M80 94 v-62 M134 94 v-62" stroke="#ffc400" stroke-width="4.5"/><path d="M22 32 H138 M22 56 H138" stroke="#333" stroke-width="8"/><path d="M22 32 H138 M22 56 H138" stroke="#ffc400" stroke-width="4.5"/><path d="M146 32 v62 M142 36 l4 -6 l4 6 M142 90 l4 6 l4 -6" fill="none" stroke="#c4262e" stroke-width="2.2"/><text x="120" y="16" style="font-size:12px;font-weight:700;fill:#c4262e">1,1 м</text></g>'],
+['Леса и подмости','Леса до 4 м принимает ответственный руководитель работ, выше 4 м — комиссия с актом. Лестницы на лесах — не реже чем через 40 м, угол не более 75°.','средства подмащивания','п. 88–102',
+ '<g stroke-linejoin="round" stroke-linecap="round"><path d="M30 100 V14 M130 100 V14 M30 60 H130 M30 24 L130 60 M130 24 L30 60" stroke="#333" stroke-width="5"/><path d="M30 100 V14 M130 100 V14 M30 60 H130" stroke="#8d97a1" stroke-width="2.5"/><rect x="22" y="56" width="116" height="8" fill="#b88a50" stroke="#4a3623" stroke-width="2"/><rect x="22" y="20" width="116" height="8" fill="#b88a50" stroke="#4a3623" stroke-width="2"/><path d="M22 12 V34 M138 12 V34" stroke="#333" stroke-width="4"/></g>'],
+['Средства спасения и эвакуации','Система спасения обязательна. В неё входят дополнительные анкеры, резервные системы, подъёмные и спусковые средства, носилки, шины, аптечка. Освободить повисшего работника надо не более чем за 10 минут.','система спасения','п. 135–137',
+ '<g stroke-linejoin="round" stroke-linecap="round"><rect x="14" y="62" width="70" height="22" rx="4" fill="#e85d04" stroke="#333" stroke-width="2.5"/><path d="M26 62 v22 M40 62 v22 M54 62 v22 M68 62 v22" stroke="#7a2e00" stroke-width="2"/><path d="M14 90 H84" stroke="#333" stroke-width="3"/><circle cx="108" cy="30" r="16" fill="#fff" stroke="#333" stroke-width="3"/><path d="M108 20 v20 M98 30 h20" stroke="#c4262e" stroke-width="5"/><rect x="96" y="60" width="48" height="36" rx="6" fill="#ffc400" stroke="#333" stroke-width="2.5"/><circle cx="120" cy="78" r="9" fill="#fff" stroke="#333" stroke-width="2"/><path d="M120 96 v10" stroke="#333" stroke-width="3"/></g>']
+];
+(function(){var h='';GAL.forEach(function(g){h+='<article class="gcard"><svg viewBox="0 0 160 110" role="img" aria-label="'+esc(g[0])+'">'+g[4]+'</svg><div class="gb"><b>'+esc(g[0])+'</b><p>'+esc(g[1])+'</p><div><span class="tag">'+esc(g[2])+'</span> <span class="tag">'+esc(g[3])+'</span></div></div></article>'});$('#gallery').innerHTML=h})();
+
+(function(){
+  var Q=[
+   {q:'Работник выполняет работу на площадке в 1,5 м от неогражденного края, перепад высоты 3 м. Это работа на высоте?',o:['Нет: ведь он не на краю','Да: есть риск падения с высоты 1,8 м и более, а площадка ближе 2 м от неогражденного перепада','Нет, это работа на высоте только выше 5 м','Только если у работника нет каски'],a:1,w:'П. 3: к работам на высоте относятся работы с риском падения с высоты 1,8 м и более, в том числе на площадках ближе 2 м от неогражденного перепада или при ограждении ниже 1,1 м.'},
+   {q:'Что работодатель делает первым с работой на высоте?',o:['Выдаёт привязь','По возможности исключает работу на высоте','Оформляет наряд-допуск','Назначает спасателей'],a:1,w:'П. 5: работодатель по возможности исключает работы на высоте. Если нельзя, применяет меры снижения риска (п. 6): ограждения высотой 1,1 м и выше, леса, подмости, подъёмники, люльки, коллективные и индивидуальные средства защиты.'},
+   {q:'Какую привязь допускают в страховочной системе?',o:['Любой пояс','Безлямочный предохранительный пояс','Только страховочную привязь','Привязь для позиционирования'],a:2,w:'П. 132: в страховочной системе применяют только страховочную привязь. Безлямочные предохранительные пояса запрещены: риск травмы позвоночника и невозможность длительного висения.'},
+   {q:'Система позиционирования. Что должно быть дополнительно?',o:['Ничего: она сама не даёт упасть','Обязательно страховочная система','Только каска с ремнём','Только второй работник'],a:1,w:'П. 131: система позиционирования фиксирует рабочее положение в подпоре, и при её применении обязательна страховочная система.'},
+   {q:'Работник остановил падение и завис на системе. За какое время его должны освободить?',o:['За 30 минут','За 20 минут','В максимально короткий срок, но не более 10 минут','Время не нормируется'],a:2,w:'П. 136: план спасения должен обеспечить освобождение работника, оставшегося в зависании после остановки падения, в максимально короткий срок, не более 10 минут.'},
+   {q:'Что обязательно учесть при выборе места анкера страховочной системы?',o:['Только цвет и сертификат','Минимальный фактор падения, отсутствие маятниковой траектории и свободное место под работником после остановки падения','Чтобы анкер был как можно ниже','Только удобство работника'],a:1,w:'П. 133: место и тип анкера должны обеспечивать минимальный фактор падения, исключать или уменьшать маятниковую траекторию и обеспечивать свободное пространство под работником (рост, длина стропа, сработавший амортизатор).'},
+   {q:'Работник с приставной лестницы выполняет работу на высоте более 1,8 м. Что требуется?',o:['Ничего: лестница сама надёжна','Страховочная система, закреплённая к конструкции или к закреплённой лестнице; стоять на ступени не ближе 1 м от верхнего конца','Только каска','Только страхующий внизу'],a:1,w:'П. 172: при работе с приставной лестницы на высоте более 1,8 м нужна страховочная система, закреплённая к конструкции или закреплённой лестнице; ступень, на которой стоит работник, не менее чем в 1 м от верхнего конца.'},
+   {q:'На какой срок выдают наряд-допуск и можно ли его продлить?',o:['До 3 суток, продление не допускается','Не более 15 календарных дней; продлить можно один раз, тоже не более чем на 15 дней','На месяц, продлевать можно без ограничений','На любой срок'],a:1,w:'П. 65: наряд-допуск выдают на срок не более 15 календарных дней со дня начала работ, продлить можно один раз, не более чем на 15 календарных дней.'},
+   {q:'Сколько хранят закрытые наряды-допуски?',o:['3 суток','30 суток','1 год','Не хранят'],a:1,w:'П. 66–67: закрытые наряды хранят 30 суток, затем их можно уничтожить. Наряды, связанные с несчастным случаем, хранят с материалами расследования.'},
+   {q:'Как часто работники 1 и 2 группы проходят периодическое обучение, а 3 группы?',o:['1 и 2 — раз в год, 3 — раз в 3 года','1 и 2 — раз в 3 года, 3 — раз в 5 лет','Все — раз в 5 лет','Все — раз в 3 года'],a:1,w:'П. 23: периодическое обучение работников 1 и 2 групп — не реже 1 раза в 3 года, 3 группы — не реже 1 раза в 5 лет.'},
+   {q:'Работник вернулся к работе на высоте после перерыва более года. Что нужно?',o:['Ничего, он уже обучался','Обучение до допуска к работе','Только инструктаж у бригадира','Только медосмотр'],a:1,w:'П. 16: обучение до начала работ обязательно, в том числе для тех, у кого был перерыв в работе на высоте более одного года.'},
+   {q:'Удерживающая система. Чем ограничена её работа?',o:['Длиной стропа или вытяжного каната, так, чтобы исключить зону возможного падения','Весом работника','Высотой каски','Числом анкеров'],a:0,w:'П. 130: длина стропа или максимальная длина вытяжного каната ограничивается так, чтобы исключить зону возможного падения. Такая система не допускает падения (п. 118).'},
+   {q:'Сколько человек может быть в люльке и где входят и выходят?',o:['Не более двух; вход и выход только на земле','До четырёх; вход и выход на высоте','Один; вход на высоте','Сколько поместится'],a:0,w:'П. 111–112: в люльке не более двух работников; вход и выход из люльки — только на земле.'}
+  ];
+  Q.forEach(function(q){var c=q.o[q.a],m=q.o.map(function(x){return[Math.random(),x]}).sort(function(u,v){return u[0]-v[0]}).map(function(z){return z[1]});q.o=m;q.a=m.indexOf(c)});
+  var done={},score=0;
+  function render(){var h='';Q.forEach(function(q,i){
+      h+='<div class="q"><b>'+(i+1)+'. '+esc(q.q)+'</b><div class="opts">';
+      q.o.forEach(function(o,j){var c='opt',d='';if(done[i]!==undefined){d=' disabled';if(j===q.a)c+=' right';else if(j===done[i])c+=' wrong'}
+        h+='<button type="button" class="'+c+'" data-i="'+i+'" data-j="'+j+'"'+d+'>'+esc(o)+'</button>'});
+      h+='</div>';if(done[i]!==undefined)h+='<div class="why">'+esc(q.w)+'</div>';h+='</div>'});
+    $('#quiz').innerHTML=h;
+    document.querySelectorAll('#quiz .opt').forEach(function(b){b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-i'),j=+b.getAttribute('data-j');if(done[i]!==undefined)return;
+      done[i]=j;if(j===Q[i].a)score++;render();res()})});}
+  function res(){var r=$('#quizRes');if(Object.keys(done).length<Q.length){r.hidden=true;return}
+    r.hidden=false;r.className='res '+(score>=11?'ok':score>=9?'mid':'bad');
+    r.textContent='Результат: '+score+' из '+Q.length+'. '+(score===Q.length?'Всё верно.':'Вернитесь к разделам, где ошиблись: разбор под каждым вопросом.')}
+  $('#quizReset').addEventListener('click',function(){done={};score=0;render();res()});
+  render();
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Технические мероприятия</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+:root{
+  --bg:#f4f7fa; --surface:#fff; --surface2:#eaf0f5; --ink:#18232f; --muted:#55646f; --line:#d3dce5;
+  --live:#d9480f; --live-soft:#fde8dc; --earth:#217a45; --earth-soft:#dff1e6;
+  --insul:#0f7c8f; --insul-soft:#d9eff3; --man:#5b46c4; --man-soft:#e8e3f9;
+  --danger:#c4262e; --danger-soft:#fbdedf; --warn-soft:#fdf0cf; --accent:#0f7c8f;
+  --font:"IBM Plex Sans",system-ui,sans-serif; --head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;
+  padding-bottom:64px}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--head);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5.5vw,40px)}
+h2{font-size:clamp(23px,4vw,30px);margin-bottom:10px}
+h3{font-size:19px;margin:0 0 6px}
+p{margin:0 0 10px}
+ul,ol{margin:6px 0 10px;padding-left:22px} li{margin:5px 0}
+section{padding-top:36px}
+.kicker{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:19px;margin-top:12px;max-width:44ch}
+nav.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0;margin-top:18px}
+nav.top .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.top a{flex:0 0 auto;font-size:14px;color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+nav.top a:hover,nav.top a:focus-visible{border-color:var(--accent);outline:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.plain{border-left:5px solid var(--earth);background:var(--earth-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.plain b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--earth);margin-bottom:2px}
+.warn{border-left:5px solid var(--danger);background:var(--danger-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.warn b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--danger);margin-bottom:2px}
+details.rule{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+details.rule summary{cursor:pointer;padding:10px 14px;font-size:15px;font-weight:500;color:var(--accent)}
+details.rule .rq{padding:2px 16px 12px;font-size:15px;color:var(--ink)}
+details.rule .rq p{margin:8px 0;padding-left:12px;border-left:3px solid var(--line)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:8px 0}
+.chain .b{flex:1 1 120px;min-width:110px;border-radius:10px;padding:10px 10px;font-size:15px;font-weight:600;line-height:1.25;border:2px solid transparent;text-align:center;display:flex;align-items:center;justify-content:center}
+.chain .w{background:var(--live-soft);color:var(--live);border-color:var(--live)}
+.chain .i{background:var(--insul-soft);color:var(--insul);border-color:var(--insul)}
+.chain .m{background:var(--man-soft);color:var(--man);border-color:var(--man)}
+.chain .e{background:var(--earth-soft);color:var(--earth);border-color:var(--earth)}
+.chain .ar{flex:0 0 auto;align-self:center;color:var(--muted);font-size:22px}
+.srow{margin:20px 0 6px}
+.srow .lab{font-weight:600;font-size:16px;margin-bottom:2px}
+.srow .lab span{color:var(--muted);font-weight:400;font-size:15px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.scene{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}
+.scene svg{display:block;width:100%;height:auto}
+svg.poster{--live:#d9480f;--earth:#1f7a3f;--insul:#0e8a9e;--float:#6b4fd0;--danger:#c4262e;--ink:#1c2530;--muted:#3b4856;--surface:#fff;--bg:#f7fbff}
+svg.poster text{fill:#1c2530;font-size:12.5px}
+.t-live{fill:var(--live)!important}
+.pulse{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.pulse{animation:none}}
+.tag{display:inline-block;font-size:12.5px;padding:1px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-weight:600;font-size:14px}
+.tscroll{overflow-x:auto}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.gcard svg{background:#fff6d6;border-bottom:3px solid #f08a24;aspect-ratio:160/110;width:100%}
+.gcard .gb{padding:10px 14px;font-size:15px;line-height:1.5}
+.gcard .gb p{margin:4px 0 8px}
+.q{padding:16px 0;border-bottom:1px solid var(--line)}
+.q b{display:block;margin-bottom:8px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;font:inherit;font-size:16px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--earth-soft);border-color:var(--earth)}
+.opt.wrong{background:var(--danger-soft);border-color:var(--danger)}
+.why{margin-top:8px;font-size:15px;color:var(--muted)}
+.btn{font:inherit;font-size:15px;padding:9px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#06222a}
+.res{margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:500}
+.res.ok{background:var(--earth-soft)} .res.mid{background:var(--warn-soft)} .res.bad{background:var(--danger-soft)}
+.step{display:flex;gap:12px;margin:10px 0}
+.step .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+:root[data-theme="dark"] .step .n{color:#06222a}
+.step div{flex:1}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.scene{background:#fff;overflow-x:auto;overscroll-behavior-x:contain}
+.scene svg{min-width:760px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.ctl .btn{font-weight:500}
+.btn:disabled{opacity:.55;cursor:default}
+.ghost{font:inherit;font-size:15px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.ghost:hover:not(:disabled){border-color:var(--accent)} .ghost:disabled{opacity:.5;cursor:default}
+.prog{list-style:none;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:8px 0}
+.prog li{font-size:13.5px;margin:0;padding:4px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.prog li.done{background:var(--earth-soft);border-color:var(--earth);color:var(--earth)}
+.prog li.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .prog li.cur{color:#06222a}
+.cap h3{margin-top:4px}
+.cap .rule{margin-top:8px}
+.rq h4{margin:10px 0 0;font-size:14px;color:var(--muted);font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.seg button{font:inherit;font-size:15px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left}
+.seg button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed=true]{color:#06222a}
+.hint{font-size:14.5px;color:var(--muted);margin:4px 0 0}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pcard svg{display:block;width:100%;height:96px;background:#f4f7fa}
+.pcard .pb{padding:10px 14px;font-size:15px}
+.pcard .pb p{margin:2px 0 6px}
+.chap{margin:12px 0}
+.chap summary{cursor:pointer;font-family:var(--head);font-size:20px;font-weight:600;padding:12px 16px}
+.chap{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.chap .in{padding:0 16px 14px}
+.chap ul{margin:6px 0 10px}
+/* scenes */
+svg.sc text{font-family:"IBM Plex Sans",system-ui,sans-serif;fill:#1c2530}
+svg.sc .halo{paint-order:stroke;stroke:#e9eef3;stroke-width:4px;stroke-linejoin:round}
+.sc .wr{stroke-width:4;stroke-linecap:round;fill:none}
+.sc .wr.live,.sc .wr.dn{stroke:#d9480f;transition:stroke .5s}
+.sc .fl{stroke:#ffd9b8;stroke-width:1.8;stroke-dasharray:3 9;stroke-linecap:round;animation:flow .8s linear infinite;transition:opacity .4s}
+@keyframes flow{to{stroke-dashoffset:-12}}
+.sc .mv{transition:transform .8s cubic-bezier(.55,0,.25,1)}
+.sc .pl{opacity:0}
+@keyframes hang{0%{opacity:0;transform:translateY(-70px) rotate(-16deg)}55%{opacity:1;transform:translateY(0) rotate(8deg)}78%{opacity:1;transform:rotate(-3deg)}100%{opacity:1;transform:none}}
+@keyframes spark{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes lockin{0%{opacity:0;transform:translateY(-16px) scale(.6)}60%{opacity:1;transform:translateY(2px) scale(1.1)}100%{opacity:1;transform:none}}
+@keyframes snap{0%{transform:translateY(-4px)}100%{transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.2)}70%{transform:scale(1.2)}100%{opacity:1;transform:none}}
+.sc .spark{opacity:0}
+.sc .lk{opacity:0}
+.sc .pop{opacity:0}
+@media (prefers-reduced-motion: reduce){
+ .sc *{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important;transition-delay:0s!important}
+ .sc .fl{animation:none}
+}
+
+.mobhint{display:none}@media(max-width:820px){.mobhint{display:block}}
+.pcat{grid-column:1/-1;margin:10px 0 0;font-size:17px;color:var(--muted)}
+
+/* ===== A: щит ===== */
+#svA .qs{transform-origin:215px 150px}
+#svA .lev{transform-origin:320px 115px}
+#svA .fuse{transform-origin:425px 116px;transition:transform .8s cubic-bezier(.55,0,.25,1),opacity .8s}
+#svA .key{transform-origin:680px 105px}
+#svA .cs{transform-origin:590px 116px}
+#svA.st1 .qs{transform:rotate(-38deg)}
+#svA.st1 .lev{transform:rotate(180deg);transition-delay:.3s}
+#svA.st1 .fuse{transform:translate(50px,-34px) rotate(35deg);opacity:.4;transition-delay:.6s}
+#svA.st1 .key{transform:rotate(90deg);transition-delay:.9s}
+#svA.st1 .br{transform:translateY(-16px);transition-delay:1.2s}
+#svA.st1 .sp1{animation:spark .8s 0s both}
+#svA.st1 .sp2{animation:spark .8s .3s both}
+#svA.st1 .sp3{animation:spark .8s .6s both}
+#svA.st1 .sp4{animation:spark .8s 1.2s both}
+#svA .bus{fill:#d9480f;transition:fill .5s}
+#svA.st1 .bus{fill:#8a98a5;transition-delay:1.9s}
+#svA.st1 .wr.dn{stroke:#8a98a5;transition-delay:1.9s}
+#svA.st1 .fl.dn{opacity:0;transition-delay:1.9s}
+#svA .sT{transition:opacity .4s}
+#svA .sT1,#svA .sT2{opacity:0}
+#svA.st1 .sT0{opacity:0}
+#svA.st1 .sT1{opacity:1;transition-delay:1.9s}
+#svA.st4b .sT1{opacity:0;transition-delay:0s}
+#svA.st4b .sT2{opacity:1;transition-delay:1.1s}
+#svA .bcover{opacity:0;transform:translateY(-14px);transition:opacity .5s .3s,transform .5s .3s}
+#svA.st2 .bcover{opacity:.96;transform:none}
+#svA.st2 .cs{transform:rotate(-35deg)}
+#svA.st2 .sp5{animation:spark .8s 0s both}
+#svA .nak{opacity:0;transform:translateX(40px);transition:opacity .5s .9s,transform .8s .9s}
+#svA.st2 .nak{opacity:1;transform:none}
+#svA.st2 .lk2{animation:lockin .6s var(--d) both}
+#svA.st2 .lk2 .sh{animation:snap .3s calc(var(--d) + .45s) both}
+#svA.st3 .pl3{animation:hang .95s var(--d) both cubic-bezier(.2,.7,.3,1)}
+#svA .ind{transform:translate(660px,325px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#svA.st4 .ind{transform:translate(756px,318px)}
+#svA.st4b .ind{transform:translate(372px,274px)}
+#svA.st5 .ind{transform:translate(660px,325px)}
+#svA .ilon{opacity:0;transition:opacity .15s}
+#svA.st4 .ilon{opacity:1;transition-delay:.9s}
+#svA.st4b .ilon{opacity:0;transition-delay:0s}
+#svA .tick{opacity:0;transition:opacity .3s}
+#svA.st4b .tick{opacity:1;transition-delay:1s}
+#svA .gcab{stroke-dasharray:96;stroke-dashoffset:96}
+#svA.st5 .gcab{stroke-dashoffset:0;transition:stroke-dashoffset .9s .8s}
+#svA.st5 .gc1{animation:pop .5s 0s both}
+#svA.st5 .gc2{animation:pop .5s 1.7s both}
+#svA .shield{transform:translateX(-640px);transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#svA.st6 .shield{transform:none}
+#svA.st6 .pl6{animation:hang .95s var(--d) both cubic-bezier(.2,.7,.3,1)}
+/* ===== B: ячейка 10 кВ ===== */
+#svB .q1b{transform-origin:190px 140px}
+#svB .q2b{transform-origin:190px 322px}
+#svB .zn{transform-origin:110px 425px}
+#svB .lv1{transform-origin:410px 128px}
+#svB .lvq{transform-origin:396px 213px}
+#svB .lv2{transform-origin:410px 310px}
+#svB .lvz{transform-origin:410px 403px}
+#svB .lvz{transform:rotate(60deg)}
+#svB.st1 .qrod{transform:translateY(-14px)}
+#svB.st1 .lvq{transform:rotate(60deg)}
+#svB.st1 .sq{animation:spark .8s 0s both}
+#svB.st1 .q1b{transform:rotate(-32deg);transition-delay:.7s}
+#svB.st1 .lv1{transform:rotate(60deg);transition-delay:.7s}
+#svB.st1 .s1{animation:spark .8s .7s both}
+#svB.st1 .q2b{transform:rotate(-32deg);transition-delay:1.4s}
+#svB.st1 .lv2{transform:rotate(60deg);transition-delay:1.4s}
+#svB.st1 .s2{animation:spark .8s 1.4s both}
+#svB .bus{fill:#d9480f}
+#svB.st1 .wr.dn{stroke:#8a98a5;transition-delay:2s}
+#svB.st1 .fl.dn{opacity:0;transition-delay:2s}
+#svB .vis{opacity:0;transition:opacity .5s}
+#svB.st1 .vis{opacity:1;transition-delay:2.3s}
+#svB .sT{transition:opacity .4s}
+#svB .sT1,#svB .sT2{opacity:0}
+#svB.st1 .sT0{opacity:0}
+#svB.st1 .sT1{opacity:1;transition-delay:2.2s}
+#svB.st4d .sT1{opacity:0;transition-delay:0s}
+#svB.st4d .sT2{opacity:1;transition-delay:1.1s}
+#svB.st2 .lk2{animation:lockin .6s var(--d) both}
+#svB.st2 .lk2 .sh{animation:snap .3s calc(var(--d) + .45s) both}
+#svB .lamp{fill:#2e9e5b;transition:fill .5s .4s}
+#svB.st2 .lamp{fill:#8a98a5}
+#svB .sprOff{opacity:0;transition:opacity .5s .2s}
+#svB .sprOn{transition:opacity .5s .2s}
+#svB.st2 .sprOff{opacity:1}
+#svB.st2 .sprOn{opacity:0}
+#svB.st3 .pl3{animation:hang .95s var(--d) both cubic-bezier(.2,.7,.3,1)}
+#svB .ind{transform:translate(540px,420px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#svB.st4 .ind{transform:translate(725px,330px)}
+#svB.st4b .ind{transform:translate(165px,430px)}
+#svB.st4c .ind{transform:translate(190px,430px);transition-duration:.6s}
+#svB.st4d .ind{transform:translate(215px,430px);transition-duration:.6s}
+#svB.st5 .ind{transform:translate(540px,420px)}
+#svB .ilon{opacity:0;transition:opacity .15s}
+#svB.st4 .ilon{opacity:1;transition-delay:.9s}
+#svB.st4b .ilon{opacity:0;transition-delay:0s}
+#svB .tk{opacity:0;transition:opacity .3s}
+#svB.st4b .tkA{opacity:1;transition-delay:.9s}
+#svB.st4c .tkB{opacity:1;transition-delay:.7s}
+#svB.st4d .tkC{opacity:1;transition-delay:.7s}
+#svB.st5 .zn{transform:rotate(0)}
+#svB.st5 .lvz{transform:rotate(0)}
+#svB .zn{transform:rotate(-40deg)}
+#svB.st5 .zn{transform:none}
+#svB.st5 .sz{animation:spark .8s .7s both}
+#svB .znt{opacity:0;transition:opacity .4s 1s}
+#svB.st5 .znt{opacity:1}
+#svB .shield{transform:translateX(40px);opacity:0;transition:transform .8s,opacity .8s}
+#svB.st6 .shield{transform:none;opacity:1}
+#svB.st6 .pl6{animation:hang .95s var(--d) both cubic-bezier(.2,.7,.3,1)}
+/* ===== C: КРУ ===== */
+#svC .cart{transform:translateX(130px);transition:transform 1.6s cubic-bezier(.45,0,.25,1)}
+#svC.st1 .cart{transform:translateX(-300px)}
+#svC .shut{transform:translateY(-230px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#svC.st2 .shut{transform:none}
+#svC.st2 .lk2{animation:lockin .6s .9s both}
+#svC.st2 .lk2 .sh{animation:snap .3s 1.35s both}
+#svC .lab0,#svC .lab1{transition:opacity .4s}
+#svC .lab1{opacity:0}
+#svC.st1 .lab0{opacity:0}
+#svC.st1 .lab1{opacity:1;transition-delay:1.6s}
+#svC.st3 .pl3{animation:hang .95s var(--d) both cubic-bezier(.2,.7,.3,1)}
+#svC[data-m="2"] .plw{display:none}
+#svC[data-m="1"] .plx{display:none}
+
+#gA .qs{transform-origin:215px 150px}
+#gA .lev{transform-origin:320px 115px}
+#gA .fuse{transform-origin:425px 116px;transition:transform .8s cubic-bezier(.55,0,.25,1),opacity .8s}
+#gA .key{transform-origin:680px 105px}
+#gA .cs{transform-origin:590px 116px}
+#gA .bus{fill:#d9480f;transition:fill .5s}
+#gA .sT{transition:opacity .4s}
+#gA .sT1,#gA .sT2{opacity:0}
+#gA .bcover{opacity:0;transform:translateY(-14px);transition:opacity .5s .3s,transform .5s .3s}
+#gA .nak{opacity:0;transform:translateX(40px);transition:opacity .5s .9s,transform .8s .9s}
+#gA .ind{transform:translate(660px,325px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#gA .ilon{opacity:0;transition:opacity .15s}
+#gA .tick{opacity:0;transition:opacity .3s}
+#gA .gcab{stroke-dasharray:96;stroke-dashoffset:96}
+#gA .shield{transform:translateX(-640px);transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#gB .q1b{transform-origin:190px 140px}
+#gB .q2b{transform-origin:190px 322px}
+#gB .zn{transform-origin:110px 425px}
+#gB .lv1{transform-origin:410px 128px}
+#gB .lvq{transform-origin:396px 213px}
+#gB .lv2{transform-origin:410px 310px}
+#gB .lvz{transform-origin:410px 403px}
+#gB .lvz{transform:rotate(60deg)}
+#gB .bus{fill:#d9480f}
+#gB .vis{opacity:0;transition:opacity .5s}
+#gB .sT{transition:opacity .4s}
+#gB .sT1,#gB .sT2{opacity:0}
+#gB .lamp{fill:#2e9e5b;transition:fill .5s .4s}
+#gB .sprOff{opacity:0;transition:opacity .5s .2s}
+#gB .sprOn{transition:opacity .5s .2s}
+#gB .ind{transform:translate(540px,420px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#gB .ilon{opacity:0;transition:opacity .15s}
+#gB .tk{opacity:0;transition:opacity .3s}
+#gB .zn{transform:rotate(-40deg)}
+#gB .znt{opacity:0;transition:opacity .4s 1s}
+#gB .shield{transform:translateX(40px);opacity:0;transition:transform .8s,opacity .8s}
+#gC .cart{transform:translateX(130px);transition:transform 1.6s cubic-bezier(.45,0,.25,1)}
+#gC .shut{transform:translateY(-230px);transition:transform .9s cubic-bezier(.5,0,.25,1)}
+#gC .lab0,#gC .lab1{transition:opacity .4s}
+#gC .lab1{opacity:0}
+#gC[data-m="2"] .plw{display:none}
+#gC[data-m="1"] .plx{display:none}
+/* ===== игра ===== */
+.sc .pl.pg{animation:hang .95s both cubic-bezier(.2,.7,.3,1)}
+.sc .lk.lg{animation:lockin .6s both}
+.sc .lk.lg .sh{animation:snap .3s .45s both}
+.hs{fill:transparent;stroke:transparent;cursor:pointer}
+.toolsel .hs:hover,.hs:focus-visible{fill:rgba(14,138,158,.16);stroke:#0e8a9e;stroke-width:2;stroke-dasharray:5 3;outline:none}
+.hs.hint{animation:hpulse 1s ease-in-out 3;stroke:#e08a00;stroke-width:3;stroke-dasharray:5 3}
+@keyframes hpulse{0%,100%{fill:rgba(224,138,0,.05)}50%{fill:rgba(224,138,0,.35)}}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.scene.shake{animation:shake .4s}
+.scene.flashbad{box-shadow:0 0 0 3px var(--danger) inset}
+#gA.g-qs .qs{transform:rotate(-38deg)}
+#gA.g-qs .sp1{animation:spark .8s both}
+#gA.g-lev .lev{transform:rotate(180deg)}
+#gA.g-lev .sp2{animation:spark .8s both}
+#gA.g-fuse .fuse{transform:translate(50px,-34px) rotate(35deg);opacity:.4}
+#gA.g-fuse .sp3{animation:spark .8s both}
+#gA.g-key .key{transform:rotate(90deg)}
+#gA.g-key .br{transform:translateY(-16px);transition-delay:.5s}
+#gA.g-key .sp4{animation:spark .8s .5s both}
+#gA.g-dead .bus{fill:#8a98a5}
+#gA.g-dead .wr.dn{stroke:#8a98a5}
+#gA.g-dead .fl.dn{opacity:0}
+#gA.g-dead .sT0{opacity:0}
+#gA.g-dead .sT1{opacity:1}
+#gA.g-checked .sT1{opacity:0}
+#gA.g-checked .sT2{opacity:1}
+#gA.g-cs .cs{transform:rotate(-35deg)}
+#gA.g-cs .sp5{animation:spark .8s both}
+#gA.g-nak .nak{opacity:1;transform:none}
+#gA.g-cover .bcover{opacity:.96;transform:none}
+#gA.g-lamp .ilon{opacity:1;transition-delay:.9s}
+#gA.g-tick .tick{opacity:1;transition-delay:.9s}
+#gA.g-gc1 .gc1{animation:pop .5s both}
+#gA.g-gcab .gcab{stroke-dashoffset:0;transition:stroke-dashoffset .8s}
+#gA.g-gc2 .gc2{animation:pop .5s .1s both}
+#gA.g-tape .shield{transform:none}
+#gB.g-q .qrod{transform:translateY(-14px)}
+#gB.g-q .lvq{transform:rotate(60deg)}
+#gB.g-q .sq{animation:spark .8s both}
+#gB.g-dr1 .q1b{transform:rotate(-32deg)}
+#gB.g-dr1 .lv1{transform:rotate(60deg)}
+#gB.g-dr1 .s1{animation:spark .8s both}
+#gB.g-dr2 .q2b{transform:rotate(-32deg)}
+#gB.g-dr2 .lv2{transform:rotate(60deg)}
+#gB.g-dr2 .s2{animation:spark .8s both}
+#gB.g-dead .wr.dn{stroke:#8a98a5}
+#gB.g-dead .fl.dn{opacity:0}
+#gB.g-dead .vis{opacity:1}
+#gB.g-dead .sT0{opacity:0}
+#gB.g-dead .sT1{opacity:1}
+#gB.g-checked .sT1{opacity:0}
+#gB.g-checked .sT2{opacity:1}
+#gB.g-ctrl .lamp{fill:#8a98a5}
+#gB.g-spring .sprOff{opacity:1}
+#gB.g-spring .sprOn{opacity:0}
+#gB.g-lamp .ilon{opacity:1;transition-delay:.9s}
+#gB.g-pa .tkA,#gB.g-pb .tkB,#gB.g-pc .tkC{opacity:1;transition-delay:.7s}
+#gB.g-zn .zn{transform:none}
+#gB.g-zn .lvz{transform:none}
+#gB.g-zn .sz{animation:spark .8s .6s both}
+#gB.g-zn .znt{opacity:1}
+#gB.g-tape .shield{transform:none;opacity:1}
+#gC.g-cart .cart{transform:translateX(-300px)}
+#gC.g-cart .lab0{opacity:0}
+#gC.g-cart .lab1{opacity:1;transition-delay:1.5s}
+#gC.g-shut .shut{transform:none}
+/* панель инструментов */
+.toolbox{margin:12px 0}
+.toolbox h4{margin:10px 0 6px;font-size:14px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tool{font:inherit;font-size:14.5px;padding:8px 12px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tool:hover{border-color:var(--accent)}
+.tool[aria-pressed=true]{border-color:var(--accent);background:var(--insul-soft);box-shadow:0 0 0 2px var(--accent) inset}
+.tool svg{width:104px;height:54px;background:#fff;border-radius:4px;display:block}
+.tool.pt{padding:6px 8px;flex-direction:column;align-items:center;gap:4px;max-width:112px}
+.tool.pt span{font-size:12px;line-height:1.2;text-align:center}
+.gmsg{min-height:64px;margin:10px 0;padding:12px 16px;border-radius:10px;background:var(--surface2);border-left:5px solid var(--line);font-size:16px}
+.gmsg.ok{background:var(--earth-soft);border-left-color:var(--earth)}
+.gmsg.bad{background:var(--danger-soft);border-left-color:var(--danger)}
+.gmsg.info{background:var(--insul-soft);border-left-color:var(--insul)}
+.gmsg b{display:block;margin-bottom:2px}
+.gstage{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin:10px 0}
+.gstage .gt{font-family:var(--head);font-size:20px;font-weight:600}
+.gstage .gc{font-size:14.5px;color:var(--muted)}
+.gbar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin:6px 0 4px}
+.gbar i{display:block;height:100%;background:var(--earth);width:0;transition:width .5s}
+.modetabs{display:flex;gap:8px;margin-top:16px}
+.modetabs button{font:inherit;font-size:17px;font-weight:600;padding:10px 20px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.modetabs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .modetabs button[aria-selected=true]{color:#06222a}
+</style>
+</head>
+<body>
+<header class="wrap" style="padding-top:22px">
+  <div class="kicker">ПОТ ЭУ · приказ Минтруда № 903н · главы XVI–XXIII и п. 29.1–29.2</div>
+  <h1>Технические мероприятия при работах со снятием напряжения</h1>
+  <p class="lead">Нажимайте кнопки под рисунками: оборудование отключается, замки защёлкиваются, плакаты вывешиваются. Под каждым шагом можно раскрыть дословный текст пункта.</p>
+  <div class="modetabs" role="tablist"><button type="button" role="tab" id="tabT" aria-selected="true">Теория</button><button type="button" role="tab" id="tabP" aria-selected="false">Практика</button></div>
+</header>
+<div id="theory">
+<nav class="top" aria-label="Разделы"><div class="wrap">
+  <a href="#poryadok">Порядок</a><a href="#sa">Щит до 1000 В</a><a href="#sb">Ячейка 10 кВ</a><a href="#sc">Шкаф КРУ</a><a href="#plakaty">Плакаты</a><a href="#glavy">Главы Правил</a><a href="#test">Тест</a>
+</div></nav>
+<main class="wrap">
+
+<section id="poryadok">
+  <h2>Порядок обязателен</h2>
+  <p>Пункт 16.1: при подготовке рабочего места технические мероприятия выполняются <b>«в указанном порядке»</b>. Их шесть.</p>
+  <div class="card">
+    <div class="step"><span class="n">1</span><div><b>Отключить.</b> Произвести необходимые отключения и (или) отсоединения (глава XVII).</div></div>
+    <div class="step"><span class="n">2</span><div><b>Не дать включить.</b> Принять меры против подачи напряжения из-за ошибочного или самопроизвольного включения: замки, колпаки, отключённые цепи управления (глава XVII).</div></div>
+    <div class="step"><span class="n">3</span><div><b>Запрещающие плакаты</b> на приводах ручного и ключах дистанционного управления (глава XVIII).</div></div>
+    <div class="step"><span class="n">4</span><div><b>Проверить отсутствие напряжения</b> на частях, которые будут заземляться (глава XIX).</div></div>
+    <div class="step"><span class="n">5</span><div><b>Заземлить.</b> Установить переносное заземление или включить заземляющие ножи (главы XX–XXII).</div></div>
+    <div class="step"><span class="n">6</span><div><b>«Заземлено», ограждение, плакаты.</b> Вывесить «Заземлено», при необходимости огородить рабочие места и оставшиеся под напряжением части, вывесить предупреждающие и предписывающие плакаты (глава XXIII).</div></div>
+  </div>
+  <div class="warn"><b class="t">Запомнить</b>Отключили — ещё не значит, что напряжения нет. Проверка (шаг 4) обязательна до заземления. А плакат никогда не заменяет отключение, замок и проверку.</div>
+  <div data-rules="16.1"></div>
+</section>
+
+<section id="sa">
+  <h2>Сцена 1. Щит до 1000 В</h2>
+  <p>Четыре ввода питания, шины под напряжением, на шинах нужно работать. Что и в каком порядке делаем?</p>
+  <p class="hint mobhint">На телефоне рисунок можно прокрутить вбок.</p>
+  <div class="scene" id="svgA"></div>
+  <div class="ctl"><button type="button" class="btn" id="aNext"></button><button type="button" class="ghost" id="aAgain">↻ Повторить шаг</button><button type="button" class="ghost" id="aReset">Сначала</button></div>
+  <ol class="prog" id="aProg"></ol>
+  <div class="cap" id="aCap"></div>
+  <p class="hint">Рисунок учебный: цвета плакатов условные, аппараты упрощены.</p>
+</section>
+
+<section id="sb">
+  <h2>Сцена 2. Ячейка 10 кВ</h2>
+  <p>Шины сверху остаются под напряжением, нужно работать на выключателе. Выше 1000 В к отключению добавляется видимый разрыв, заземляющие ножи и ограждение соседней ячейки.</p>
+  <div class="scene" id="svgB"></div>
+  <div class="ctl"><button type="button" class="btn" id="bNext"></button><button type="button" class="ghost" id="bAgain">↻ Повторить шаг</button><button type="button" class="ghost" id="bReset">Сначала</button></div>
+  <ol class="prog" id="bProg"></ol>
+  <div class="cap" id="bCap"></div>
+</section>
+
+<section id="sc">
+  <h2>Сцена 3. Шкаф КРУ с выкатной тележкой</h2>
+  <p>В КРУ с выкатными тележками меры против ошибочного включения принимают по пунктам 29.1 и 29.2. Выберите, где предстоит работать.</p>
+  <div class="seg" id="cSeg"><button type="button" data-m="1" aria-pressed="true">Работа на тележке или в отсеке (п. 29.1)</button><button type="button" data-m="2" aria-pressed="false">Работа вне шкафа: на оборудовании или линии (п. 29.2)</button></div>
+  <div class="scene" id="svgC"></div>
+  <div class="ctl" id="cCtl"></div>
+  <ol class="prog" id="cProg"></ol>
+  <div class="cap" id="cCap"></div>
+</section>
+
+<section id="plakaty">
+  <h2>Какой плакат и где</h2>
+  <p>Девять плакатов, которые встречаются в этих главах. Цвета на рисунке условные.</p>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<section id="glavy">
+  <h2>Главы Правил по порядку</h2>
+  <p>Коротко и простыми словами. Дословный текст раскрывается под каждой главой.</p>
+
+  <details class="chap"><summary>XVII. Отключения</summary><div class="in">
+    <ul>
+      <li><b>Что отключают (17.1):</b> токоведущие части, на которых будет работа; неогражденные токоведущие части, к которым возможно случайное приближение людей, механизмов и подъёмных сооружений ближе расстояния по таблице № 1; цепи управления и питания приводов. Закрывают воздух в системах управления, снимают завод с пружин и грузов у приводов выключателей и разъединителей.</li>
+      <li><b>Выше 1000 В (17.2):</b> видимый разрыв с каждой стороны, откуда возможна подача напряжения. В КРУ с выкатными элементами и КРУЭ 6 кВ и выше, где видимого разрыва нет, положение проверяют по механическому указателю. Трансформаторы отключают и со стороны других обмоток.</li>
+      <li><b>После отключения (17.3):</b> убедиться глазами, что аппараты отключены и нет шунтирующих перемычек.</li>
+      <li><b>Защита от включения выше 1000 В (17.4):</b> ручные приводы разъединителей, отделителей и выключателей нагрузки в отключённом положении заперты механическим замком; ограждения у разъединителей с оперативной штангой заперты; у дистанционных приводов отключены силовые цепи и цепи управления; у пневмоприводов закрыта и заперта задвижка, воздух выпущен, спускные клапаны открыты; у грузовых и пружинных приводов груз или пружины приведены в нерабочее положение; вывешены запрещающие плакаты.</li>
+      <li><b>До 1000 В (17.5):</b> напряжение снимают отключением аппаратов с ручным приводом; предохранители снимают. Если предохранителей нет — запирают рукоятки или дверцы шкафа управления, закрывают кнопки, ставят изолирующие накладки между контактами. У дистанционного аппарата размыкают вторичную цепь включающей катушки.</li>
+      <li><b>17.6:</b> если контакты аппарата до 1000 В недоступны для осмотра, его отключённое положение определяют проверкой отсутствия напряжения на зажимах или на отходящих шинах и проводах.</li>
+    </ul>
+    <div data-rules="17.1,17.2,17.3,17.4,17.5,17.6"></div>
+  </div></details>
+
+  <details class="chap"><summary>XVIII. Вывешивание запрещающих плакатов</summary><div class="in">
+    <ul>
+      <li><b>«Не включать! Работают люди» (18.1):</b> на приводах (рукоятках) аппаратов с ручным управлением: выключателей, отделителей, разъединителей, рубильников, автоматов. У однополюсных разъединителей — на привод каждого полюса; у управляемых оперативной штангой — на ограждения. На ключах и кнопках дистанционного и местного управления, на автоматах или у места снятых предохранителей цепей управления и силовых цепей питания приводов. До 1000 В без аппаратов — у снятых предохранителей.</li>
+      <li><b>«Не открывать! Работают люди» (18.1):</b> на задвижках, закрывающих доступ воздуха в пневмоприводы разъединителей.</li>
+      <li><b>«Не включать! Работа на линии» (18.2):</b> один плакат на привод разъединителя, которым отключена ВЛ, КВЛ или КЛ, независимо от числа бригад. Вывешивают и снимают по команде диспетчерского или оперативного персонала. Перед снятием нужно подтверждение, что работы закончены и все бригады удалены с рабочего места.</li>
+      <li><b>«Работа под напряжением. Повторно не включать!» (18.3):</b> при работах под напряжением на приводах ручного и ключах дистанционного управления. Исключения: токоведущие части до 35 кВ методом на расстоянии и части до 1000 В в ТП и КТП методом в контакте.</li>
+    </ul>
+    <div data-rules="18.1,18.2,18.3"></div>
+  </div></details>
+
+  <details class="chap"><summary>XIX. Проверка отсутствия напряжения</summary><div class="in">
+    <ul>
+      <li><b>Чем (19.1):</b> указателем напряжения. Его исправность перед применением проверяют специальным прибором или поднесением к частям, заведомо находящимся под напряжением. Выше 1000 В — в диэлектрических перчатках. В заводских КРУ допускаются встроенные стационарные указатели.</li>
+      <li><b>35 кВ и выше (19.1):</b> можно изолирующей штангой: касаются частей несколько раз, нет искрения и потрескивания. На одноцепных ВЛ 330 кВ и выше достаточно отсутствия коронирования.</li>
+      <li><b>Кто (19.2):</b> в РУ — один работник из оперативного персонала, группа IV (выше 1000 В) или III (до 1000 В). На ВЛ — двое: выше 1000 В группы IV и III, до 1000 В обе III.</li>
+      <li><b>Выверка схемы в натуре (19.3):</b> разрешена в ОРУ и КТП наружной установки, а также на ВЛ при тумане, дожде, снегопаде, если нет специальных указателей; в ОРУ и на двухцепных ВЛ 330 кВ и выше.</li>
+      <li><b>ВЛ (19.4):</b> при проводах на разных уровнях — снизу вверх, с нижнего провода; при горизонтальной подвеске — с ближайшего.</li>
+      <li><b>До 1000 В (19.5):</b> в сети с заземлённой нейтралью двухполюсным указателем проверяют между фазами и между каждой фазой и заземлённым корпусом или защитным проводником. Контрольные лампы запрещены.</li>
+      <li><b>19.6:</b> сигнализаторы, блокировки и постоянно включённые вольтметры — только дополнительные средства; по их показаниям нельзя делать вывод об отсутствии напряжения.</li>
+    </ul>
+    <div data-rules="19.1,19.2,19.3,19.4,19.5,19.6"></div>
+  </div></details>
+
+  <details class="chap"><summary>XX–XXII. Заземление</summary><div class="in">
+    <ul>
+      <li><b>Общие правила (XX):</b> заземлять сразу после проверки отсутствия напряжения. Переносное заземление сначала присоединяют к заземляющему устройству, потом ставят на токоведущие части; снимают в обратном порядке. Работают в диэлектрических перчатках; выше 1000 В — изолирующей штангой. Касаться проводящих частей заземления запрещено. Заземлять можно только предназначенными для этого проводниками.</li>
+      <li><b>В РУ (XXI):</b> выше 1000 В заземляют части всех фаз отключённого участка со всех сторон возможной подачи напряжения; на сборные шины достаточно одного заземления. При работе на линейном разъединителе — дополнительное заземление на спуски со стороны ВЛ. Заземлённые части отделены от находящихся под напряжением видимым разрывом. Заземление присоединяют в местах, очищенных от краски.</li>
+      <li><b>Кто в РУ (21.7, 21.8):</b> до 1000 В — один работник с группой III из оперативного персонала. Выше 1000 В переносные заземления ставят двое (IV оперативный и III); заземляющие ножи включает один работник с группой IV; отключать ножи и снимать переносные заземления единолично может оперативный работник с группой III.</li>
+      <li><b>Шины щитов до 1000 В (21.4):</b> напряжение снимают и шины заземляют, кроме выполненных изолированным проводом.</li>
+      <li><b>Где заземлять нельзя или опасно (21.6):</b> разрабатывают дополнительные меры: диэлектрические колпаки на ножи, накладки, отсоединение проводов, кабелей и шин.</li>
+      <li><b>На ВЛ (XXII):</b> выше 1000 В заземляют во всех РУ и у секционирующих аппаратов, где линия отключена (с исключениями п. 22.1); до 1000 В достаточно на рабочем месте. На рабочем месте каждой бригады заземлены провода всех фаз.</li>
+    </ul>
+    <div data-rules="20.1,20.2,20.3,20.4,21.1,21.2,21.3,21.4,21.5,21.6,21.7,21.8,22.1,22.2,22.3,22.4,22.5,22.6,22.7,22.8,22.9,22.10,22.11,22.12"></div>
+  </div></details>
+
+  <details class="chap"><summary>XXIII. Ограждение рабочего места, плакаты безопасности</summary><div class="in">
+    <ul>
+      <li><b>«Заземлено» (23.1):</b> на приводах разъединителей, отделителей и выключателей нагрузки, при ошибочном включении которых возможна подача напряжения на заземлённый участок, и на ключах и кнопках дистанционного управления.</li>
+      <li><b>Временные ограждения (23.2):</b> щиты, ширмы, экраны из изоляционных материалов. Расстояние до токоведущих частей не менее указанного в таблице № 1; в установках 6–10 кВ разрешено уменьшить до 0,35 м. На них надпись или плакат «Стой! Напряжение!». Выгораживание — щитами, ширмами, барьерами или шнуром (с проходом), плакаты обращены внутрь.</li>
+      <li><b>Накладки (23.3):</b> до 20 кВ, если нельзя оградить щитами, между отключёнными и находящимися под напряжением частями. Выше 1000 В ставят двое (IV и III) в перчатках штангой или клещами; до 1000 В — один работник не ниже III в перчатках.</li>
+      <li><b>23.4:</b> на ограждениях камер, шкафах и панелях, граничащих с рабочим местом, — «Стой! Напряжение».</li>
+      <li><b>ОРУ (23.5):</b> рабочее место огорожено канатом, верёвкой или шнуром с плакатами «Стой! Напряжение» внутрь. Линейные разъединители при снятии напряжения со всего ОРУ — плакаты наружу.</li>
+      <li><b>Конструкции (23.6):</b> «Стой! Напряжение» на участках, по которым можно пройти к частям под напряжением; «Не влезай! Убьет» на граничащих конструкциях внизу; «Влезать здесь!» на разрешённых лестницах и конструкциях.</li>
+      <li><b>«Работать здесь» (23.7):</b> на подготовленном рабочем месте: на оборудовании и в месте прохода внутрь выгороженного рабочего места.</li>
+      <li><b>23.8:</b> плакаты и ограждения до полного окончания работы не убирают и не переставляют, кроме случаев из графы «Отдельные указания» наряда-допуска.</li>
+    </ul>
+    <div data-rules="23.1,23.2,23.3,23.4,23.5,23.6,23.7,23.8"></div>
+  </div></details>
+
+  <details class="chap"><summary>КРУ с выкатными тележками (п. 29.1, 29.2)</summary><div class="in">
+    <ul>
+      <li><b>Работа на тележке или в отсеке (29.1):</b> тележку выкатить в ремонтное положение; шторку отсека с токоведущими частями под напряжением запереть на замок и вывесить «Стой! Напряжение»; на тележке или в отсеке работы — «Работать здесь».</li>
+      <li><b>Работа вне КРУ (29.2):</b> тележку выкатить из шкафа в ремонтное положение; шторку или дверцы запереть на замок и вывесить «Не включать! Работают люди» или «Не включать! Работа на линии».</li>
+    </ul>
+    <div data-rules="29.1,29.2"></div>
+  </div></details>
+</section>
+
+<section id="test">
+  <h2>Проверьте себя</h2>
+  <p>Ситуации из практики. После ответа показано, из какого пункта Правил следует решение.</p>
+  <div id="quiz"></div>
+  <div class="res" id="quizRes" hidden></div>
+  <p><button type="button" class="ghost" id="quizReset">Пройти заново</button></p>
+</section>
+
+<footer style="margin-top:30px;font-size:14px;color:var(--muted)">
+  <p>Источник: Правила по охране труда при эксплуатации электроустановок, приказ Минтруда России № 903н (ред. приказа № 279н от 29.04.2022). Тексты под разворачивающимися блоками приведены дословно. Перед экзаменом сверьтесь с действующей редакцией.</p>
+</footer>
+</main>
+</div>
+<div id="practice" hidden><main class="wrap">
+<section style="padding-top:20px">
+  <h2>Практика: проведите мероприятия сами</h2>
+  <p>У вас набор инструментов и плакатов. Выберите его внизу и нажмите на нужное место на схеме. Если сделать не вовремя или не туда, будет ошибка с пояснением из Правил. Этапы идут в порядке п. 16.1.</p>
+  <div class="seg" id="gSeg"><button type="button" data-s="A" aria-pressed="true">Щит до 1000 В</button><button type="button" data-s="B" aria-pressed="false">Ячейка 10 кВ</button><button type="button" data-s="C1" aria-pressed="false">Шкаф КРУ: работа на тележке</button><button type="button" data-s="C2" aria-pressed="false">Шкаф КРУ: работа вне шкафа</button></div>
+  <div class="gstage"><div class="gt" id="gStageT"></div><div class="gc" id="gStageC"></div></div>
+  <div class="gbar"><i id="gBar"></i></div>
+  <p id="gTodo" style="margin:4px 0 10px"></p>
+  <p class="hint mobhint">На телефоне схему можно прокрутить вбок.</p>
+  <div class="scene" id="gScene"></div>
+  <div class="gmsg info" id="gMsg" role="status" aria-live="polite"></div>
+  <div class="ctl"><button type="button" class="ghost" id="gHint">Подсказка</button><button type="button" class="ghost" id="gReset">Начать заново</button></div>
+  <div id="gRes"></div>
+  <div class="toolbox" id="gTools"></div>
+</section>
+</main></div>
+
+<script>
+var $=function(s,r){return (r||document).querySelector(s)};
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+var QUOTES={"16.1": ["При подготовке рабочего места для обеспечения безопасности выполнения работ со снятием напряжения должны быть в указанном порядке выполнены следующие технические мероприятия:", "произведены необходимые отключения и (или) отсоединения;", "приняты меры, препятствующие подаче напряжения на место работы вследствие ошибочного или самопроизвольного включения коммутационных аппаратов;", "на приводах ручного и на ключах дистанционного управления коммутационными аппаратами вывешены запрещающие плакаты;", "проверено отсутствие напряжения на токоведущих частях, которые должны быть заземлены для защиты людей от поражения электрическим током;", "установлено переносное заземление (включены заземляющие ножи);", "вывешены указательные плакаты \"Заземлено\", ограждены при необходимости рабочие места и оставшиеся под напряжением токоведущие части, вывешены предупреждающие и предписывающие плакаты.", "При дистанционном управлении коммутационными аппаратами и заземляющими ножами с автоматизированного рабочего места, позволяющего оперативному и (или) диспетчерскому персоналу дистанционно (с монитора компьютера) осуществлять управление коммутационными аппаратами и заземляющими ножами и определять их положение, использовать выводимые на монитор компьютера схемы электрических соединений электроустановок, электрические параметры (напряжение, ток, мощность), а также считывать поступающие аварийные и предупредительные сигналы (далее - АРМ), допускается:", "принимать меры, препятствующие подаче напряжения на место работы вследствие ошибочного или самопроизвольного включения коммутационных аппаратов, а также вывешивать запрещающие плакаты на приводы ручного и на ключи дистанционного управления коммутационными аппаратами после включения заземляющих ножей;", "выполнять отключение трансформаторов напряжения со стороны низшего напряжения после включения заземляющих ножей."], "16.2": ["При подготовке рабочего места для выполнения работ под напряжением на токоведущих частях электроустановки должны быть выполнены следующие технические мероприятия:", "приняты меры, препятствующие повторному включению под напряжение отключившихся действием защит электроустановок, на которых выполняются работы под напряжением, посредством действия автоматического повторного включения (далее - АПВ) или автоматического включения резерва (далее - АВР);", "на приводах ручного, на ключах дистанционного управления коммутационными аппаратами должны быть вывешены, а в АРМ в соответствии с требованиями главы XVIII Правил отображены, запрещающие плакаты.", "При выполнении работ под напряжением на токоведущих частях методом на расстоянии (с применением изолирующих штанг) или на токоведущих частях до 1000 В мачтовых и столбовых трансформаторных подстанций (далее - ТП) и КТП методом в контакте, выводить действие АПВ, АВР на питающих ЛЭП и оборудовании выше 1000 В включительно не требуется."], "16.3": ["При выполнении работ под напряжением в электроустановках до 1000 В методом в контакте или методом в изоляции в электроустановках до 35 кВ на токоведущие части в месте производства работ необходимо установить изолирующие покрытия (накладки).", "На токоведущие части до 35 кВ, находящиеся под напряжением, расположенные вблизи рабочего места и находящиеся в пределах досягаемости работника, к которым возможно случайное прикосновение и отключение которых невозможно, необходимо также установить изолирующие покрытия (накладки) или установить ограждение, препятствующее прикосновению."], "17.1": ["При подготовке рабочего места должны быть отключены:", "токоведущие части, на которых будут производиться работы;", "неогражденные токоведущие части, к которым возможно случайное приближение людей, механизмов и подъемных сооружений на расстояние менее указанного в таблице N 1;", "цепи управления и питания приводов, закрыт воздух в системах управления коммутационными аппаратами, снят завод с пружин и грузов у приводов выключателей и разъединителей.", "При подготовке рабочего места на ранее отключенных токоведущих частях, необходимо проверить выполнение указанных выше мероприятий."], "17.2": ["В электроустановках напряжением выше 1000 В с каждой стороны, с которой включением коммутационного аппарата не исключена подача напряжения на рабочее место, должен быть видимый разрыв. Видимый разрыв разрешается создавать отключением разъединителей, снятием предохранителей, отключением отделителей и выключателей нагрузки, отсоединением или снятием шин и проводов.", "Отсоединение шин и проводов выполняется по одному из методов выполнения работ под напряжением.", "Работы по отсоединению также должны входить в перечень разрешенных к выполнению под напряжением на токоведущих частях в электроустановках напряжением до и выше 1000 В, который подписывается техническим руководителем или ответственным за электрохозяйство и утверждается руководителем организации или руководителем обособленного подразделения.", "В случае отсутствия видимого разрыва в комплектных распределительных устройствах заводского изготовления с выкатными элементами, а также в комплектных распределительных устройствах с элегазовой изоляцией (далее - КРУЭ) напряжением 6 кВ и выше разрешается проверку отключенного положения коммутационного аппарата проверять по механическому указателю гарантированного положения контактов.", "При дистанционном управлении коммутационными аппаратами и заземляющими ножами с АРМ во время производства переключений не допускается нахождение персонала в распределительных устройствах, в которых находятся данные коммутационные аппараты и заземляющие ножи.", "Силовые трансформаторы и трансформаторы напряжения, связанные с выделенным для работ участком электроустановки, должны быть отключены и схемы их разобраны также со стороны других своих обмоток для исключения возможности обратной трансформации.", "При дистанционном управлении с АРМ коммутационными аппаратами и заземляющими ножами при выводе в ремонт ЛЭП, секций (систем) шин допускается выполнять отключение трансформаторов напряжения со стороны низкого напряжения после заземления ЛЭП, секций (систем) шин."], "17.3": ["После отключения выключателей, разъединителей (отделителей) и выключателей нагрузки с ручным управлением необходимо визуально убедиться в их отключении и отсутствии шунтирующих перемычек.", "При дистанционном управлении коммутационными аппаратами и заземляющими ножами с АРМ проверка положения коммутационных аппаратов (выключателей, разъединителей) и заземляющих ножей производится по сигнализации АРМ. Визуальная проверка фактического положения коммутационных аппаратов и заземляющих ножей должна быть выполнена после окончания всего комплекса операций по производству отключений непосредственно на месте установки коммутационных аппаратов и заземляющих ножей."], "17.4": ["При подготовке рабочего места в электроустановках напряжением выше 1000 В для предотвращения ошибочного или самопроизвольного включения коммутационных аппаратов, которыми подается напряжение к месту работы, должны быть приняты следующие меры:", "у разъединителей, отделителей, выключателей нагрузки ручные приводы в отключенном положении должны быть заперты ключом или съемной ручкой (далее - механический замок). В электроустановках напряжением 6 - 10 кВ с однополюсными разъединителями вместо механического замка допускается надевать на ножи диэлектрические колпаки;", "у разъединителей, управляемых оперативной штангой, стационарные ограждения должны быть заперты на механический замок;", "у приводов коммутационных аппаратов, имеющих дистанционное управление, должны быть отключены силовые цепи и цепи управления, а у пневматических приводов, кроме того, на подводящем трубопроводе сжатого воздуха задвижка должна быть закрыта и заперта на механический замок и выпущен сжатый воздух, при этом спускные клапаны должны быть оставлены в открытом положении;", "при дистанционном управлении с АРМ, у приводов разъединителей должны быть отключены силовые цепи, ключ выбора режима работы в шкафу управления переведен в положение \"местное управление\", шкаф управления разъединителем заперт на механический замок. Указанные мероприятия выполняются после заземления ЛЭП и оборудования;", "у грузовых и пружинных приводов включающий груз или включающие пружины должны быть приведены в нерабочее положение;", "должны быть вывешены запрещающие плакаты.", "Меры по предотвращению ошибочного включения коммутационных аппаратов КРУ с выкатными тележками должны быть приняты в соответствии с требованиями, предусмотренными пунктами 29.1, 29.2 Правил."], "17.5": ["В электроустановках напряжением до 1000 В со всех токоведущих частей, на которых будет проводиться работа, напряжение должно быть снято отключением коммутационных аппаратов с ручным приводом, а при наличии в схеме предохранителей - снятием последних. При отсутствии в схеме предохранителей предотвращение ошибочного включения коммутационных аппаратов должно быть обеспечено такими мерами, как запирание рукояток или дверец шкафа управления, закрытие кнопок, установка между контактами коммутационного аппарата изолирующих накладок. При снятии напряжения коммутационным аппаратом с дистанционным управлением необходимо разомкнуть вторичную цепь включающей катушки.", "Перечисленные меры могут быть заменены расшиновкой или отсоединением кабеля, проводов от коммутационного аппарата либо от оборудования, на котором должны проводиться работы.", "Указанные работы выполняются по одному из методов работ под напряжением.", "Необходимо вывесить запрещающие плакаты."], "17.6": ["Отключенное положение коммутационных аппаратов напряжением до 1000 В с недоступными для осмотра контактами определяется проверкой отсутствия напряжения на их зажимах либо на отходящих шинах, проводах или зажимах оборудования, включаемого этими коммутационными аппаратами. Проверку отсутствия напряжения в комплектных распределительных устройствах заводского изготовления допускается производить с использованием встроенных стационарных указателей напряжения."], "18.1": ["На приводах (рукоятках приводов) коммутационных аппаратов с ручным управлением (выключателей, отделителей, разъединителей, рубильников, автоматов) во избежание подачи напряжения на рабочее место должны быть вывешены плакаты \"Не включать! Работают люди\".", "У однополюсных разъединителей плакаты вывешиваются на приводе каждого полюса, у разъединителей, управляемых оперативной штангой на ограждениях. На задвижках, закрывающих доступ воздуха в пневматические приводы разъединителей, вывешивается плакат \"Не открывать! Работают люди\".", "На присоединениях напряжением до 1000 В, не имеющих коммутационных аппаратов, плакат \"Не включать! Работают люди\" должен быть вывешен у снятых предохранителей, в КРУ - в соответствии с пунктом 29.2 Правил.", "Плакаты должны быть вывешены на ключах и кнопках дистанционного и местного управления, а также на автоматах или у места снятых предохранителей цепей управления и силовых цепей питания приводов коммутационных аппаратов.", "При дистанционном управлении с АРМ коммутационными аппаратами и заземляющими ножами допускается вывешивать плакаты \"Не включать! Работают люди\" после заземления ЛЭП и оборудования.", "При дистанционном управлении коммутационными аппаратами с АРМ оперативного персонала аналогичные плакаты безопасности, кроме того, должны быть отображены рядом с графическим обозначением соответствующего коммутационного аппарата на схеме АРМ."], "18.2": ["На приводах разъединителей, которыми отключена для выполнения работ ВЛ, КВЛ или КЛ, вывешивается один плакат \"Не включать! Работа на линии\" независимо от числа работающих бригад. При дистанционном управлении с АРМ коммутационными аппаратами и заземляющими ножами допускается вывешивать плакат \"Не включать! Работа на линии\" после заземления ЛЭП.", "При дистанционном управлении коммутационными аппаратами с АРМ знак запрещающего плаката \"Не включать! Работа на линии!\" должен быть отображен в АРМ диспетчерского или оперативного персонала, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ, а также в АРМ оперативного персонала объекта электроэнергетики на схеме рядом с символом разъединителя, которым подается напряжение на линию электропередачи. При отсутствии разъединителей на линиях электропередачи напряжением до 1000 В допускается вывешивать плакат \"Не включать! Работа на линии!\" на приводах или ключах управления коммутационным аппаратом в зависимости от его конструктивного исполнения.", "Плакат вывешивается и снимается по команде диспетчерского или оперативного персонала, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ. Перед отдачей команды на снятие плаката \"Не включать! Работа на линии!\" диспетчерский или оперативный персонал, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ, должен получить от работника из числа оперативного персонала, выдающего разрешение на подготовку рабочего места и на допуск, подтверждение об окончании работ и удалении всех бригад с рабочего места."], "18.3": ["При выполнении работ под напряжением, на приводах ручного и ключах дистанционного управления коммутационных аппаратов, вывешивается запрещающий плакат \"Работа под напряжением. Повторно не включать!\".", "При работах под напряжением на токоведущих частях до 35 кВ методом на расстоянии (с применением изолирующих штанг) или токоведущих частях до 1000 В в ТП и КТП методом в контакте вывешивать плакат \"Работа под напряжением. Повторно не включать!\" на приводах ручного и ключах дистанционного управления коммутационными аппаратами не требуется.", "При дистанционном управлении коммутационными аппаратами с АРМ знак запрещающего плаката \"Работа под напряжением. Повторно не включать!\" должен быть отображен в АРМ диспетчерского или оперативного персонала, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ, а также в АРМ оперативного персонала объекта электроэнергетики на схеме рядом с символом выключателя, которым подается напряжение на линию электропередачи.", "Плакат вывешивается и снимается по команде диспетчерского или оперативного персонала, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ. Перед отдачей команды на снятие плаката \"Работа под напряжением. Повторно не включать!\" диспетчерский или оперативный персонал, в чьем соответственно диспетчерском или технологическом управлении находится ВЛ, КВЛ или КЛ, должен получить от работника из числа оперативного персонала, выдающего разрешение на подготовку рабочего места и на допуск, подтверждение об окончании работ и удалении всех бригад с рабочего места."], "19.1": ["Проверять отсутствие напряжения необходимо указателем напряжения, исправность которого перед применением должна быть установлена с помощью предназначенных для этой цели специальных приборов или приближением к токоведущим частям, заведомо находящимся под напряжением.", "В электроустановках напряжением выше 1000 В пользоваться указателем напряжения необходимо в диэлектрических перчатках.", "В комплектных распределительных устройствах заводского изготовления (в том числе с заполнением элегазом) проверку отсутствия напряжения допускается производить с использованием встроенных стационарных указателей напряжения.", "В электроустановках напряжением 35 кВ и выше для проверки отсутствия напряжения можно пользоваться изолирующей штангой, прикасаясь ею несколько раз к токоведущим частям. Признаком отсутствия напряжения является отсутствие искрения и потрескивания. На одноцепных ВЛ напряжением 330 кВ и выше достаточным признаком отсутствия напряжения является отсутствие коронирования.", "При дистанционном управлении коммутационными аппаратами и заземляющими ножами с АРМ допускается проверку отсутствия напряжения, производимую перед включением заземляющих ножей, выполнять выверкой схемы, отображаемой на мониторе АРМ, при наличии соответствующей оперативной блокировки на объекте электроэнергетики и (или) программной (логической) оперативной блокировки, реализуемой в АРМ и АСУ технологическими процессами объекта электроэнергетики."], "19.2": ["В РУ проверять отсутствие напряжения разрешается одному работнику из числа оперативного персонала, имеющему группу IV по электробезопасности в электроустановках напряжением выше 1000 В, и имеющему группу III по электробезопасности в электроустановках напряжением до 1000 В.", "На ВЛ проверку отсутствия напряжения должны выполнять два работника: на ВЛ напряжением выше 1000 В - работники, имеющие группы IV и III по электробезопасности, на ВЛ напряжением до 1000 В - работники, имеющие группу III по электробезопасности."], "19.3": ["Проверять отсутствие напряжения выверкой схемы в натуре разрешается:", "в ОРУ и на комплектной трансформаторной подстанции (далее - КТП) наружной установки, а также на ВЛ при тумане, дожде, снегопаде в случае отсутствия специальных указателей напряжения;", "в ОРУ напряжением 330 кВ и выше и на двухцепных ВЛ напряжением 330 кВ и выше.", "При выверке схемы в натуре отсутствие напряжения на вводах ВЛ и КЛ подтверждается дежурным, в оперативном управлении которого находятся линии.", "Выверка ВЛ в натуре заключается в проверке направления и внешних признаков линий, а также обозначений на опорах, которые должны соответствовать диспетчерским наименованиям линий."], "19.4": ["На ВЛ при подвеске проводов на разных уровнях проверять отсутствие напряжения указателем или штангой и устанавливать заземление следует снизу вверх, начиная с нижнего провода. При горизонтальной подвеске проверку нужно начинать с ближайшего провода."], "19.5": ["В электроустановках напряжением до 1000 В с заземленной нейтралью при применении двухполюсного указателя проверять отсутствие напряжения нужно как между фазами, так и между каждой фазой и заземленным корпусом оборудования или защитным проводником. Разрешается применять предварительно проверенный вольтметр. Запрещено пользоваться контрольными лампами."], "19.6": ["Устройства, сигнализирующие об отключенном положении аппарата, блокирующие устройства, постоянно включенные вольтметры являются только дополнительными средствами, подтверждающими отсутствие напряжения, и на основании их показаний нельзя делать заключение об отсутствии напряжения."], "20.1": ["Устанавливать заземления на токоведущие части необходимо непосредственно после проверки отсутствия напряжения."], "20.2": ["Переносное заземление сначала нужно присоединить к заземляющему устройству, а затем, после проверки отсутствия напряжения, установить на токоведущие части.", "Снимать переносное заземление необходимо в обратной последовательности: сначала снять его с токоведущих частей, а затем отсоединить от заземляющего устройства."], "20.3": ["Установка и снятие переносных заземлений должны выполняться в диэлектрических перчатках с применением в электроустановках напряжением выше 1000 В изолирующей штанги. Закреплять зажимы переносных заземлений следует этой же штангой.", "Запрещается при установке, снятии переносного заземления или выполнения работы касаться проводящих частей заземления."], "20.4": ["Запрещается пользоваться для заземления проводниками, не предназначенными для этой цели, кроме случаев, указанных в пункте 27.2 Правил."], "21.1": ["В электроустановках напряжением выше 1000 В заземляться должны токоведущие части всех фаз (полюсов) отключенного для работ участка со всех сторон, откуда может быть подано напряжение, за исключением отключенных для работы сборных шин РУ, на которые достаточно установить одно заземление.", "При работах на отключенном линейном разъединителе на провода спусков со стороны ВЛ независимо от наличия заземляющих ножей на разъединителе должно быть установлено дополнительное заземление, не нарушаемое при манипуляциях с разъединителем."], "21.2": ["Заземленные токоведущие части должны быть отделены от токоведущих частей, находящихся под напряжением, видимым разрывом. Разрешается отсутствие видимого разрыва в случаях, указанных в пункте 17.2 Правил.", "Установленные заземления могут быть отделены от токоведущих частей, на которых непосредственно ведется работа, отключенными выключателями, разъединителями, отделителями или выключателями нагрузки, снятыми предохранителями, демонтированными шинами или проводами, выкатными элементами комплектных устройств.", "Непосредственно на рабочем месте заземление на токоведущие части дополнительно должно быть установлено в тех случаях, когда эти части могут оказаться под наведенным напряжением (потенциалом)."], "21.3": ["Переносные заземления следует присоединять к токоведущим частям и к заземляющему устройству в местах, очищенных от краски."], "21.4": ["В электроустановках напряжением до 1000 В при работах на сборных шинах РУ, щитов, сборок напряжение с шин должно быть снято и шины (за исключением шин, выполненных изолированным проводом) должны быть заземлены. Необходимость и возможность заземления присоединений этих РУ, щитов, сборок и подключенного к ним оборудования определяет выдающий наряд-допуск, распоряжение."], "21.5": ["Разрешается временное снятие заземлений, установленных при подготовке рабочего места, если это требуется по характеру выполняемых работ (измерение сопротивления изоляции).", "Временное снятие и повторную установку заземлений выполняют оперативный персонал либо по указанию работника, выдающего наряд-допуск, производитель работ.", "Разрешение на временное снятие заземлений, а также на выполнение этих операций производителем работ должно быть внесено в строку наряда-допуска \"Отдельные указания\" с записью о том, где и для какой цели должны быть сняты заземления."], "21.6": ["В электроустановках, конструкция которых такова, что установка заземления опасна или невозможна (например, в некоторых распределительных ящиках, КРУ отдельных типов, сборках с вертикальным расположением фаз), должны быть разработаны дополнительные мероприятия по обеспечению безопасности работ, включающие установку диэлектрических колпаков на ножи разъединителей, рубильников диэлектрических накладок или отсоединение проводов, кабелей и шин. Перечень таких электроустановок утверждается руководителем организации или руководителем обособленного подразделения и доводится до сведения работников."], "21.7": ["В электроустановках напряжением до 1000 В операции по установке и снятию заземлений разрешается выполнять одному работнику, имеющему группу III, из числа оперативного персонала."], "21.8": ["В электроустановках напряжением выше 1000 В устанавливать переносные заземления должны два работника: один - имеющий группу IV по электробезопасности (из числа оперативного персонала), другой - имеющий группу III по электробезопасности; работник, имеющий группу III по электробезопасности, имеет право быть из числа ремонтного персонала, а при выполнении работ по заземлению присоединений потребителей - из персонала потребителей. На удаленных подстанциях по разрешению административно-технического (руководящих работников и специалистов) или оперативного персонала при установке заземлений в основной схеме разрешается работа второго работника, имеющего группу III по электробезопасности, из числа персонала потребителей; включать заземляющие ножи имеет право один работник, имеющий группу IV по электробезопасности, из числа оперативного персонала.", "Отключать заземляющие ножи и снимать переносные заземления единолично имеет право работник из числа оперативного персонала, имеющий группу III."], "22.1": ["ВЛ напряжением выше 1000 В должны быть заземлены во всех РУ и у секционирующих коммутационных аппаратов, где отключена линия. Разрешается:", "ВЛ напряжением 35 кВ и выше с ответвлениями не заземлять на подстанциях, подключенных к этим ответвлениям, при условии, что ВЛ заземлена с двух сторон, а на этих подстанциях заземления установлены за отключенными линейными разъединителями;", "ВЛ напряжением 6 - 20 кВ заземлять только в одном РУ или у одного секционирующего аппарата либо на ближайшей к РУ или секционирующему аппарату опоре. В остальных РУ этого напряжения и у секционирующих аппаратов, где ВЛ отключена, разрешается ее не заземлять при условии, что на ВЛ будут установлены заземления между рабочим местом и этим РУ или секционирующими аппаратами. На ВЛ указанные заземления следует устанавливать на опорах, имеющих заземляющие устройства.", "На ВЛ напряжением до 1000 В достаточно установить заземление только на рабочем месте."], "22.2": ["Дополнительно к заземлениям, указанным в пункте 22.1 Правил, на рабочем месте каждой бригады должны быть заземлены провода всех фаз, а при необходимости и грозозащитные тросы."], "22.3": ["При монтаже проводов в анкерном пролете, а также после соединения петель на анкерных опорах смонтированного участка ВЛ провода (тросы) должны быть заземлены на начальной анкерной опоре и на одной из конечных промежуточных опор (перед анкерной опорой конечной)."], "22.4": ["Не разрешается заземлять провода (тросы) на конечной анкерной опоре смонтированного анкерного пролета, а также смонтированного участка ВЛ во избежание перехода потенциала от грозовых разрядов и других перенапряжений с проводов (тросов) готового участка ВЛ на следующий, монтируемый, ее участок."], "22.5": ["На ВЛ с расщепленными проводами разрешается в каждой фазе заземлять только один провод; при наличии изолирующих распорок заземлять требуется все провода фазы."], "22.6": ["На одноцепных ВЛ заземление на рабочих местах необходимо устанавливать на опоре, на которой ведется работа, или на соседней. Разрешается установка заземлений с двух сторон участка ВЛ, на котором работает бригада, при условии, что расстояние между заземлениями не превышает 2 км."], "22.7": ["При работах на изолированном от опоры молниезащитном тросе или на конструкции опоры, когда требуется приближение к этому тросу на расстояние менее 1 м, трос должен быть заземлен. Заземление нужно устанавливать в сторону пролета, в котором трос изолирован, или в пролете на месте проведения работ.", "Отсоединять и присоединять заземляющий спуск к грозозащитному тросу, изолированному от земли, следует после предварительного заземления троса.", "Если на этом тросе предусмотрена плавка гололеда, перед началом работы трос должен быть отключен и заземлен с тех сторон, откуда на него не исключена подача напряжения."], "22.8": ["Переносные заземления следует присоединять на металлических опорах - к их элементам, на железобетонных и деревянных опорах с заземляющими спусками - к этим спускам после проверки их целости. На железобетонных опорах, не имеющих заземляющих спусков, разрешается присоединять заземления к траверсам и другим металлическим элементам опоры, имеющим контакт с заземляющим устройством.", "В электросетях напряжением до 1000 В с заземленной нейтралью при наличии повторного заземления нулевого провода разрешается присоединять переносные заземления к этому нулевому проводу.", "Места присоединения переносных заземлений к заземляющим проводникам или к конструкциям должны быть очищены от краски.", "Переносное заземление на рабочем месте разрешается присоединять к заземлителю, погруженному вертикально в грунт, не менее чем на 0,5 м. Запрещена установка заземлителей в случайные навалы грунта."], "22.9": ["На ВЛ напряжением до 1000 В при работах, выполняемых с опор либо с телескопической вышки без изолирующего звена, заземление должно быть установлено как на провода ремонтируемой линии, так и на все подвешенные на этих опорах провода, в том числе на неизолированные провода линий радиотрансляции и телемеханики."], "22.10": ["На ВЛ, отключенных для ремонта, устанавливать, а затем снимать переносные заземления и включать имеющиеся на опорах заземляющие ножи должны работники из числа оперативного персонала: один, имеющий группу IV по электробезопасности (на ВЛ напряжением выше 1000 В) или группу III по электробезопасности (на ВЛ напряжением до 1000 В), второй - имеющий группу III по электробезопасности. Разрешается использование второго работника, имеющего группу III по электробезопасности, из числа ремонтного персонала, а на ВЛ, питающих потребителя, из числа персонала потребителя.", "Отключать заземляющие ножи разрешается одному работнику, имеющему группу III по электробезопасности, из числа оперативного персонала.", "На рабочих местах на ВЛ устанавливать переносные заземления имеет право производитель работ с членом бригады, имеющим группу III по электробезопасности. Снимать эти переносные заземления разрешается по указанию производителя работ два члена бригады, имеющие группу III по электробезопасности."], "22.11": ["На ВЛ при проверке отсутствия напряжения, установке и снятии заземлений один из двух работников должен находиться на земле и вести наблюдение за другим."], "22.12": ["Требования к установке заземлений на ВЛ при работах в пролете пересечения с другими ВЛ, на одной отключенной цепи многоцепной ВЛ, на ВЛ под наведенным напряжением и при пофазном ремонте предусмотрены главой XXXVIII Правил."], "23.1": ["В электроустановках должны быть вывешены плакаты \"Заземлено\" на приводах разъединителей, отделителей и выключателей нагрузки, при ошибочном включении которых не исключается подача напряжения на заземленный участок электроустановки, и на ключах и кнопках дистанционного управления коммутационными аппаратами. При дистанционном управлении с АРМ оперативного персонала знак плаката \"Заземлено\" отображается рядом с графическим обозначением соответствующего коммутационного аппарата на схеме АРМ."], "23.2": ["Для временного ограждения токоведущих частей, оставшихся под напряжением, должны применяться щиты, ширмы, экраны, изготовленные из изоляционных материалов.", "При установке временных ограждений без снятия напряжения расстояние от них до токоведущих частей должно быть не менее, указанного в таблице N 1.", "В электроустановках напряжением 6 - 10 кВ это расстояние разрешается уменьшить до 0,35 м.", "На временные ограждения должны быть нанесены надписи \"Стой! Напряжение!\" или укреплены соответствующие плакаты.", "Выгораживание рабочих мест осуществляется щитами, ширмами, барьерами или шнуром из растительных либо синтетических волокон (с оставлением прохода) и вывешиванием на них плакатов \"Стой! Напряжение\", обращенными внутрь огражденного пространства."], "23.3": ["В электроустановках напряжением до 20 кВ в тех случаях, когда нельзя оградить токоведущие части щитами, разрешается применение изолирующих накладок, помещаемых между отключенными и находящимися под напряжением токоведущими частями (например, между контактами отключенного разъединителя). Эти накладки могут касаться токоведущих частей, находящихся под напряжением.", "Устанавливать и снимать изолирующие накладки на токоведущие части электроустановок напряжением выше 1000 В должны два работника с IV и III группой по электробезопасности с применением диэлектрических перчаток и изолирующих штанг либо клещей.", "Установка и снятие накладок в электроустановках до 1000 В могут производиться одним работником с группой по электробезопасности не ниже III с применением диэлектрических перчаток."], "23.4": ["На ограждениях камер, шкафах и панелях, граничащих с рабочим местом, должны быть вывешены плакаты \"Стой! Напряжение\"."], "23.5": ["В ОРУ при работах, проводимых с земли, и на оборудовании, установленном на фундаментах и отдельных конструкциях, рабочее место должно быть ограждено (с оставлением проезда, прохода) канатом, веревкой или шнуром из растительных либо синтетических волокон с вывешенными на них плакатами \"Стой! Напряжение\", обращенными внутрь огражденного пространства.", "Разрешается пользоваться для подвески каната конструкциями, не включенными в зону рабочего места, при условии, что они остаются вне огражденного пространства.", "При снятии напряжения со всего ОРУ, за исключением линейных разъединителей, последние должны быть ограждены канатом с плакатами \"Стой! Напряжение\", обращенными наружу огражденного пространства.", "В ОРУ при работах по распоряжению во вторичных системах ограждать рабочее место не требуется."], "23.6": ["В ОРУ на участках конструкций, по которым можно пройти от рабочего места к граничащим с ним участкам, находящимся под напряжением, должны быть установлены хорошо видимые плакаты \"Стой! Напряжение\". Эти плакаты имеет право устанавливать работник, имеющий группу III, из числа ремонтного персонала под руководством допускающего.", "На конструкциях, граничащих с той, по которой разрешается подниматься, внизу должен быть вывешен плакат \"Не влезай! Убьет\".", "На стационарных лестницах и конструкциях, по которым для проведения работ разрешено подниматься, должен быть вывешен плакат \"Влезать здесь!\"."], "23.7": ["На подготовленных рабочих местах в электроустановках (на оборудовании, на котором предстоит производить работы, а также в месте прохода внутрь выгороженного рабочего места) должен быть вывешен плакат \"Работать здесь\"."], "23.8": ["Не допускается убирать или переставлять до полного окончания работы плакаты и ограждения, установленные при подготовке рабочих мест допускающим, кроме случаев, оговоренных в графе \"Отдельные указания\" наряда-допуска."], "29.1": ["При работе на оборудовании тележки или в отсеке шкафа КРУ тележку с оборудованием необходимо выкатить в ремонтное положение; шторку отсека, в котором токоведущие части остались под напряжением, запереть на замок и вывесить плакат безопасности \"Стой! Напряжение\"; на тележке или в отсеке, где предстоит работать, вывесить плакат \"Работать здесь\"."], "29.2": ["При работах вне КРУ на подключенном к нему оборудовании или на отходящих ВЛ и КЛ тележку с выключателем необходимо выкатить в ремонтное положение из шкафа; шторку или дверцы запереть на замок и на них вывесить плакаты \"Не включать! Работают люди\" или \"Не включать! Работа на линии\".", "При этом разрешается:", "при наличии блокировки между заземляющими ножами и тележкой с выключателем устанавливать тележку в контрольное положение после включения этих ножей;", "при отсутствии такой блокировки или заземляющих ножей в шкафах КРУ устанавливать тележку в промежуточное положение между контрольным и ремонтным положением при условии запирания ее на замок. Устанавливать тележку в промежуточное положение разрешается независимо от наличия заземления на присоединении.", "При установке заземлений в шкафу КРУ в случае работы на отходящих ВЛ необходимо учитывать требования, предусмотренные пунктом 22.1 Правил."]};
+function T(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'"'+(o.a?' text-anchor="'+o.a+'"':'')+' font-size="'+(o.sz||12)+'"'+(o.w?' font-weight="'+o.w+'"':'')+(o.f?' style="fill:'+o.f+'"':'')+(o.c?' class="'+o.c+'"':'')+'>'+esc(s)+'</text>'}
+function W(x1,y1,x2,y2,c){return '<line class="wr '+c+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"/><line class="fl '+c+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"/>'}
+var GAME=false;
+var PK={dont_on:{k:'ban1',a:'Не включать!',b:'работают люди'},dont_open:{k:'ban1',a:'Не открывать!',b:'работают люди'},dont_line:{k:'ban2',a:'Не включать!',b:'работа на линии'},
+ volt:{k:'ban1',a:'Работа под напряжением',b:'повторно не включать!',w:112,h:60},stop:{k:'warn',a:'Стой!',b:'напряжение'},climbno:{k:'warn',a:'Не влезай!',b:'убьет'},
+ climb:{k:'must',a:'Влезать',b:'здесь'},work:{k:'must',a:'Работать',b:'здесь'},earth:{k:'ind',a:'Заземлено',b:''}};
+var PMAP={'не включать!|работают люди':'dont_on','не включать!|работа на линии':'dont_line','не открывать!|работают люди':'dont_open','стой!|напряжение!':'stop','заземлено|':'earth','работать здесь|':'work'};
+/* рисунок плаката по образцу: центр x=0, верх y=0 */
+function PB(kind,w,h){
+  var p=PK[kind],w=w||p.w||(p.k==='warn'?104:92),h=h||p.h||(p.b?54:36),x0=-w/2,R='#d3202a',B='#1b75c8',s='',k=p.k,A=p.a.toUpperCase(),Bt=p.b;
+  var sw=Math.max(2.2,h*.06),cx=0,aw=w-14,c1='#1c2530',c2='#1c2530';
+  if(k==='ban1'){s+='<rect x="'+x0+'" y="0" width="'+w+'" height="'+h+'" rx="2.5" fill="#fff" stroke="'+R+'" stroke-width="'+sw+'"/>';c1=c2=R}
+  if(k==='ban2'){s+='<rect x="'+x0+'" y="0" width="'+w+'" height="'+h+'" rx="2.5" fill="'+R+'" stroke="'+R+'" stroke-width="'+sw+'"/>';c1=c2='#fff'}
+  if(k==='warn'){s+='<rect x="'+x0+'" y="0" width="'+w+'" height="'+h+'" rx="2.5" fill="#fff" stroke="'+R+'" stroke-width="'+sw+'"/>';var bh=h*.62,bw=bh*.55,bx=x0+w*.1,by=h*.19;
+    s+='<polygon fill="'+R+'" points="'+[[.55,0],[.1,.58],[.42,.58],[.25,1],[.9,.38],[.58,.38],[.78,0]].map(function(q){return (bx+q[0]*bw).toFixed(1)+','+(by+q[1]*bh).toFixed(1)}).join(' ')+'"/>';cx=w*.13;aw=w*.62}
+  if(k==='must'){s+='<rect x="'+x0+'" y="0" width="'+w+'" height="'+h+'" rx="2.5" fill="'+B+'"/><rect x="'+(x0+h*.11)+'" y="'+(h*.11)+'" width="'+(w-h*.22)+'" height="'+(h*.78)+'" fill="#fff"/>';aw=w-h*.3}
+  if(k==='ind'){s+='<rect x="'+x0+'" y="0" width="'+w+'" height="'+h+'" rx="2.5" fill="'+B+'"/><rect x="'+(x0+3)+'" y="3" width="'+(w-6)+'" height="'+(h-6)+'" fill="none" stroke="#fff" stroke-width="1.6"/>';c1='#fff'}
+  var f1=Math.min(h*(Bt?.3:.38),aw/(A.length*.74)),f2=Bt?Math.min(h*.24,aw/(Bt.length*.6)):0,y1=Bt?h*.45:h*.64,y2=h*.8;
+  s+='<text x="'+cx+'" y="'+y1+'" text-anchor="middle" font-weight="800" style="font-size:'+f1.toFixed(1)+'px;fill:'+c1+'">'+esc(A)+'</text>';
+  if(Bt)s+='<text x="'+cx+'" y="'+y2+'" text-anchor="middle" font-weight="600" style="font-size:'+f2.toFixed(1)+'px;fill:'+c2+'">'+esc(Bt)+'</text>';
+  return s;
+}
+function PBsize(kind){var p=PK[kind];return [p.w||(p.k==='warn'?104:92),p.h||(p.b?54:36)]}
+function HANG(x,y,kind,cls,d){
+  var z=PBsize(kind);
+  return '<g transform="translate('+x+','+y+')"><g class="pl '+cls+'" style="--d:'+d+'s;transform-origin:0 0"><line x1="0" y1="-10" x2="0" y2="0" stroke="#6b7782" stroke-width="1.5"/><circle cx="0" cy="-10" r="2.6" fill="#6b7782"/>'+PB(kind,z[0],z[1])+'</g></g>';
+}
+function PL(x,y,l1,l2,k,cls,d,w){if(GAME)return '';var kind=PMAP[l1.toLowerCase()+'|'+(l2||'').toLowerCase()];if(!kind)throw new Error('no poster '+l1);return HANG(x,y,kind,cls,d)}
+function LK(x,y,d,extra){if(GAME)return '';return '<g transform="translate('+x+','+y+')"><g class="lk lk2" style="--d:'+d+'s;transform-origin:0 6px"><path class="sh" d="M-5 0 v-5 a5 5 0 0 1 10 0 v5" fill="none" stroke="#44515c" stroke-width="2.6"/><rect x="-8.5" y="0" width="17" height="13" rx="2.5" fill="#e0a800" stroke="#7a5b00" stroke-width="1.5"/><circle cx="0" cy="6.5" r="2" fill="#7a5b00"/></g></g>'}
+function SP(x,y,cls,r){r=r||1;return '<g transform="translate('+x+','+y+') scale('+r+')"><polygon class="spark '+cls+'" style="transform-origin:0 0" points="0,-13 4,-4 14,-5 7,2 12,12 1,7 -8,14 -6,3 -15,-3 -4,-5" fill="#ffd43b" stroke="#e08a00" stroke-width="1.5"/></g>'}
+function IND(glove){return '<g class="ind"><g transform="rotate(51)"><rect x="4" y="-5.5" width="70" height="11" rx="5.5" fill="#2c3a46"/><rect x="22" y="-4.5" width="14" height="9" rx="2" fill="#aebdca"/><circle cx="29" cy="0" r="3" fill="#59656f"/><circle class="ilon" cx="29" cy="0" r="6.5" fill="#ffd43b" stroke="#e08a00" stroke-width="1.5"/><rect x="46" y="-6.5" width="30" height="13" rx="5" fill="#0e8a9e"/>'+(glove?'<ellipse cx="86" cy="0" rx="14" ry="10" fill="#e0a000" stroke="#8a5a00" stroke-width="1.5"/><path d="M80 -9 q3 -9 10 -4" fill="none" stroke="#8a5a00" stroke-width="1.5"/>':'')+'</g><circle cx="0" cy="0" r="3.2" fill="#d5dbe0" stroke="#59656f"/></g>'}
+function PATT(id){return '<pattern id="'+id+'" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#d3202a"/><rect x="5" width="5" height="10" fill="#fff"/></pattern>'}
+
+/* ---------- Сцена A: щит до 1000 В ---------- */
+function sceneA(){
+  var X=[215,320,425,530],s='<svg id="svA" class="sc poster" viewBox="0 0 860 440" role="img" aria-label="Щит до 1000 В: рубильник, автомат, предохранитель и контактор с дистанционным управлением. Нажимайте кнопку под рисунком, и мероприятия выполняются по порядку.">';
+  s+='<defs>'+PATT('hA')+'</defs>';
+  s+='<rect x="130" y="44" width="480" height="300" rx="10" fill="#e9eef3" stroke="#8a98a5" stroke-width="3"/>';
+  s+=T(14,24,'Щит до 1000 В',{w:700,sz:14});
+  X.forEach(function(x,i){s+=W(x,20,x,i==0?86:i==1?92:i==2?88:88,'live');s+=T(x,14,'Ввод '+(i+1),{a:'middle',sz:11})});
+  /* шины */
+  s+='<rect class="bus" x="150" y="262" width="440" height="12" rx="3"/>';
+  /* 1 рубильник */
+  s+=W(215,150,215,262,'dn')+'<rect x="208" y="84" width="14" height="8" rx="2" fill="#44515c"/>'
+   +'<g class="qs mv"><line x1="215" y1="150" x2="215" y2="92" stroke="#44515c" stroke-width="6" stroke-linecap="round"/><rect x="206" y="112" width="18" height="13" rx="3" fill="#b3261e"/></g><circle cx="215" cy="150" r="6" fill="#44515c"/>'+SP(215,90,'sp1');
+  /* 2 автомат */
+  s+=W(320,142,320,262,'dn')+'<rect x="306" y="92" width="28" height="50" rx="5" fill="#cfd8df" stroke="#44515c" stroke-width="2"/><rect x="314" y="100" width="12" height="30" rx="3" fill="#8a98a5"/>'
+   +'<g class="lev mv"><line x1="320" y1="115" x2="320" y2="97" stroke="#d9480f" stroke-width="7" stroke-linecap="round"/></g><circle cx="320" cy="115" r="4" fill="#44515c"/>'+SP(320,100,'sp2',.8);
+  /* 3 предохранитель */
+  s+=W(425,140,425,262,'dn')+'<rect x="417" y="84" width="16" height="7" rx="2" fill="#44515c"/><rect x="417" y="137" width="16" height="7" rx="2" fill="#44515c"/>'
+   +'<g class="fuse"><rect x="414" y="93" width="22" height="44" rx="5" fill="#f4e2b0" stroke="#8a6d1a" stroke-width="2"/><rect x="414" y="93" width="22" height="8" rx="3" fill="#b9a06a"/><rect x="414" y="129" width="22" height="8" rx="3" fill="#b9a06a"/></g>'+SP(425,114,'sp3',.9);
+  /* 4 контактор */
+  s+=W(530,144,530,262,'dn')+'<rect x="506" y="88" width="48" height="56" rx="6" fill="#cfd8df" stroke="#44515c" stroke-width="2"/><path d="M512 133 l5 -6 l5 12 l5 -12 l5 12 l5 -6" fill="none" stroke="#59656f" stroke-width="2"/>'
+   +W(530,88,530,104,'live')+W(530,122,530,144,'dn')+'<rect class="br mv" x="523" y="102" width="14" height="22" rx="2" fill="#44515c"/><rect class="nak" x="514" y="111" width="32" height="6" rx="2" fill="#0e8a9e"/>'+SP(530,114,'sp4',.9);
+  /* пульт управления */
+  s+='<rect x="640" y="44" width="210" height="206" rx="10" fill="#e9eef3" stroke="#8a98a5" stroke-width="3"/>'+T(745,64,'Дистанционное управление',{a:'middle',sz:11.5,w:600});
+  s+='<line x1="554" y1="116" x2="590" y2="116" stroke="#59656f" stroke-width="2" stroke-dasharray="5 4"/><line x1="606" y1="116" x2="640" y2="116" stroke="#59656f" stroke-width="2" stroke-dasharray="5 4"/>'
+   +'<circle cx="590" cy="116" r="3.5" fill="#44515c"/><circle cx="606" cy="116" r="3.5" fill="#44515c"/><line class="cs mv" x1="590" y1="116" x2="606" y2="116" stroke="#44515c" stroke-width="3" stroke-linecap="round"/>'+SP(598,114,'sp5',.6)
+   +T(598,102,'цепь катушки',{a:'middle',sz:10});
+  s+='<circle cx="680" cy="105" r="17" fill="#59656f"/><g class="key mv"><rect x="677.5" y="90" width="5" height="30" rx="2" fill="#f0c64a"/><circle cx="680" cy="94" r="5" fill="#f0c64a"/></g>'+T(680,137,'Ключ',{a:'middle',sz:11});
+  s+='<circle cx="668" cy="185" r="13" fill="#2e9e5b"/><circle cx="714" cy="185" r="13" fill="#c4262e"/>'+T(668,218,'Пуск',{a:'middle',sz:11})+T(714,218,'Стоп',{a:'middle',sz:11});
+  s+='<g class="bcover"><rect x="648" y="164" width="88" height="44" rx="6" fill="#c9d4dc" stroke="#44515c" stroke-width="2"/>'+T(692,191,'закрыто',{a:'middle',sz:11})+'</g>';
+  /* подписи */
+  [['Рубильник',215],['Автомат',320],['Предохранитель',425],['Контактор',530]].forEach(function(a){s+=T(a[1],246,a[0],{a:'middle',sz:12,w:600,c:'halo'})});
+  /* земля */
+  s+='<rect x="150" y="380" width="440" height="10" rx="3" fill="#2f6f45"/>'+T(160,408,'Заземляющее устройство (земля)',{sz:12.5,w:600});
+  s+='<g stroke="#2f6f45" stroke-width="3"><line x1="600" y1="385" x2="624" y2="385"/><line x1="605" y1="391" x2="619" y2="391"/><line x1="609" y1="397" x2="615" y2="397"/></g>';
+  /* переносное заземление */
+  s+='<line class="gcab" x1="267" y1="374" x2="267" y2="280" stroke="#2e9e5b" stroke-width="5" stroke-linecap="round"/>'
+   +'<g transform="translate(267,377)"><g class="gc1 pop" style="transform-origin:0 0"><rect x="-9" y="-8" width="18" height="12" rx="3" fill="#44515c"/><circle cx="-22" cy="-6" r="9" fill="#0e6fb0"/><text x="-22" y="-2" text-anchor="middle" font-size="12" font-weight="700" style="fill:#fff">1</text></g></g>'
+   +'<g transform="translate(267,272)"><g class="gc2 pop" style="transform-origin:0 0"><rect x="-10" y="-9" width="20" height="14" rx="3" fill="#44515c"/><circle cx="-24" cy="12" r="9" fill="#0e6fb0"/><text x="-24" y="16" text-anchor="middle" font-size="12" font-weight="700" style="fill:#fff">2</text></g></g>';
+  /* указатель */
+  s+='<rect x="736" y="290" width="116" height="58" rx="8" fill="#fde8dc" stroke="#d9480f" stroke-width="2"/><circle cx="756" cy="318" r="6" fill="#d9480f"/>'+T(768,314,'заведомо под',{sz:10.5})+T(768,327,'напряжением',{sz:10.5});
+  s+='<text class="tick" x="372" y="256" text-anchor="middle" font-size="22" font-weight="700" style="fill:#1f7a3f">✓</text>';
+  s+=IND(false);
+  s+=T(300,300,'Шины щита',{sz:12.5,w:600,c:'halo'});
+  s+='<g class="sT sT0"><text x="378" y="300" font-size="12.5" font-weight="600" style="fill:#d9480f" class="halo">— под напряжением</text></g><g class="sT sT1"><text x="378" y="300" font-size="12.5" font-weight="600" style="fill:#8a5a00" class="halo">— отключены, но ещё не проверены</text></g><g class="sT sT2"><text x="378" y="300" font-size="12.5" font-weight="600" style="fill:#1f7a3f" class="halo">— напряжения нет (проверено)</text></g>';
+  /* ширма */
+  s+='<g class="shield"><rect x="14" y="56" width="586" height="12" rx="3" fill="url(#hA)" stroke="#1c2530" stroke-width="1.5"/></g>';
+  /* плакаты */
+  s+=PL(X[0],160,'Не включать!','Работают люди','ban','pl3',0)+PL(X[1],160,'Не включать!','Работают люди','ban','pl3',.18)+PL(X[2],160,'Не включать!','Работают люди','ban','pl3',.36)+PL(X[3],160,'Не включать!','Работают люди','ban','pl3',.54)
+   +PL(770,86,'Не включать!','Работают люди','ban','pl3',.72)+PL(790,148,'Не включать!','Работают люди','ban','pl3',.9);
+  s+=PL(267,312,'Заземлено','','earth','pl6',0,86)+PL(172,298,'Работать здесь','','do','pl6',.25,88)+PL(66,80,'Стой!','Напряжение!','stop','pl6',.9,96);
+  /* замки */
+  s+=LK(236,121,0)+LK(342,121,.2);
+  s+='</svg>';return s;
+}
+
+/* ---------- Сцена B: ячейка 10 кВ ---------- */
+function sceneB(){
+  var CY=[110,195,292,385],s='<svg id="svB" class="sc poster" viewBox="0 0 900 500" role="img" aria-label="Ячейка 10 кВ: шины, шинный разъединитель, выключатель, линейный разъединитель, заземляющие ножи и приводы. Нажимайте кнопку под рисунком.">';
+  s+='<defs>'+PATT('hB')+'</defs>';
+  s+='<rect x="30" y="20" width="310" height="440" rx="10" fill="#e9eef3" stroke="#8a98a5" stroke-width="3"/>'+T(185,13,'Ячейка 10 кВ',{a:'middle',sz:13.5,w:700});
+  s+='<rect class="bus" x="60" y="48" width="260" height="12" rx="3"/>'+T(185,42,'Сборные шины — остаются под напряжением',{a:'middle',sz:11});
+  /* QS1 */
+  s+=W(190,60,190,82,'live')+'<rect x="183" y="76" width="14" height="8" rx="2" fill="#44515c"/>'+W(190,140,190,165,'dn')
+   +'<g class="q1b mv"><line x1="190" y1="140" x2="190" y2="82" stroke="#44515c" stroke-width="6" stroke-linecap="round"/><rect x="182" y="104" width="16" height="12" rx="3" fill="#b3261e"/></g><circle cx="190" cy="140" r="6" fill="#44515c"/>'+SP(190,84,'s1');
+  /* Q */
+  s+='<rect x="168" y="165" width="44" height="62" rx="6" fill="#cfd8df" stroke="#44515c" stroke-width="2"/>'+W(190,165,190,182,'dn')+W(190,208,190,262,'dn')+'<rect class="qrod mv" x="187.5" y="182" width="5" height="28" rx="2" fill="#44515c"/>'+SP(190,200,'sq',.9);
+  /* QS2 */
+  s+='<rect x="183" y="256" width="14" height="8" rx="2" fill="#44515c"/>'+W(190,322,190,358,'dn')
+   +'<g class="q2b mv"><line x1="190" y1="322" x2="190" y2="264" stroke="#44515c" stroke-width="6" stroke-linecap="round"/><rect x="182" y="286" width="16" height="12" rx="3" fill="#b3261e"/></g><circle cx="190" cy="322" r="6" fill="#44515c"/>'+SP(190,266,'s2');
+  /* ЗН */
+  s+=W(165,358,215,358,'dn')+'<circle cx="110" cy="425" r="6" fill="#2f6f45"/><g stroke="#2f6f45" stroke-width="3"><line x1="96" y1="437" x2="124" y2="437"/><line x1="101" y1="443" x2="119" y2="443"/><line x1="106" y1="449" x2="114" y2="449"/></g><line x1="110" y1="431" x2="110" y2="437" stroke="#2f6f45" stroke-width="3"/>'
+   +'<g class="zn mv"><line x1="110" y1="425" x2="165" y2="358" stroke="#2f6f45" stroke-width="6" stroke-linecap="round"/></g>'+SP(165,358,'sz',.9);
+  s+=T(226,395,'ЗН: заземляющие ножи',{sz:10.5,w:600});
+  /* кабель */
+  [165,190,215].forEach(function(x,i){s+=W(x,358,x,462,'dn')+'<circle cx="'+x+'" cy="430" r="9" fill="#fff" stroke="#44515c" stroke-width="2"/>'+T(x,434,'ABC'[i],{a:'middle',sz:11,w:700})+'<text class="tk tk'+'ABC'[i]+'" x="'+x+'" y="416" text-anchor="middle" font-size="18" font-weight="700" style="fill:#1f7a3f">✓</text>'});
+  s+=T(214,112,'Шинный разъединитель',{sz:11.5,w:600})+T(224,198,'Выключатель',{sz:11.5,w:600})+T(214,294,'Линейный разъединитель',{sz:11.5,w:600});
+  /* видимый разрыв */
+  s+='<g class="vis"><ellipse cx="180" cy="86" rx="30" ry="13" fill="none" stroke="#0e6fb0" stroke-width="2" stroke-dasharray="4 3"/>'+T(150,66,'видимый разрыв',{a:'end',sz:11,w:600,f:'#0e6fb0'})+'<ellipse cx="180" cy="268" rx="30" ry="13" fill="none" stroke="#0e6fb0" stroke-width="2" stroke-dasharray="4 3"/>'+T(150,250,'видимый разрыв',{a:'end',sz:11,w:600,f:'#0e6fb0'})+'</g>';
+  /* приводы */
+  var N=[['Привод QS1','lv1'],['Привод Q','lvq'],['Привод QS2','lv2'],['Привод ЗН','lvz']];
+  N.forEach(function(n,i){var cy=CY[i];s+='<rect x="380" y="'+(cy-28)+'" width="120" height="56" rx="8" fill="#e9eef3" stroke="#8a98a5" stroke-width="2"/>'+T(388,cy-12,n[0],{sz:11.5,w:600})
+    +'<circle cx="'+(i==1?396:410)+'" cy="'+(cy+18)+'" r="4" fill="#44515c"/><g class="'+n[1]+' mv"><line x1="'+(i==1?396:410)+'" y1="'+(cy+18)+'" x2="'+(i==1?396:410)+'" y2="'+(cy-2)+'" stroke="#d9480f" stroke-width="7" stroke-linecap="round"/></g>';});
+  /* пружина и цепи управления у привода Q */
+  s+='<path class="sprOn" d="M426 211 l6 -6 l6 12 l6 -12 l6 12 l6 -6" fill="none" stroke="#59656f" stroke-width="2.5"/><path class="sprOff" d="M428 211 l4 -3 l4 6 l4 -6 l4 6 l4 -3" fill="none" stroke="#59656f" stroke-width="2.5"/>'+T(442,226,'пружина',{a:'middle',sz:9.5})+'<circle class="lamp" cx="478" cy="210" r="6"/>'+T(478,194,'цепи упр.',{a:'middle',sz:9.5});
+  /* соседняя ячейка */
+  s+='<rect x="725" y="20" width="130" height="440" rx="10" fill="#e9eef3" stroke="#8a98a5" stroke-width="3"/>'+T(790,42,'Соседняя ячейка',{a:'middle',sz:12,w:700})+T(790,58,'под напряжением',{a:'middle',sz:11})
+   +'<rect class="bus" x="745" y="70" width="95" height="12" rx="3"/>'+W(770,82,770,230,'live')+W(750,82,750,330,'live')+'<circle cx="750" cy="330" r="7" fill="#d9480f"/>'+T(764,334,'заведомо под',{sz:10.5})+T(764,347,'напряжением',{sz:10.5});
+  s+=IND(true);
+  s+=T(40,488,'Кабельная линия',{sz:12.5,w:600});
+  s+='<g class="sT sT0"><text x="170" y="488" font-size="12.5" font-weight="600" style="fill:#d9480f">— под напряжением</text></g><g class="sT sT1"><text x="170" y="488" font-size="12.5" font-weight="600" style="fill:#8a5a00">— отключена, ещё не проверена</text></g><g class="sT sT2"><text x="170" y="488" font-size="12.5" font-weight="600" style="fill:#1f7a3f">— напряжения нет на A, B, C</text></g>';
+    s+='<g class="shield"><rect x="702" y="20" width="12" height="440" rx="3" fill="url(#hB)" stroke="#1c2530" stroke-width="1.5"/></g>';
+  /* статус */
+s+='<g class="znt"><text x="232" y="411" font-size="11.5" font-weight="700" style="fill:#1f7a3f">ножи включены ✓</text></g>';
+  /* плакаты и замки */
+  s+=PL(552,CY[0]-26,'Не включать!','Работают люди','ban','pl3',0)+PL(552,CY[1]-26,'Не включать!','Работают люди','ban','pl3',.25)+PL(552,CY[2]-26,'Не включать!','Работают люди','ban','pl3',.5);
+  s+=PL(650,CY[0]-17,'Заземлено','','earth','pl6',0,90)+PL(650,CY[2]-17,'Заземлено','','earth','pl6',.2,90)+PL(650,CY[1]-26,'Стой!','Напряжение!','stop','pl6',.9,96)+PL(105,172,'Работать здесь','','do','pl6',.5,100);
+  s+=LK(472,CY[0]+8,0)+LK(472,CY[2]+8,.25);
+  s+='</svg>';return s;
+}
+
+/* ---------- Сцена C: КРУ, выкатная тележка ---------- */
+function sceneC(){
+  var s='<svg id="svC" class="sc poster" data-m="1" viewBox="0 0 760 350" role="img" aria-label="Шкаф КРУ с выкатной тележкой: тележка выкатывается в ремонтное положение, шторка запирается на замок, вывешиваются плакаты.">';
+  s+='<defs><clipPath id="cpC"><rect x="330" y="60" width="360" height="220"/></clipPath></defs>';
+  s+='<line x1="10" y1="300" x2="750" y2="300" stroke="#8a98a5" stroke-width="3"/>';
+  s+='<rect x="300" y="20" width="420" height="280" rx="8" fill="#dfe6ec" stroke="#8a98a5" stroke-width="3"/><rect x="330" y="60" width="360" height="220" fill="#aab8c3"/>';
+  s+=T(510,45,'Шкаф КРУ',{a:'middle',sz:13.5,w:700});
+  /* шины/контакты под напряжением */
+  s+='<rect x="640" y="75" width="40" height="190" rx="4" fill="#d9480f"/>'+[167,195,223].map(function(y){return '<rect x="622" y="'+y+'" width="20" height="10" rx="3" fill="#7a2b08"/>'}).join('')+T(715,318,'под напряжением',{a:'end',sz:11,w:600,f:'#d9480f'});
+  /* тележка */
+  s+='<g class="cart mv"><rect x="350" y="150" width="140" height="115" rx="8" fill="#6c7c8a" stroke="#44515c" stroke-width="2"/>'+[375,420,465].map(function(x){return '<rect x="'+(x-9)+'" y="165" width="18" height="60" rx="8" fill="#cfd8df" stroke="#44515c" stroke-width="2"/>'}).join('')+[100,170,240].map(function(y,i){return ''}).join('')
+   +[[172],[200],[228]].map(function(a){return '<rect x="490" y="'+(a[0]-5)+'" width="22" height="10" rx="3" fill="#44515c"/>'}).join('')
+   +'<circle cx="378" cy="275" r="11" fill="#2c3a46"/><circle cx="462" cy="275" r="11" fill="#2c3a46"/>'
+   +'<g class="plx pl3x"></g></g>';
+  s+='<line x1="330" y1="286" x2="690" y2="286" stroke="#59656f" stroke-width="3"/>';
+  /* шторка */
+  s+='<g clip-path="url(#cpC)"><g class="shut mv"><rect x="598" y="60" width="92" height="220" fill="#8a98a5" stroke="#44515c" stroke-width="2"/>'+[90,120,150,180,210,240].map(function(y){return '<line x1="598" y1="'+y+'" x2="690" y2="'+y+'" stroke="#6b7782" stroke-width="2"/>'}).join('')+'</g></g>';
+  s+=LK(644,84,0);
+  s+=T(540,325,'рабочее положение',{a:'middle',sz:12,w:600,c:'lab0'})+T(125,325,'ремонтное положение',{a:'middle',sz:12,w:600,f:'#0e6fb0',c:'lab1'});
+  /* плакаты */
+  s+='<g class="plw">'+PL(644,150,'Стой!','Напряжение!','stop','pl3',0,92)+PL(125,195,'Работать здесь','','do','pl3',.4,104)+'</g>'
+   +'<g class="plx">'+PL(644,150,'Не включать!','Работа на линии','ban','pl3',0,92)+'</g>';
+  s+='</svg>';return s;
+}
+
+function rules(ids){
+  var h='';ids.forEach(function(id){var ps=QUOTES[id];if(!ps)return;h+='<h4>п. '+id+'</h4>'+ps.map(function(p){return '<p>'+esc(p)+'</p>'}).join('')});
+  return '<details class="rule"><summary>Как в Правилах: п. '+ids.join(', ')+'</summary><div class="rq">'+h+'</div></details>';
+}
+function Stepper(o){
+  var svg=$(o.svg),n=0,timers=[],busy=false,N=o.steps.length;
+  var nb=$(o.next),ag=$(o.again),rs=$(o.reset),pr=$(o.prog),cap=$(o.cap);
+  function T0(){timers.forEach(clearTimeout);timers=[]}
+  function stepClasses(i){var a=['st'+i];(o.extra&&o.extra[i]||[]).forEach(function(e){a.push(e[1])});return a}
+  function play(i){svg.classList.add('st'+i);(o.extra&&o.extra[i]||[]).forEach(function(e){timers.push(setTimeout(function(){svg.classList.add(e[1])},e[0]))})}
+  function draw(){
+    var h='';o.steps.forEach(function(s,i){h+='<li class="'+(i+1<n?'done':i+1===n?'cur':'')+'">'+(i+1<=n?(i+1<n?'✓ ':''):'')+(i+1)+'. '+esc(s.short)+'</li>'});pr.innerHTML=h;
+    if(n===0){cap.innerHTML='<div class="plain"><b class="t">С чего начать</b>'+o.intro+'</div>'}
+    else{var s=o.steps[n-1];cap.innerHTML='<h3>'+(n)+'. '+esc(s.t)+'</h3><div class="plain"><b class="t">Простыми словами</b>'+s.p+'</div>'+rules(s.r)+(n===N?'<div class="plain" style="margin-top:12px"><b class="t">Готово</b>'+o.done+'</div>':'')}
+    nb.disabled=busy||n>=N;ag.disabled=busy||n===0;rs.disabled=busy||n===0;
+    nb.textContent=n>=N?'Рабочее место подготовлено ✓':(n===0?'Начать: ':'Дальше: ')+(n+1)+'. '+o.steps[Math.min(n,N-1)].btn;
+  }
+  function lock(ms){busy=true;draw();timers.push(setTimeout(function(){busy=false;draw()},ms))}
+  nb.addEventListener('click',function(){if(busy||n>=N)return;n++;play(n);lock(o.steps[n-1].ms||1800)});
+  ag.addEventListener('click',function(){if(busy||n===0)return;T0();stepClasses(n).forEach(function(c){svg.classList.remove(c)});busy=true;draw();
+    timers.push(setTimeout(function(){play(n);lock(o.steps[n-1].ms||1800)},900))});
+  function reset(){T0();busy=false;n=0;svg.className.baseVal=svg.className.baseVal.split(' ').filter(function(c){return !/^st/.test(c)}).join(' ');draw()}
+  rs.addEventListener('click',reset);
+  draw();return {reset:reset};
+}
+
+var A_STEPS=[
+ {short:'Отключить',btn:'отключить оборудование',t:'Отключить оборудование',ms:2600,
+  p:'<p>Снимаем напряжение со всех частей, где будем работать. Рубильник и автомат выключаем, предохранитель снимаем, контактор с дистанционным управлением отключаем ключом. Контакты разошлись — тока нет. После отключения нужно визуально убедиться, что аппараты отключены и нет шунтирующих перемычек.</p><p>Но «отключено» ещё не значит «проверено»: пока не проверили, шины считаем находящимися под напряжением.</p>',
+  r:['17.1','17.3','17.5']},
+ {short:'Не дать включить',btn:'принять меры против ошибочного включения',t:'Не дать включить по ошибке',ms:2000,
+  p:'<p>Отключённый аппарат может кто-то включить по ошибке или он включится сам. Поэтому ставим защиту: рукоятки рубильника и автомата запираем, кнопки закрываем крышкой, цепь включающей катушки размыкаем, между контактами контактора вставляем изолирующую накладку.</p><p>Правила перечисляют такие меры: запирание рукояток или дверец шкафа управления, закрытие кнопок, изолирующие накладки между контактами. Эти меры нужны там, где в схеме нет предохранителей. Где предохранители есть, их просто снимают.</p>',
+  r:['17.5']},
+ {short:'Вывесить плакаты',btn:'вывесить запрещающие плакаты',t:'Вывесить запрещающие плакаты',ms:2800,
+  p:'<p>На рукоятках рубильника и автомата, на ключе и кнопках дистанционного управления, у места снятого предохранителя вывешиваем «Не включать! Работают люди».</p><p>Плакат нужен не вместо замка и не вместо отключения, а вместе с ними: это предупреждение для всех, кто подойдёт к щиту.</p>',
+  r:['18.1']},
+ {short:'Проверить напряжение',btn:'проверить отсутствие напряжения',t:'Проверить, что напряжения нет',ms:3600,
+  p:'<p>Сначала проверяем сам указатель: подносим к частям, которые заведомо под напряжением. Загорелся — исправен. Только после этого касаемся шин, которые будем заземлять. Не горит — напряжения нет.</p><p>До 1000 В в сети с заземлённой нейтралью двухполюсным указателем проверяют и между фазами, и между каждой фазой и заземлённым корпусом (или защитным проводником). Контрольные лампы использовать нельзя. В РУ проверяет один работник из оперативного персонала с группой III.</p>',
+  r:['19.1','19.2','19.5','17.6']},
+ {short:'Заземлить',btn:'установить заземление',t:'Установить переносное заземление',ms:3000,
+  p:'<p>Заземляем сразу после проверки. Сначала заземление присоединяют к заземляющему устройству (1), потом ставят на шины (2). Снимают наоборот: сначала с шин, потом от земли.</p><p>Работают в диэлектрических перчатках, прикасаться к проводящим частям заземления нельзя. Шины щитов до 1000 В заземляют, если они не изолированы.</p>',
+  r:['20.1','20.2','20.3','21.4','21.7']},
+ {short:'«Заземлено», ограждение',btn:'вывесить «Заземлено», огородить, отметить место работы',t:'«Заземлено», ограждение и плакаты',ms:2600,
+  p:'<p>Вывешиваем указательный плакат «Заземлено». Части, оставшиеся под напряжением (здесь это подвод питания сверху), закрываем щитом или ширмой из изоляционного материала с плакатом «Стой! Напряжение!». На месте работы вывешиваем «Работать здесь».</p><p>До конца работы плакаты и ограждения не убирают и не переставляют.</p>',
+  r:['16.1','23.1','23.2','23.7','23.8']}
+];
+var B_STEPS=[
+ {short:'Отключить',btn:'отключить выключатель и разъединители',t:'Отключить: выключатель, потом разъединители',ms:3400,
+  p:'<p>Выше 1000 В с каждой стороны, откуда возможна подача напряжения, должен быть <b>видимый разрыв</b>. Сначала отключаем выключатель, затем шинный и линейный разъединители. Лезвия разошлись — разрыв виден глазом.</p><p>Видимый разрыв создают разъединителями, снятием предохранителей, отделителями и выключателями нагрузки, снятием шин и проводов. Если к участку подключены силовые трансформаторы или трансформаторы напряжения, их отключают и со стороны других обмоток, чтобы не было обратной трансформации.</p>',
+  r:['17.2']},
+ {short:'Не дать включить',btn:'принять меры против ошибочного включения',t:'Не дать включить по ошибке',ms:2200,
+  p:'<p>Ручные приводы разъединителей в отключённом положении запираем механическим замком (ключом или съёмной ручкой). У привода выключателя отключаем силовые цепи и цепи управления и приводим пружины в нерабочее положение.</p><p>В сетях 6–10 кВ с однополюсными разъединителями вместо замка можно надеть на ножи диэлектрические колпаки.</p>',
+  r:['17.1','17.4']},
+ {short:'Вывесить плакаты',btn:'вывесить запрещающие плакаты',t:'Вывесить запрещающие плакаты',ms:2600,
+  p:'<p>На приводах разъединителей и выключателя, на ключе дистанционного управления вывешиваем «Не включать! Работают люди». У однополюсных разъединителей плакат вешают на привод каждого полюса.</p><p>Если бы линию отключили разъединителем ради работы на линии, на его приводе висел бы один плакат «Не включать! Работа на линии», сколько бы бригад ни работало.</p>',
+  r:['18.1','18.2']},
+ {short:'Проверить напряжение',btn:'проверить отсутствие напряжения на фазах A, B, C',t:'Проверить, что напряжения нет',ms:5200,
+  p:'<p>Указатель сначала проверяют на исправность: подносят к частям, заведомо находящимся под напряжением (на рисунке это соседняя ячейка). Затем проверяют все три фазы A, B, C отключённого участка.</p><p>Выше 1000 В указателем пользуются в диэлектрических перчатках. В РУ проверяет один работник из оперативного персонала с группой IV.</p>',
+  r:['19.1','19.2']},
+ {short:'Заземлить',btn:'включить заземляющие ножи',t:'Включить заземляющие ножи',ms:2400,
+  p:'<p>Включаем заземляющие ножи: участок соединён с землёй и отделён видимым разрывом от всех источников. Включать ножи может один работник с группой IV из оперативного персонала.</p><p>Если ножей нет, ставят переносное заземление: сначала к заземляющему устройству, потом на токоведущие части. Устанавливают двое: IV (оперативный) и III. Заземляются все фазы со всех сторон, откуда может быть подано напряжение; на сборные шины достаточно одного заземления.</p>',
+  r:['20.2','21.1','21.2','21.8']},
+ {short:'«Заземлено», ограждение',btn:'вывесить «Заземлено», огородить соседнюю ячейку, отметить место',t:'«Заземлено», ограждение и плакаты',ms:2600,
+  p:'<p>Вывешиваем «Заземлено» на приводах разъединителей, которыми можно подать напряжение на заземлённый участок. Соседнюю ячейку, оставшуюся под напряжением, закрываем щитом или ширмой из изоляционного материала с плакатом «Стой! Напряжение!». На месте работы вывешиваем «Работать здесь».</p><p>В сетях 6–10 кВ расстояние от временного ограждения до токоведущих частей разрешено уменьшить до 0,35 м.</p>',
+  r:['23.1','23.2','23.4','23.7','23.8']}
+];
+function C_STEPS(m){return [
+ {short:'Выкатить тележку',btn:'выкатить тележку в ремонтное положение',t:'Выкатить тележку в ремонтное положение',ms:2200,
+  p:'<p>'+(m===1?'Чтобы работать на оборудовании тележки или в отсеке шкафа, тележку с оборудованием выкатываем в ремонтное положение.':'Чтобы работать вне шкафа (на подключённом оборудовании или на отходящей линии), тележку с выключателем выкатываем из шкафа в ремонтное положение.')+'</p>',
+  r:[m===1?'29.1':'29.2']},
+ {short:'Запереть шторку',btn:'запереть шторку на замок',t:'Запереть шторку на замок',ms:2200,
+  p:'<p>'+(m===1?'Шторку отсека, в котором токоведущие части остались под напряжением, запираем на замок.':'Шторку или дверцы запираем на замок.')+'</p>',
+  r:[m===1?'29.1':'29.2']},
+ {short:'Плакаты',btn:'вывесить плакаты',t:'Вывесить плакаты',ms:1800,
+  p:m===1?'<p>На шторке вывешиваем «Стой! Напряжение», а на тележке или в отсеке, где предстоит работать, — «Работать здесь».</p>':'<p>На шторке или дверцах вывешиваем «Не включать! Работают люди» или «Не включать! Работа на линии». На рисунке: работа на линии.</p><p>Разрешено ставить тележку в контрольное положение после включения заземляющих ножей, если есть блокировка между ножами и тележкой. Без блокировки или без ножей допускается промежуточное положение между контрольным и ремонтным, если тележка заперта на замок.</p>',
+  r:[m===1?'29.1':'29.2']}
+]}
+
+$('#svgA').innerHTML=sceneA();$('#svgB').innerHTML=sceneB();$('#svgC').innerHTML=sceneC();
+Stepper({svg:'#svA',next:'#aNext',again:'#aAgain',reset:'#aReset',prog:'#aProg',cap:'#aCap',steps:A_STEPS,extra:{4:[[1700,'st4b']]},
+  intro:'<p>Щит до 1000 В: четыре ввода питания (рубильник, автомат, предохранитель и контактор с ключом и кнопками) подают напряжение на шины. Нужно работать на шинах. Нажимайте кнопку под рисунком: мероприятия идут в том порядке, который требуют Правила (п. 16.1).</p>',
+  done:'<p>Теперь шины отключены, защищены от включения, проверены и заземлены, а вокруг стоят плакаты и ограждения. Можно допускать бригаду.</p>'});
+Stepper({svg:'#svB',next:'#bNext',again:'#bAgain',reset:'#bReset',prog:'#bProg',cap:'#bCap',steps:B_STEPS,extra:{4:[[1700,'st4b'],[2900,'st4c'],[3900,'st4d']]},
+  intro:'<p>Ячейка 10 кВ: шины сверху под напряжением, ниже по цепочке шинный разъединитель QS1, выключатель Q, линейный разъединитель QS2 и заземляющие ножи, дальше кабель. Нужно работать на выключателе Q. Нажимайте кнопку: мероприятия идут по порядку.</p>',
+  done:'<p>Ячейка отключена видимым разрывом с обеих сторон, приводы заперты, напряжение проверено, участок заземлён, соседняя ячейка ограждена. Можно допускать бригаду.</p>'});
+var cMode=1,cStep=null;
+function cInit(m){cMode=m;var sv=$('#svC');sv.setAttribute('data-m',m);
+  document.querySelectorAll('#cSeg button').forEach(function(b){b.setAttribute('aria-pressed',(+b.getAttribute('data-m')===m)?'true':'false')});
+  var fresh=$('#cCtl');fresh.innerHTML='<button type="button" class="btn" id="cNext"></button><button type="button" class="ghost" id="cAgain">↻ Повторить шаг</button><button type="button" class="ghost" id="cReset">Сначала</button>';
+  sv.className.baseVal=sv.className.baseVal.split(' ').filter(function(c){return !/^st/.test(c)}).join(' ');
+  cStep=Stepper({svg:'#svC',next:'#cNext',again:'#cAgain',reset:'#cReset',prog:'#cProg',cap:'#cCap',steps:C_STEPS(m),
+   intro:m===1?'<p>Работаем на оборудовании тележки или в отсеке шкафа КРУ (п. 29.1).</p>':'<p>Работаем вне шкафа: на подключённом к нему оборудовании или на отходящей линии (п. 29.2).</p>',
+   done:'<p>Тележка в ремонтном положении, шторка заперта, плакаты вывешены.</p>'});
+}
+document.querySelectorAll('#cSeg button').forEach(function(b){b.addEventListener('click',function(){cInit(+b.getAttribute('data-m'))})});
+cInit(1);
+
+(function(){
+  function pc(kind){var z=PBsize(kind),sc=Math.min(180/z[0],84/z[1]);return '<svg viewBox="0 0 200 96" role="img" aria-label="Плакат «'+esc(PK[kind].a+' '+PK[kind].b)+'»"><g transform="translate(100,'+(48-z[1]*sc/2).toFixed(1)+') scale('+sc.toFixed(2)+')">'+PB(kind)+'</g></svg>';}
+  var P=[
+   ['Не включать! Работают люди','dont_on','1','На приводах (рукоятках) ручного управления выключателей, отделителей, разъединителей, рубильников, автоматов; у однополюсных — на привод каждого полюса; на ограждениях у разъединителей с оперативной штангой; на ключах и кнопках дистанционного и местного управления; у снятых предохранителей.','18.1'],
+   ['Не открывать! Работают люди','dont_open','1','На задвижках, закрывающих доступ воздуха в пневматические приводы разъединителей.','18.1'],
+   ['Не включать! Работа на линии','dont_line','1','На приводе разъединителя, которым отключена ВЛ, КВЛ или КЛ. Один плакат независимо от числа бригад. Вывешивают и снимают по команде диспетчерского или оперативного персонала.','18.2, 29.2'],
+   ['Работа под напряжением. Повторно не включать!','volt','1','При работах под напряжением на приводах ручного и ключах дистанционного управления (с исключениями п. 18.3).','18.3'],
+   ['Стой! Напряжение','stop','2','На временных ограждениях; на ограждениях камер, шкафах и панелях, граничащих с рабочим местом; на канате вокруг рабочего места в ОРУ (внутрь); на конструкциях, по которым можно пройти к частям под напряжением; на запертой шторке отсека КРУ.','23.2, 23.4–23.6, 29.1'],
+   ['Не влезай! Убьет','climbno','2','На конструкциях, граничащих с той, по которой разрешается подниматься, внизу.','23.6'],
+   ['Влезать здесь!','climb','3','На стационарных лестницах и конструкциях, по которым для работы разрешено подниматься.','23.6'],
+   ['Работать здесь','work','3','На подготовленном рабочем месте: на оборудовании, где предстоит работа, и в месте прохода внутрь выгороженного рабочего места; на тележке или в отсеке КРУ.','23.7, 29.1'],
+   ['Заземлено','earth','4','На приводах разъединителей, отделителей и выключателей нагрузки, при ошибочном включении которых возможна подача напряжения на заземлённый участок, и на ключах и кнопках дистанционного управления.','16.1, 23.1']
+  ];
+  var CATS={'1':'Запрещающие','2':'Предупреждающие','3':'Предписывающие','4':'Указательный'};
+  var h='';['1','2','3','4'].forEach(function(c){h+='<h3 class="pcat">'+CATS[c]+'</h3>';P.filter(function(p){return p[2]===c}).forEach(function(p){h+='<div class="pcard">'+pc(p[1])+'<div class="pb"><b>«'+esc(p[0])+'»</b><p>'+esc(p[3])+'</p><span class="tag">п. '+esc(p[4])+'</span></div></div>'})});
+  $('#pgrid').innerHTML=h;
+  document.querySelectorAll('[data-rules]').forEach(function(d){d.innerHTML=rules(d.getAttribute('data-rules').split(','))});
+})();
+
+(function(){
+var TOOLS=[['hand','Рука: отключить / включить'],['lock','Замок'],['nak','Изолирующая накладка'],['cover','Крышка на кнопки'],['ind','Указатель напряжения'],['clamp','Переносное заземление'],['tape','Ограждающая лента, ширма']];
+var PTS=['dont_on','dont_open','dont_line','volt','stop','climbno','climb','work','earth'];
+function pname(k){return PK[k].a+(PK[k].b?' '+PK[k].b:'')}
+function tname(t){if(t.indexOf('p:')===0)return '«'+pname(t.slice(2))+'»';var r=TOOLS.filter(function(x){return x[0]===t})[0];return r?r[1].split(':')[0]:t}
+var PTRAP={
+ dont_on:'Плакат «Не включать! Работают люди» вешают на приводы и ключи управления аппаратов (п. 18.1), а не сюда.',
+ dont_open:'«Не открывать! Работают люди» вешают только на задвижки пневмоприводов (п. 18.1). Здесь пневмопривода нет.',
+ dont_line:'«Не включать! Работа на линии» вешают на привод разъединителя, которым отключена линия (п. 18.2). Здесь работа не на линии.',
+ volt:'«Работа под напряжением. Повторно не включать!» нужен при работах под напряжением (п. 18.3). Здесь напряжение снимают.',
+ stop:'«Стой! Напряжение» вешают на ограждение или шторку, граничащие с частями под напряжением (п. 23.2, 23.4, 29.1), а не сюда.',
+ climbno:'«Не влезай! Убьет» вешают на конструкции ОРУ, граничащие с разрешённой для подъёма (п. 23.6). Здесь это не нужно.',
+ climb:'«Влезать здесь!» вешают на разрешённые для подъёма лестницы и конструкции в ОРУ (п. 23.6). Здесь это не нужно.',
+ work:'«Работать здесь» вешают на подготовленном рабочем месте: на оборудовании, где предстоит работа (п. 23.7).',
+ earth:'«Заземлено» вешают после установки заземления, на приводы и ключи, указанные в п. 23.1, и на заземлённый участок.'};
+var TTRAP={hand:'Здесь рукой ничего делать не нужно.',lock:'Здесь замок не нужен.',nak:'Накладки ставят между контактами аппарата (п. 17.5).',cover:'Крышка закрывает кнопки управления (п. 17.5).',
+ ind:'Отсутствие напряжения проверяют на частях, которые будут заземляться (п. 16.1).',clamp:'Заземление присоединяют к заземляющему устройству и к токоведущим частям (п. 20.2). Здесь это не нужно.',tape:'Ограждают рабочее место и части, оставшиеся под напряжением (п. 23.2). Здесь лента не нужна.'};
+function T(id,st,tool,t,ok,r,o){var x={id:id,st:st,tool:tool,t:[].concat(t),ok:ok,r:r};for(var k in (o||{}))x[k]=o[k];return x}
+var P=function(k){return 'p:'+k};
+var SC={};
+/* ---------- щит ---------- */
+SC.A={base:'A',gen:sceneA,name:'Щит до 1000 В',
+ hs:[['qs',195,84,40,72],['lev',300,90,40,56],['fuse',405,84,40,64],['ctr',500,84,60,64],['key',660,85,40,42],['btn',648,164,88,44],['cs',584,100,32,32],['bus',150,256,440,24],['test',736,290,116,58],['earth',150,376,440,18],['gcl',247,285,40,86],['top',14,50,596,28]],
+ lab:{qs:'рубильник',lev:'автомат',fuse:'предохранитель',ctr:'контактор',key:'ключ дистанционного управления',btn:'кнопки «Пуск» и «Стоп»',cs:'цепь катушки контактора',bus:'шины щита',test:'контрольную часть под напряжением (справа внизу)',earth:'заземляющее устройство (зелёная шина внизу)',gcl:'заземление на шинах',top:'верх щита, где подводится питание'},
+ anchor:{qs:[215,160],lev:[320,160],fuse:[425,160],key:[770,86],btn:[790,148],gcl:[267,312],bus:[172,298],top:[66,80]},
+ lockAt:{qs:[236,121],lev:[342,121]},rest:[660,325],pts:{test:[756,318],bus:[372,274]},
+ trap:{'lock|fuse':['Предохранитель уже снят: именно снятие предохранителя отключает цепь. Замок не нужен.','17.5'],'hand|ctr':['Контактор отключают ключом дистанционного управления, а не руками на самом контакторе.','17.4'],'hand|bus':['Шины отключают аппаратами, которыми подаётся напряжение. Руками их не отключить.','17.1']},
+ stages:[
+  {n:'Отключить',todo:'Возьмите «Руку» и отключите все аппараты, которыми подаётся напряжение на шины: рубильник, автомат, предохранитель (его снимают), контактор (ключом).',gate:'Сначала отключения.',done:function(S){S.cls('g-dead')}},
+  {n:'Не дать включить по ошибке',todo:'Заприте рукоятки замками, закройте кнопки крышкой, разомкните цепь катушки контактора, вставьте накладку между контактами контактора.',gate:'Сначала отключите все аппараты (п. 16.1).'},
+  {n:'Запрещающие плакаты',todo:'Выберите плакат «Не включать! Работают люди» и повесьте на рукоятки, ключ, кнопки и на место снятого предохранителя.',gate:'Плакаты вывешивают после отключения и защиты от включения (п. 16.1).'},
+  {n:'Проверить отсутствие напряжения',todo:'Возьмите указатель напряжения: сначала проверьте его на части, заведомо находящейся под напряжением, потом проверьте шины.',gate:'Проверять напряжение рано: сначала отключения, защита от включения и плакаты (п. 16.1).',done:function(S){S.cls('g-checked');setTimeout(function(){S.ind(S.cfg.rest,false)},900)}},
+  {n:'Заземлить',todo:'Возьмите «Переносное заземление»: сначала присоедините к заземляющему устройству, затем к шинам.',gate:'Заземлять рано: сначала нужно проверить отсутствие напряжения (п. 16.1, 20.1).'},
+  {n:'«Заземлено», ограждение, плакаты',todo:'Повесьте «Заземлено» на заземление и «Работать здесь» на шины, где будет работа. Поставьте ограждающую ленту у частей, оставшихся под напряжением (вверху), и повесьте на неё «Стой! Напряжение».',gate:'Это последний этап: сначала заземление (п. 16.1).'}],
+ tasks:[
+  T('a1',0,'hand','qs','Рубильник отключён: контакты разошлись.','17.5',{act:function(S){S.cls('g-qs')}}),
+  T('a2',0,'hand','lev','Автомат отключён.','17.5',{act:function(S){S.cls('g-lev')}}),
+  T('a3',0,'hand','fuse','Предохранитель снят: так отключают цепь с предохранителем.','17.5',{act:function(S){S.cls('g-fuse')}}),
+  T('a4',0,'hand','key','Контактор отключён ключом: контакты разошлись.','17.4',{act:function(S){S.cls('g-key')}}),
+  T('b1',1,'lock','qs','Рукоятка рубильника заперта.','17.5',{act:function(S,t){S.lock(t)}}),
+  T('b2',1,'lock','lev','Рукоятка автомата заперта.','17.5',{act:function(S,t){S.lock(t)}}),
+  T('b3',1,'hand','cs','Цепь включающей катушки разомкнута.','17.5',{act:function(S){S.cls('g-cs')}}),
+  T('b4',1,'nak','ctr','Изолирующая накладка вставлена между контактами контактора.','17.5',{act:function(S){S.cls('g-nak')}}),
+  T('b5',1,'cover','btn','Кнопки закрыты крышкой.','17.5',{act:function(S){S.cls('g-cover')}}),
+  T('c1',2,P('dont_on'),'qs','Плакат на рубильнике.','18.1'),T('c2',2,P('dont_on'),'lev','Плакат на автомате.','18.1'),
+  T('c3',2,P('dont_on'),'fuse','Плакат у места снятого предохранителя.','18.1'),T('c4',2,P('dont_on'),'key','Плакат на ключе управления.','18.1'),T('c5',2,P('dont_on'),'btn','Плакат на кнопках.','18.1'),
+  T('d1',3,'ind','test','Указатель загорелся на части под напряжением: он исправен.','19.1',{act:function(S){S.ind(S.cfg.pts.test,true)}}),
+  T('d2',3,'ind','bus','Указатель не горит: напряжения на шинах нет.','19.1',{need:'d1',needMsg:'Сначала проверьте исправность указателя на части, заведомо находящейся под напряжением (п. 19.1).',act:function(S){S.ind(S.cfg.pts.bus,false);S.cls('g-tick')}}),
+  T('e1',4,'clamp','earth','Заземление присоединено к заземляющему устройству.','20.2',{act:function(S){S.cls('g-gc1')}}),
+  T('e2',4,'clamp','bus','Заземление установлено на шины.','20.2',{need:'e1',needMsg:'Сначала заземление присоединяют к заземляющему устройству, и только потом ставят на токоведущие части (п. 20.2).',act:function(S){S.cls('g-gcab');S.cls('g-gc2')}}),
+  T('f1',5,P('earth'),'gcl','Вывешен «Заземлено».','23.1'),
+  T('f2',5,P('work'),'bus','«Работать здесь» вывешен на рабочем месте.','23.7'),
+  T('f3',5,'tape','top','Части, оставшиеся под напряжением, закрыты ограждением.','23.2',{act:function(S){S.cls('g-tape')}}),
+  T('f4',5,P('stop'),'top','На ограждении «Стой! Напряжение».','23.2',{need:'f3',needMsg:'Сначала поставьте ограждение: плакат вешают на него (п. 23.2).'})]};
+/* ---------- ячейка ---------- */
+SC.B={base:'B',gen:sceneB,name:'Ячейка 10 кВ',
+ hs:[['dr1',380,82,120,56],['dr1',160,76,60,70],['drq',380,167,120,56],['qb',168,165,44,62],['dr2',380,264,120,56],['dr2',160,258,60,70],['drz',380,357,120,56],['drz',95,325,120,90],['spr',415,200,50,26],['ctrl',455,190,45,36],['test',738,318,110,40],['nb',700,20,155,296],['pa',153,418,24,24],['pb',178,418,24,24],['pc',203,418,24,24]],
+ lab:{dr1:'шинный разъединитель QS1 (привод)',drq:'выключатель Q (привод)',qb:'выключатель Q',dr2:'линейный разъединитель QS2 (привод)',drz:'заземляющие ножи (привод)',spr:'пружину привода выключателя',ctrl:'цепи управления привода выключателя',test:'контрольную часть под напряжением в соседней ячейке',nb:'соседнюю ячейку, оставшуюся под напряжением',pa:'фазу A на кабеле',pb:'фазу B на кабеле',pc:'фазу C на кабеле'},
+ anchor:{'dr1:dont_on':[552,84],'dr1:earth':[650,93],drq:[552,169],'dr2:dont_on':[552,266],'dr2:earth':[650,275],qb:[105,172],nb:[650,169]},
+ lockAt:{dr1:[472,118],dr2:[472,300]},rest:[540,420],pts:{test:[725,330],pa:[165,430],pb:[190,430],pc:[215,430]},
+ trap:{'lock|drq':['У привода выключателя отключают силовые цепи и цепи управления и приводят пружины в нерабочее положение. Замок ставят на ручные приводы разъединителей.','17.4'],'clamp|*':['В ячейке есть заземляющие ножи: их и включают. Переносное заземление ставят там, где ножей нет.','16.1'],'ind|qb':['Проверять нужно части, которые будут заземляться: фазы на кабеле.','16.1']},
+ stages:[
+  {n:'Отключить',todo:'Возьмите «Руку» и отключите выключатель, шинный и линейный разъединители. Должен появиться видимый разрыв.',gate:'Сначала отключения.',done:function(S){S.cls('g-dead')}},
+  {n:'Не дать включить по ошибке',todo:'Заприте приводы разъединителей замками. У привода выключателя спустите пружину и отключите цепи управления.',gate:'Сначала отключите выключатель и разъединители (п. 16.1).'},
+  {n:'Запрещающие плакаты',todo:'Повесьте «Не включать! Работают люди» на приводы шинного разъединителя, выключателя и линейного разъединителя.',gate:'Плакаты вывешивают после отключения и защиты от включения (п. 16.1).'},
+  {n:'Проверить отсутствие напряжения',todo:'Возьмите указатель напряжения: проверьте его исправность на части под напряжением (соседняя ячейка), затем проверьте все три фазы A, B, C на кабеле.',gate:'Проверять напряжение рано: сначала отключения, защита от включения и плакаты (п. 16.1).',done:function(S){S.cls('g-checked');setTimeout(function(){S.ind(S.cfg.rest,false)},900)}},
+  {n:'Заземлить',todo:'Включите заземляющие ножи (рукой, через привод).',gate:'Заземлять рано: сначала нужно проверить отсутствие напряжения (п. 16.1, 20.1).'},
+  {n:'«Заземлено», ограждение, плакаты',todo:'«Заземлено» на приводы обоих разъединителей, «Работать здесь» на выключатель, лента на соседнюю ячейку и «Стой! Напряжение» на неё.',gate:'Это последний этап: сначала заземление (п. 16.1).'}],
+ tasks:[
+  T('a1',0,'hand',['drq','qb'],'Выключатель отключён: контакты разошлись.','17.2',{act:function(S){S.cls('g-q')}}),
+  T('a2',0,'hand','dr1','Шинный разъединитель отключён: виден разрыв.','17.2',{act:function(S){S.cls('g-dr1')}}),
+  T('a3',0,'hand','dr2','Линейный разъединитель отключён: виден разрыв.','17.2',{act:function(S){S.cls('g-dr2')}}),
+  T('b1',1,'lock','dr1','Привод QS1 заперт механическим замком.','17.4',{act:function(S,t){S.lock(t)}}),
+  T('b2',1,'lock','dr2','Привод QS2 заперт механическим замком.','17.4',{act:function(S,t){S.lock(t)}}),
+  T('b3',1,'hand','spr','Пружина привода в нерабочем положении.','17.4',{act:function(S){S.cls('g-spring')}}),
+  T('b4',1,'hand','ctrl','Цепи управления привода отключены.','17.4',{act:function(S){S.cls('g-ctrl')}}),
+  T('c1',2,P('dont_on'),'dr1','Плакат на приводе QS1.','18.1'),T('c2',2,P('dont_on'),'drq','Плакат на приводе выключателя.','18.1'),T('c3',2,P('dont_on'),'dr2','Плакат на приводе QS2.','18.1'),
+  T('d1',3,'ind','test','Указатель загорелся на части под напряжением: он исправен.','19.1',{act:function(S){S.ind(S.cfg.pts.test,true)}}),
+  T('d2',3,'ind','pa','Фаза A: указатель не горит.','19.1',{need:'d1',needMsg:'Сначала проверьте исправность указателя на части, заведомо находящейся под напряжением (п. 19.1).',act:function(S){S.ind(S.cfg.pts.pa,false);S.cls('g-pa')}}),
+  T('d3',3,'ind','pb','Фаза B: указатель не горит.','19.1',{need:'d1',needMsg:'Сначала проверьте исправность указателя на части, заведомо находящейся под напряжением (п. 19.1).',act:function(S){S.ind(S.cfg.pts.pb,false);S.cls('g-pb')}}),
+  T('d4',3,'ind','pc','Фаза C: указатель не горит.','19.1',{need:'d1',needMsg:'Сначала проверьте исправность указателя на части, заведомо находящейся под напряжением (п. 19.1).',act:function(S){S.ind(S.cfg.pts.pc,false);S.cls('g-pc')}}),
+  T('e1',4,'hand','drz','Заземляющие ножи включены: участок заземлён.','21.8',{act:function(S){S.cls('g-zn')}}),
+  T('f1',5,P('earth'),'dr1','«Заземлено» на приводе QS1.','23.1'),T('f2',5,P('earth'),'dr2','«Заземлено» на приводе QS2.','23.1'),
+  T('f3',5,P('work'),'qb','«Работать здесь» на выключателе.','23.7'),
+  T('f4',5,'tape','nb','Соседняя ячейка закрыта ограждением.','23.2',{act:function(S){S.cls('g-tape')}}),
+  T('f5',5,P('stop'),'nb','На ограждении «Стой! Напряжение».','23.2',{need:'f4',needMsg:'Сначала поставьте ограждение: плакат вешают на него (п. 23.2).'})]};
+/* ---------- КРУ ---------- */
+function kru(m){var postTasks=m===1?[T('c1',2,P('stop'),'shut','На шторке «Стой! Напряжение».','29.1'),T('c2',2,P('work'),'cart','На тележке «Работать здесь».','29.1')]
+  :[T('c1',2,[P('dont_line'),P('dont_on')],'shut','На шторке вывешен плакат «Не включать!».','29.2')];
+ var rule=m===1?'29.1':'29.2';
+ return {base:'C',gen:sceneC,name:m===1?'Шкаф КРУ: работа на тележке':'Шкаф КРУ: работа вне шкафа',
+ hs:[['cart',480,150,140,115],['shut',598,60,92,220]],
+ lab:{cart:'тележку с выключателем',shut:'шторку отсека'},anchor:{shut:[644,150],cart:[125,195]},lockAt:{shut:[644,84]},rest:[0,0],pts:{},
+ trap:{'lock|cart':['Замком запирают шторку отсека.',rule]},
+ stages:[{n:'Выкатить тележку',todo:'Возьмите «Руку» и выкатите тележку в ремонтное положение.',gate:'Сначала выкатите тележку.'},
+  {n:'Запереть шторку',todo:'Закройте шторку рукой и заприте её замком.',gate:'Сначала выкатите тележку (п. '+rule+').'},
+  {n:'Плакаты',todo:m===1?'Повесьте «Стой! Напряжение» на шторку и «Работать здесь» на тележку.':'Работа вне шкафа, на линии: повесьте на шторку «Не включать! Работа на линии».',gate:'Плакаты вывешивают после того, как тележка выкачена и шторка заперта (п. '+rule+').'}],
+ tasks:[T('a1',0,'hand','cart','Тележка выкачена в ремонтное положение.',rule,{act:function(S){S.cls('g-cart');S.moveHs('cart',50,150)}}),
+  T('b1',1,'hand','shut','Шторка закрыта.',rule,{act:function(S){S.cls('g-shut')}}),
+  T('b2',1,'lock','shut','Шторка заперта на замок.',rule,{need:'b1',needMsg:'Сначала закройте шторку.',act:function(S,t){setTimeout(function(){S.lock(t)},700)}})].concat(postTasks)}}
+SC.C1=kru(1);SC.C2=kru(2);
+
+var wrap=$('#gScene'),cur,key,svg,hsg,tool=null,stage,done,errors,hints,doneCount,total;
+var S={};
+function msg(k,t,x){var m=$('#gMsg');m.className='gmsg '+k;m.innerHTML='<b>'+esc(t)+'</b>'+esc(x)}
+function anchorOf(t,kind){return cur.anchor[t+':'+kind]||cur.anchor[t]}
+S.cls=function(c){svg.classList.add(c)};
+S.poster=function(t,kind){var a=anchorOf(t,kind);hsg.insertAdjacentHTML('beforebegin',HANG(a[0],a[1],kind,'pg',0))};
+S.lock=function(t){var a=cur.lockAt[t];hsg.insertAdjacentHTML('beforebegin',LK(a[0],a[1],0).replace('lk lk2','lk lg'))};
+S.ind=function(p,lamp){var e=svg.querySelector('.ind');if(e)e.style.transform='translate('+p[0]+'px,'+p[1]+'px)';svg.classList[lamp?'add':'remove']('g-lamp')};
+S.moveHs=function(t,x,y){var r=svg.querySelector('.hs[data-t="'+t+'"]');r.setAttribute('x',x);r.setAttribute('y',y)};
+Object.defineProperty(S,'cfg',{get:function(){return cur}});
+function head(){
+  var done_=stage>=cur.stages.length;
+  $('#gStageT').textContent=done_?'Все этапы пройдены':'Этап '+(stage+1)+' из '+cur.stages.length+': '+cur.stages[stage].n;
+  $('#gStageC').textContent='Действий: '+doneCount+' из '+total+' · ошибок: '+errors+' · подсказок: '+hints;
+  $('#gBar').style.width=(doneCount/total*100)+'%';
+  $('#gTodo').textContent=done_?'':cur.stages[stage].todo;
+}
+function start(k){
+  key=k;cur=SC[k];GAME=true;var s=cur.gen();GAME=false;
+  s=s.replace(/(id="|#)(hA|hB|cpC)\b/g,'$1$2g').replace(/svA/g,'gA').replace(/svB/g,'gB').replace(/svC/g,'gC');
+  wrap.innerHTML=s;svg=wrap.querySelector('svg');
+  var h='<g class="hsg">';cur.hs.forEach(function(r){h+='<rect class="hs" data-t="'+r[0]+'" x="'+r[1]+'" y="'+r[2]+'" width="'+r[3]+'" height="'+r[4]+'" rx="6" tabindex="0" role="button" aria-label="'+esc(cur.lab[r[0]]||'')+'"/>'});
+  svg.insertAdjacentHTML('beforeend',h+'</g>');hsg=svg.querySelector('.hsg');
+  cur.tasks.forEach(function(x){x.done=false});
+  stage=0;done={};errors=0;hints=0;doneCount=0;total=cur.tasks.length;
+  $('#gRes').innerHTML='';
+  document.querySelectorAll('#gSeg button').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-s')===k?'true':'false')});
+  msg('info','Начинаем','Выберите инструмент внизу и нажмите на нужное место на схеме. '+(tool?'':'Для начала возьмите «Руку».'));
+  head();
+}
+function wrong(why,rule){
+  errors++;wrap.classList.remove('shake');void wrap.offsetWidth;wrap.classList.add('shake');
+  msg('bad','Ошибка',why+(rule?' (п. '+rule+')':''));head();
+}
+function toolMatch(task,t){return [].concat(task.tool).indexOf(t)>=0}
+function click(t){
+  if(stage>=cur.stages.length)return;
+  if(!tool){msg('info','Нужен инструмент','Сначала выберите инструмент или плакат внизу.');return}
+  var cands=cur.tasks.filter(function(x){return x.t.indexOf(t)>=0&&toolMatch(x,tool)});
+  if(!cands.length){
+    var tr=cur.trap[tool+'|'+t]||cur.trap[tool+'|*'];
+    if(tr)return wrong(tr[0],tr[1]);
+    if(tool.indexOf('p:')===0)return wrong(PTRAP[tool.slice(2)]);
+    return wrong(TTRAP[tool]);
+  }
+  var task=cands.filter(function(x){return !x.done})[0];
+  if(!task){msg('info','Уже сделано','Здесь это уже выполнено.');return}
+  if(task.st>stage)return wrong(cur.stages[stage].gate?'Рано. '+cur.stages[task.st].n+' — позже. '+cur.stages[task.st].gate:'Рано.');
+  if(task.need&&!done[task.need])return wrong(task.needMsg);
+  task.done=true;done[task.id]=true;doneCount++;
+  if(tool.indexOf('p:')===0)S.poster(t,tool.slice(2));
+  if(task.act)task.act(S,t,tool);
+  msg('ok','Верно',task.ok+' (п. '+task.r+')');
+  var rest=cur.tasks.filter(function(x){return x.st===stage&&!x.done});
+  if(!rest.length){
+    var st=cur.stages[stage];if(st.done)st.done(S);
+    stage++;
+    if(stage<cur.stages.length)msg('ok','Этап «'+st.n+'» пройден ✓','Дальше: '+cur.stages[stage].n+'. '+cur.stages[stage].todo);
+    else finish();
+  }
+  head();
+}
+function finish(){
+  var r=errors===0?'Без ошибок. Так и надо делать на настоящем рабочем месте.':errors<=3?'Хорошо, но есть над чем поработать: пройдите ещё раз без ошибок.':'Порядок и места плакатов пока не закрепились. Перечитайте теорию и пройдите ещё раз.';
+  msg('ok','Рабочее место подготовлено ✓','Все технические мероприятия выполнены в правильном порядке.');
+  $('#gRes').innerHTML='<div class="res '+(errors===0?'ok':errors<=3?'mid':'bad')+'">Итог: ошибок — '+errors+', подсказок — '+hints+'. '+esc(r)+'</div>';
+}
+function hint(){
+  if(stage>=cur.stages.length)return;
+  var c=cur.tasks.filter(function(x){return x.st===stage&&!x.done&&(!x.need||done[x.need])})[0];if(!c)return;
+  hints++;var tl=[].concat(c.tool)[0];
+  msg('info','Подсказка','Возьмите '+tname(tl)+' и нажмите на: '+cur.lab[c.t[0]]+'.');
+  c.t.forEach(function(t){svg.querySelectorAll('.hs[data-t="'+t+'"]').forEach(function(r){r.classList.add('hint');setTimeout(function(){r.classList.remove('hint')},3200)})});
+  head();
+}
+function pick(t){tool=(tool===t)?null:t;
+  document.querySelectorAll('#gTools .tool').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-tool')===tool?'true':'false')});
+  wrap.classList.toggle('toolsel',!!tool);
+  if(tool)msg('info','В руках: '+tname(tool).replace(/[«»]/g,''),'Нажмите на нужное место на схеме. Повторное нажатие на инструмент убирает его.');
+}
+var th='<h4>Инструменты</h4><div class="tools">';TOOLS.forEach(function(x){th+='<button type="button" class="tool" data-tool="'+x[0]+'" aria-pressed="false">'+esc(x[1])+'</button>'});
+th+='</div><h4>Плакаты</h4><div class="tools">';
+PTS.forEach(function(k){var z=PBsize(k);th+='<button type="button" class="tool pt" data-tool="p:'+k+'" aria-pressed="false" aria-label="Плакат «'+esc(pname(k))+'»"><svg viewBox="'+(-z[0]/2-3)+' -3 '+(z[0]+6)+' '+(z[1]+6)+'">'+PB(k)+'</svg><span>'+esc(pname(k))+'</span></button>'});
+$('#gTools').innerHTML=th+'</div>';
+$('#gTools').addEventListener('click',function(e){var b=e.target.closest('.tool');if(b)pick(b.getAttribute('data-tool'))});
+wrap.addEventListener('click',function(e){var r=e.target.closest('.hs');if(r)click(r.getAttribute('data-t'))});
+wrap.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){var r=e.target.closest&&e.target.closest('.hs');if(r){e.preventDefault();click(r.getAttribute('data-t'))}}});
+$('#gHint').addEventListener('click',hint);
+$('#gReset').addEventListener('click',function(){start(key)});
+document.querySelectorAll('#gSeg button').forEach(function(b){b.addEventListener('click',function(){start(b.getAttribute('data-s'))})});
+var inited=false,bt=$('#tabT'),bp=$('#tabP');
+function mode(m){var p=m==='p';$('#theory').hidden=p;$('#practice').hidden=!p;bt.setAttribute('aria-selected',p?'false':'true');bp.setAttribute('aria-selected',p?'true':'false');
+  if(p&&!inited){inited=true;start('A')}window.scrollTo(0,0)}
+bt.addEventListener('click',function(){mode('t')});bp.addEventListener('click',function(){mode('p')});
+document.querySelectorAll('[data-go="p"]').forEach(function(a){a.addEventListener('click',function(){mode('p')})});
+window.__gstart=start;
+})();
+
+(function(){
+  var Q=[
+   {q:'Оперативник отключил выключатель и разъединители, запер приводы, вывесил плакаты «Не включать! Работают люди» и сразу пошёл ставить заземление. Что он пропустил?',o:['Проверку отсутствия напряжения на частях, которые будут заземляться','Ограждение соседней ячейки: его ставят до заземления','Плакат «Заземлено»: его вешают до установки заземления','Ничего: плакаты заменяют проверку'],a:0,w:'П. 16.1: проверка отсутствия напряжения идёт после плакатов и до заземления. Ограждение и плакат «Заземлено» выполняются последними. П. 20.1: заземляют непосредственно после проверки.'},
+   {q:'В ячейке 10 кВ отключён выключатель, сигнальная лампа показывает «Отключено». Разъединители включены, выкатных элементов нет. Можно ли начинать работу на кабеле?',o:['Нет: нужен видимый разрыв с каждой стороны, откуда возможна подача напряжения, например отключением разъединителей','Да: отключённый выключатель даёт достаточный разрыв','Да, если повесить плакат на выключатель','Да, если заземлить только шины'],a:0,w:'П. 17.2: выше 1000 В с каждой стороны, откуда возможна подача напряжения, должен быть видимый разрыв. Его создают отключением разъединителей, снятием предохранителей, отключением отделителей и выключателей нагрузки, отсоединением или снятием шин и проводов. Исключение только для КРУ с выкатными элементами и КРУЭ 6 кВ и выше: положение проверяют по механическому указателю.'},
+   {q:'На отключаемом участке есть силовой трансформатор 10/0,4 кВ. Его отключили только со стороны 10 кВ. Достаточно ли этого?',o:['Нет: схему разбирают и со стороны других обмоток, чтобы не было обратной трансформации','Да: напряжение подаётся только со стороны 10 кВ','Да, если на стороне 0,4 кВ повесить плакат','Нет: нужно только заземлить корпус трансформатора'],a:0,w:'П. 17.2: силовые трансформаторы и трансформаторы напряжения, связанные с участком, должны быть отключены и их схемы разобраны также со стороны других обмоток для исключения обратной трансформации.'},
+   {q:'Линейный разъединитель 10 кВ отключён. Ручной привод остался в отключённом положении без замка, на нём висит плакат. Правильно ли это?',o:['Нет: ручной привод в отключённом положении должен быть заперт механическим замком (ключом или съёмной ручкой)','Да: плаката достаточно','Да, если рядом стоит работник','Да: в сетях 6–10 кВ замок не нужен ни в каком случае'],a:0,w:'П. 17.4: ручные приводы разъединителей, отделителей и выключателей нагрузки в отключённом положении запирают механическим замком и вывешивают запрещающие плакаты. Только в сетях 6–10 кВ с однополюсными разъединителями вместо замка допускается надевать на ножи диэлектрические колпаки.'},
+   {q:'Щит до 1000 В, питание через автомат, предохранителей в схеме нет. Автомат отключили. Что делают, чтобы его не включили по ошибке?',o:['Запирают рукоятку или дверцу шкафа управления, закрывают кнопки или ставят изолирующие накладки между контактами, вывешивают плакаты','Достаточно вывесить плакат','Достаточно перевести рукоятку в положение «отключено»','Достаточно записать об отключении в журнал'],a:0,w:'П. 17.5: при отсутствии в схеме предохранителей ошибочное включение предотвращают запиранием рукояток или дверец шкафа управления, закрытием кнопок, установкой между контактами изолирующих накладок. Необходимо вывесить запрещающие плакаты.'},
+   {q:'Три однополюсных разъединителя 10 кВ отключены для работы. Где вывешивают «Не включать! Работают люди»?',o:['На привод каждого полюса','Один плакат на все три','Только на ограждение камеры','На шины за разъединителями'],a:0,w:'П. 18.1: у однополюсных разъединителей плакаты вывешиваются на приводе каждого полюса; у разъединителей, управляемых оперативной штангой, — на ограждениях.'},
+   {q:'ВЛ 10 кВ отключена линейным разъединителем, на линии работают три бригады. Сколько плакатов «Не включать! Работа на линии» вывешивают на привод разъединителя?',o:['Один, независимо от числа бригад','Три, по одному на бригаду','Два: основной и дублирующий','Плакат не нужен, если есть наряд-допуск'],a:0,w:'П. 18.2: вывешивается один плакат независимо от числа работающих бригад. Его вывешивают и снимают по команде диспетчерского или оперативного персонала; перед снятием нужно подтверждение об окончании работ и удалении всех бригад.'},
+   {q:'Оперативный работник с группой III должен проверить отсутствие напряжения в РУ 10 кВ. Может ли он это сделать?',o:['Нет: в РУ выше 1000 В это делает один работник из оперативного персонала с группой IV','Да, если ему поможет второй работник с группой IV','Да, если он работает в диэлектрических перчатках','Да, если РУ закрытое'],a:0,w:'П. 19.2: в РУ проверять отсутствие напряжения разрешается одному работнику из оперативного персонала с группой IV (выше 1000 В) или III (до 1000 В). Двое проверяют напряжение на ВЛ.'},
+   {q:'Указатель напряжения достали из чехла, внешне он цел. Что нужно сделать перед проверкой шин?',o:['Убедиться в исправности: специальным прибором или поднеся к частям, заведомо находящимся под напряжением','Ничего: внешнего осмотра достаточно','Проверить на корпусе заземлённого щита','Заменить указатель контрольной лампой'],a:0,w:'П. 19.1: исправность указателя перед применением устанавливают специальными приборами или приближением к токоведущим частям, заведомо находящимся под напряжением. Выше 1000 В указателем пользуются в диэлектрических перчатках.'},
+   {q:'Сеть 0,4 кВ с заземлённой нейтралью. Как проверяют отсутствие напряжения двухполюсным указателем?',o:['Между фазами и между каждой фазой и заземлённым корпусом или защитным проводником','Только между фазами','Только между фазой и нулевым проводом','Контрольной лампой между фазой и землёй'],a:0,w:'П. 19.5: проверяют и между фазами, и между каждой фазой и заземлённым корпусом оборудования или защитным проводником. Разрешён предварительно проверенный вольтметр. Контрольными лампами пользоваться запрещено.'},
+   {q:'В щите горит сигнальная лампа «Отключено», постоянный вольтметр показывает ноль. Можно ли на этом основании считать, что напряжения нет?',o:['Нет: это только дополнительные средства, вывод об отсутствии напряжения по ним делать нельзя','Да: два независимых признака','Да, если вольтметр проверен','Да, если лампа новая'],a:0,w:'П. 19.6: устройства сигнализации об отключённом положении, блокирующие устройства и постоянно включённые вольтметры — только дополнительные средства, и на основании их показаний нельзя делать заключение об отсутствии напряжения.'},
+   {q:'Порядок установки и снятия переносного заземления:',o:['Установка: сначала к заземляющему устройству, потом на токоведущие части. Снятие: сначала с токоведущих частей, потом от заземляющего устройства','Установка: сначала на токоведущие части, потом к земле. Снятие в том же порядке','Установка: сначала к земле. Снятие: сначала от земли','Порядок не важен, если работать в перчатках'],a:0,w:'П. 20.2: сначала присоединить к заземляющему устройству, затем, после проверки отсутствия напряжения, установить на токоведущие части. Снимать в обратной последовательности.'},
+   {q:'Отключены для работы сборные шины РУ выше 1000 В. Сколько заземлений достаточно на сами сборные шины?',o:['Одно','По одному со стороны каждой ячейки','По одному на каждую фазу, отдельным заземлением в разных местах','Заземление на шины не ставят'],a:0,w:'П. 21.1: заземляться должны токоведущие части всех фаз отключённого участка со всех сторон, откуда может быть подано напряжение, за исключением отключённых для работы сборных шин РУ: на них достаточно одного заземления.'},
+   {q:'Кто имеет право включить заземляющие ножи в РУ выше 1000 В?',o:['Один работник с группой IV из оперативного персонала','Двое: IV и III','Один работник с группой III','Производитель работ'],a:0,w:'П. 21.8: включать заземляющие ножи имеет право один работник с группой IV из оперативного персонала. Переносные заземления выше 1000 В устанавливают двое: IV (оперативный) и III. Отключать ножи и снимать переносные заземления единолично может оперативный работник с группой III.'},
+   {q:'Для временного ограждения соседней ячейки 10 кВ поставили щит из изоляционного материала. Какое наименьшее расстояние от щита до токоведущих частей разрешено?',o:['0,35 м: для 6–10 кВ расстояние по таблице № 1 разрешено уменьшить','Не менее 1 м без исключений','Не менее 0,1 м','Расстояние не нормируется'],a:0,w:'П. 23.2: при установке временных ограждений без снятия напряжения расстояние до токоведущих частей не менее указанного в таблице № 1; в установках 6–10 кВ его разрешено уменьшить до 0,35 м. На ограждения наносят надписи «Стой! Напряжение!» или крепят плакаты.'},
+   {q:'Работа в ОРУ с земли. Рабочее место огородили канатом. Куда обращены плакаты «Стой! Напряжение»?',o:['Внутрь огороженного пространства','Наружу','Одним плакатом в обе стороны','На канате плакаты не вешают'],a:0,w:'П. 23.5: канат, верёвка или шнур с плакатами «Стой! Напряжение», обращёнными внутрь огражденного пространства. Исключение: при снятии напряжения со всего ОРУ, кроме линейных разъединителей, последние ограждают канатом с плакатами, обращёнными наружу.'},
+   {q:'Работа на тележке выключателя в шкафу КРУ. Тележку выкатили в ремонтное положение. Что делают со шторкой отсека, где токоведущие части остались под напряжением?',o:['Запирают на замок и вывешивают «Стой! Напряжение»; на тележке или в отсеке работы вывешивают «Работать здесь»','Оставляют открытой для вентиляции','Закрывают без замка и вешают «Не включать!»','Вешают «Не влезай! Убьет»'],a:0,w:'П. 29.1: тележку выкатить в ремонтное положение; шторку отсека, в котором токоведущие части остались под напряжением, запереть на замок и вывесить «Стой! Напряжение»; на тележке или в отсеке, где предстоит работать, вывесить «Работать здесь».'},
+   {q:'Какие плакаты вывешивают на стационарной лестнице, по которой разрешено подниматься к рабочему месту в ОРУ, и на соседних конструкциях?',o:['«Влезать здесь!» на лестнице; «Не влезай! Убьет» внизу на граничащих конструкциях','«Работать здесь» на всех','«Стой! Напряжение» на лестнице','Плакаты не нужны, если есть наряд-допуск'],a:0,w:'П. 23.6: на стационарных лестницах и конструкциях, по которым разрешено подниматься, — «Влезать здесь!»; на конструкциях, граничащих с той, по которой разрешается подниматься, внизу — «Не влезай! Убьет». На участках, по которым можно пройти к частям под напряжением, — «Стой! Напряжение».'}
+  ];
+  Q.forEach(function(q){var c=q.o[q.a],m=q.o.map(function(x){return[Math.random(),x]}).sort(function(u,v){return u[0]-v[0]}).map(function(z){return z[1]});q.o=m;q.a=m.indexOf(c)});
+  var done={},score=0;
+  function render(){
+    var h='';Q.forEach(function(q,i){
+      h+='<div class="q"><b>'+(i+1)+'. '+esc(q.q)+'</b><div class="opts">';
+      q.o.forEach(function(o,j){var c='opt',d='';if(done[i]!==undefined){d=' disabled';if(j===q.a)c+=' right';else if(j===done[i])c+=' wrong'}
+        h+='<button type="button" class="'+c+'" data-i="'+i+'" data-j="'+j+'"'+d+'>'+esc(o)+'</button>'});
+      h+='</div>';if(done[i]!==undefined)h+='<div class="why">'+esc(q.w)+'</div>';h+='</div>'});
+    $('#quiz').innerHTML=h;
+    document.querySelectorAll('#quiz .opt').forEach(function(b){b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-i'),j=+b.getAttribute('data-j');if(done[i]!==undefined)return;
+      done[i]=j;if(j===Q[i].a)score++;render();res()})});
+  }
+  function res(){var r=$('#quizRes');if(Object.keys(done).length<Q.length){r.hidden=true;return}
+    r.hidden=false;r.className='res '+(score>=Q.length*0.8?'ok':score>=Q.length*0.6?'mid':'bad');
+    r.textContent='Результат: '+score+' из '+Q.length+'. '+(score===Q.length?'Всё верно.':'Вернитесь к разделам и пунктам, где ошиблись: разбор под каждым вопросом.')}
+  $('#quizReset').addEventListener('click',function(){done={};score=0;render();res()});
+  render();
+})();
+
+</script>
+</body>
+</html>

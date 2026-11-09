@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Работа под напряжением</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+:root{
+  --bg:#f4f7fa; --surface:#fff; --surface2:#eaf0f5; --ink:#18232f; --muted:#55646f; --line:#d3dce5;
+  --live:#d9480f; --live-soft:#fde8dc; --earth:#217a45; --earth-soft:#dff1e6;
+  --insul:#0f7c8f; --insul-soft:#d9eff3; --man:#5b46c4; --man-soft:#e8e3f9;
+  --danger:#c4262e; --danger-soft:#fbdedf; --warn-soft:#fdf0cf; --accent:#0f7c8f;
+  --font:"IBM Plex Sans",system-ui,sans-serif; --head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --surface:#18212a; --surface2:#212c37; --ink:#e8edf2; --muted:#9bacba; --line:#2e3b48;
+  --live:#ff8a4c; --live-soft:#3a2418; --earth:#5ec489; --earth-soft:#173225;
+  --insul:#4cc3d6; --insul-soft:#143038; --man:#b0a4ff; --man-soft:#2a2547;
+  --danger:#ff6b72; --danger-soft:#3b1a1d; --warn-soft:#38290d; --accent:#4cc3d6; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;
+  padding-bottom:64px}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--head);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5.5vw,40px)}
+h2{font-size:clamp(23px,4vw,30px);margin-bottom:10px}
+h3{font-size:19px;margin:0 0 6px}
+p{margin:0 0 10px}
+ul,ol{margin:6px 0 10px;padding-left:22px} li{margin:5px 0}
+section{padding-top:36px}
+.kicker{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:19px;margin-top:12px;max-width:44ch}
+nav.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0;margin-top:18px}
+nav.top .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.top a{flex:0 0 auto;font-size:14px;color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+nav.top a:hover,nav.top a:focus-visible{border-color:var(--accent);outline:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.plain{border-left:5px solid var(--earth);background:var(--earth-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.plain b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--earth);margin-bottom:2px}
+.warn{border-left:5px solid var(--danger);background:var(--danger-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0}
+.warn b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--danger);margin-bottom:2px}
+details.rule{margin:10px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+details.rule summary{cursor:pointer;padding:10px 14px;font-size:15px;font-weight:500;color:var(--accent)}
+details.rule .rq{padding:2px 16px 12px;font-size:15px;color:var(--ink)}
+details.rule .rq p{margin:8px 0;padding-left:12px;border-left:3px solid var(--line)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:8px 0}
+.chain .b{flex:1 1 120px;min-width:110px;border-radius:10px;padding:10px 10px;font-size:15px;font-weight:600;line-height:1.25;border:2px solid transparent;text-align:center;display:flex;align-items:center;justify-content:center}
+.chain .w{background:var(--live-soft);color:var(--live);border-color:var(--live)}
+.chain .i{background:var(--insul-soft);color:var(--insul);border-color:var(--insul)}
+.chain .m{background:var(--man-soft);color:var(--man);border-color:var(--man)}
+.chain .e{background:var(--earth-soft);color:var(--earth);border-color:var(--earth)}
+.chain .ar{flex:0 0 auto;align-self:center;color:var(--muted);font-size:22px}
+.srow{margin:20px 0 6px}
+.srow .lab{font-weight:600;font-size:16px;margin-bottom:2px}
+.srow .lab span{color:var(--muted);font-weight:400;font-size:15px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.scene{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}
+.scene svg{display:block;width:100%;height:auto}
+svg.poster{--live:#d9480f;--earth:#1f7a3f;--insul:#0e8a9e;--float:#6b4fd0;--danger:#c4262e;--ink:#1c2530;--muted:#3b4856;--surface:#fff;--bg:#f7fbff}
+svg.poster text{fill:#1c2530;font-size:12.5px}
+.t-live{fill:var(--live)!important}
+.pulse{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.pulse{animation:none}}
+.tag{display:inline-block;font-size:12.5px;padding:1px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-weight:600;font-size:14px}
+.tscroll{overflow-x:auto}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:10px}
+.gcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.gcard svg{background:#fff6d6;border-bottom:3px solid #f08a24;aspect-ratio:160/110;width:100%}
+.gcard .gb{padding:10px 14px;font-size:15px;line-height:1.5}
+.gcard .gb p{margin:4px 0 8px}
+.q{padding:16px 0;border-bottom:1px solid var(--line)}
+.q b{display:block;margin-bottom:8px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;font:inherit;font-size:16px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--earth-soft);border-color:var(--earth)}
+.opt.wrong{background:var(--danger-soft);border-color:var(--danger)}
+.why{margin-top:8px;font-size:15px;color:var(--muted)}
+.btn{font:inherit;font-size:15px;padding:9px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#06222a}
+.res{margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:500}
+.res.ok{background:var(--earth-soft)} .res.mid{background:var(--warn-soft)} .res.bad{background:var(--danger-soft)}
+.step{display:flex;gap:12px;margin:10px 0}
+.step .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+:root[data-theme="dark"] .step .n{color:#06222a}
+.step div{flex:1}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="wrap" style="padding-top:22px">
+  <div class="kicker">ПОТ ЭУ · приказ Минтруда № 903н · раздел XXXVIII</div>
+  <h1>Работа под напряжением и под наведённым напряжением</h1>
+  <p class="lead">Сначала простыми словами, что требуют Правила. Под каждым блоком можно раскрыть дословный текст пункта.</p>
+</header>
+<nav class="top" aria-label="Разделы"><div class="wrap">
+  <a href="#glavnoe">Главное</a><a href="#s1">Схема 1</a><a href="#s2">Схема 2</a><a href="#s3">Схема 3</a><a href="#obshee">Общие правила</a><a href="#sredstva">Средства защиты</a><a href="#rasst">Расстояния</a><a href="#nav">Наведённое напряжение</a><a href="#test">Тест</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="glavnoe">
+  <h2>Главное</h2>
+  <div class="card">
+    <div class="step"><span class="n">1</span><div><b>Работа под напряжением</b> — это работа на токоведущей части, с которой напряжение не сняли.</div></div>
+    <div class="step"><span class="n">2</span><div>Опасен ток, который проходит через тело: от токоведущей части через человека в землю. Поэтому в эту цепочку ставят изоляцию.</div></div>
+    <div class="step"><span class="n">3</span><div>Правила (п. 38.21) описывают <b>три схемы</b>. Каждая названа цепочкой: что стоит между токоведущей частью и землёй и в каком порядке. Цепочки надо запомнить.</div></div>
+  </div>
+
+  <div class="srow"><div class="lab">Схема 1 <span>— метод «в контакте» и метод «на расстоянии»</span></div>
+    <div class="chain"><div class="b w">Токоведущая часть под напряжением</div><div class="ar">→</div><div class="b i">Изоляция</div><div class="ar">→</div><div class="b m">Человек</div><div class="ar">→</div><div class="b e">Земля</div></div>
+    <p>Между человеком и токоведущей частью стоит изоляция. Человек остаётся на потенциале земли.</p></div>
+  <div class="srow"><div class="lab">Схема 2 <span>— работа под потенциалом</span></div>
+    <div class="chain"><div class="b w">Токоведущая часть под напряжением</div><div class="ar">→</div><div class="b m">Человек</div><div class="ar">→</div><div class="b i">Изоляция</div><div class="ar">→</div><div class="b e">Земля</div></div>
+    <p>Человек у токоведущей части, а изоляция между ним и землёй.</p></div>
+  <div class="srow"><div class="lab">Схема 3 <span>— метод «в изоляции»</span></div>
+    <div class="chain"><div class="b w">Токоведущая часть под напряжением</div><div class="ar">→</div><div class="b i">Изоляция</div><div class="ar">→</div><div class="b m">Человек</div><div class="ar">→</div><div class="b i">Изоляция</div><div class="ar">→</div><div class="b e">Земля</div></div>
+    <p>Человек изолирован и от токоведущей части, и от земли.</p></div>
+
+  <div class="card"><h3>Сравнение в одной таблице</h3>
+  <div class="tscroll"><table>
+    <thead><tr><th>Схема</th><th>Где применяют</th><th>Что обязательно</th></tr></thead>
+    <tbody>
+    <tr><td><b>1, «в контакте»</b></td><td>ВЛ (ВЛИ) до 1000 В; оборудование до 1000 В в ТП и КТП</td><td>Диэлектрические перчатки, накладки, изолирующий инструмент</td></tr>
+    <tr><td><b>1, «на расстоянии»</b></td><td>РУ, ТП, ВЛ (КВЛ) и оборудование 1–35 кВ</td><td>Штанги и клещи; со штангами диэлектрические перчатки; расстояние по таблице № 1</td></tr>
+    <tr><td><b>2, «под потенциалом»</b></td><td>Электроустановки, по специальным инструкциям, ТК, ПОР или ППР</td><td>Изоляция от земли, экранирующий комплект, выравнивание потенциалов</td></tr>
+    <tr><td><b>3, «в изоляции»</b></td><td>Электроустановки до 35 кВ включительно</td><td>Изоляция от земли, диэлектрические перчатки и рукава, накладки</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<section id="s1">
+  <h2>Схема 1. Токоведущая часть – изоляция – человек – земля</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Человек защищён изоляцией (перчатки, накладки, штанги) и остаётся на потенциале земли. Схема применяется до 35 кВ включительно и делится на два метода.</div>
+  @@Q(38.21;1)@@
+
+  <div class="card">
+    <h3>Метод «в контакте»</h3>
+    <div class="scene"><svg id="sc1a" class="poster" viewBox="225 0 535 450" role="img" aria-label="Работник в люльке касается провода в диэлектрических перчатках, провода закрыты накладками"></svg></div>
+    <div class="plain"><b class="t">Простыми словами</b>Работают руками на токоведущих частях, но в диэлектрических перчатках, с изолирующим инструментом. Соседние части закрыты накладками.</div>
+    <ul>
+      <li><b>Где:</b> ВЛ и ВЛИ до 1000 В, оборудование до 1000 В в ТП и КТП.</li>
+      <li><b>Что нужно:</b> диэлектрические перчатки нужного класса, накладки, изолирующий инструмент.</li>
+      <li><b>На ВЛ до 1000 В</b> надевают комплект: диэлектрические, хлопчатобумажные и защитные кожаные перчатки.</li>
+      <li><b>Подъёмник</b> без изолирующего звена на ВЛ до 1000 В допускается, если люлька закрыта накладками: пол, перила, ограждающая планка, дверь.</li>
+      <li><b>В установках до 1000 В</b> ещё нужно: снять напряжение с соседних токоведущих частей или оградить их; стоять в диэлектрических галошах, на изолирующей подставке или на резиновом диэлектрическом коврике.</li>
+    </ul>
+    <div class="warn"><b class="t">Нельзя</b>Работать в одежде с короткими или засученными рукавами. Использовать ножовки, напильники, металлические метры и другой металлический инструмент, не предназначенный для работ под напряжением.</div>
+    @@Q(38.21;2,3)@@ @@Q(4.5;all)@@
+  </div>
+
+  <div class="card">
+    <h3>Метод «на расстоянии»</h3>
+    <div class="scene"><svg id="sc1b" class="poster" viewBox="225 0 535 450" role="img" aria-label="Работник держит токоведущую часть изолирующей штангой на расстоянии"></svg></div>
+    <div class="plain"><b class="t">Простыми словами</b>К токоведущим частям руками не прикасаются: работают изолирующими штангами и клещами. Накладки на токоведущие части ставить не нужно.</div>
+    <ul>
+      <li><b>Где:</b> РУ, ТП, ВЛ и КВЛ, оборудование напряжением 1–35 кВ.</li>
+      <li><b>Основные средства:</b> изолирующие штанги, клещи.</li>
+      <li><b>Дополнительные:</b> диэлектрические перчатки, боты, накладки.</li>
+      <li>При работе со штангами диэлектрические перчатки обязательны. Расстояние от работника до токоведущих частей — не менее указанного в таблице № 1.</li>
+    </ul>
+    @@Q(38.21;4,5)@@
+  </div>
+</section>
+
+<section id="s2">
+  <h2>Схема 2. Токоведущая часть – человек – изоляция – земля</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Это работа под потенциалом. Человек сам оказывается под потенциалом токоведущей части, но полностью изолирован от земли. Чтобы не ударило током при касании, потенциалы заранее выравнивают.</div>
+  <div class="card">
+    <div class="scene"><svg id="sc2" class="poster" viewBox="225 0 535 450" role="img" aria-label="Работник в экранирующем комплекте на изолированной от земли площадке у провода"></svg></div>
+    <h3>Три условия</h3>
+    <div class="step"><span class="n">1</span><div><b>Изоляция от земли.</b> Специальные устройства соответствующего напряжения.</div></div>
+    <div class="step"><span class="n">2</span><div><b>Экранирующий комплект,</b> соответствующий техническим регламентам и иным обязательным требованиям.</div></div>
+    <div class="step"><span class="n">3</span><div><b>Выравнивание потенциалов</b> экранирующего комплекта, рабочей площадки и провода специальной штангой для переноса потенциала.</div></div>
+    <p>Расстояние от работника до заземлённых частей и элементов оборудования — не менее указанного в таблице № 1.</p>
+    <div class="warn"><b class="t">Нельзя</b>Прикасаться к изоляторам и арматуре подвесок, у которых потенциал не такой, как у провода. Передавать инструмент работникам, которые стоят не на той же площадке, и получать от них (п. 38.24).</div>
+    <ul>
+      <li>Конкретные виды работ под потенциалом выполняют по специальным инструкциям, технологическим картам, ПОР или ППР (п. 38.22).</li>
+      <li>На ВЛ выше 1000 В группа IV нужна тем, кто касается провода под потенциалом; остальным членам бригады — группа III (п. 38.23).</li>
+    </ul>
+    @@Q(38.21;6,7,8,9)@@ @@Q(38.22;all)@@ @@Q(38.23;all)@@ @@Q(38.24;all)@@
+  </div>
+</section>
+
+<section id="s3">
+  <h2>Схема 3. Токоведущая часть – изоляция – человек – изоляция – земля</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Метод «в изоляции». Человек изолирован и от токоведущей части, и от земли. Применяют до 35 кВ включительно.</div>
+  <div class="card">
+    <div class="scene"><svg id="sc3" class="poster" viewBox="225 0 535 450" role="img" aria-label="Работник в диэлектрических рукавах и перчатках на изолированной от земли площадке"></svg></div>
+    <h3>Что обязательно</h3>
+    <ul>
+      <li><b>Изоляция от земли:</b> специальные изолирующие устройства соответствующего класса напряжения.</li>
+      <li><b>Электрозащитные средства:</b> диэлектрические перчатки, диэлектрические рукава, накладки.</li>
+      <li><b>Перчатки — комплектом:</b> диэлектрические, хлопчатобумажные, защитные кожаные. Кожаные обязательны: они защищают диэлектрические от механических повреждений.</li>
+      <li><b>Манжеты</b> диэлектрических перчаток во время работы перекрывают рукава так, чтобы не оставалось открытого участка руки.</li>
+      <li><b>Накладки:</b> на токоведущие части в месте работы; на части рядом в пределах досягаемости, которые отключить нельзя, — тоже накладки или ограждение (п. 16.3).</li>
+    </ul>
+    @@Q(38.21;10,11,12,13,14,15)@@ @@Q(16.3;all)@@
+  </div>
+</section>
+
+<section id="obshee">
+  <h2>Общие правила для всех схем</h2>
+  <div class="card">
+    <h3>Ближе 150 мм нельзя</h3>
+    <p>Незащищёнными от тока частями тела нельзя приближаться к токоведущим частям под напряжением ближе, чем на <b>150 мм</b>.</p>
+    <h3 style="margin-top:14px">Накладки: порядок</h3>
+    <p>Для схемы 1 («в контакте») и схемы 3 накладки ставят на токоведущие части и на части, не находящиеся под напряжением, <b>начиная от ближайших</b>. Снимают <b>в обратном порядке</b>. Класс напряжения накладок должен соответствовать установке.</p>
+    <h3 style="margin-top:14px">Подъёмник с изолирующим звеном</h3>
+    <p>От токоведущих частей под напряжением до ближайшей токопроводящей части стрелы — не менее, чем в таблице № 1.</p>
+    @@Q(38.21;16,17,18,19,20)@@
+  </div>
+  <div class="card">
+    <h3>До начала работы (п. 16.2, 16.4)</h3>
+    <ul>
+      <li>Работа должна быть в перечне работ, разрешённых под напряжением.</li>
+      <li>Приняты меры, чтобы отключившаяся электроустановка не включилась обратно от АПВ или АВР.</li>
+      <li>На приводах ручного управления и ключах дистанционного управления вывешены запрещающие плакаты.</li>
+      <li>При методе «на расстоянии» со штангами, а также в мачтовых и столбовых ТП и КТП до 1000 В методом «в контакте» выводить АПВ и АВР на питающих ЛЭП выше 1000 В не требуется.</li>
+    </ul>
+    @@Q(16.2;all)@@
+    <h3 style="margin-top:14px">Кто допускается (п. 38.23)</h3>
+    <p>В электроустановках до 1000 В члены бригады, которые работают под напряжением на токоведущих частях, — группа не ниже III. Ответственный руководитель работ и производитель работ — не ниже IV (кроме случаев по п. 38.88 и 38.89).</p>
+    @@Q(38.23;all)@@
+    <h3 style="margin-top:14px">Погода (п. 38.32)</h3>
+    <p>Нельзя работать на ВЛ под напряжением при тумане, дожде, снегопаде, в тёмное время суток, при обледенении опор (если на опору поднимаются без подъёмных сооружений) и при ветре, который мешает работать на опорах.</p>
+    @@Q(38.32;all)@@
+  </div>
+</section>
+
+<section id="sredstva">
+  <h2>Средства защиты, как они выглядят</h2>
+  <p>Только средства, которые названы в Правилах (п. 38.21, 4.5, 16.3). У каждого указано, для какой схемы он нужен.</p>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="rasst">
+  <h2>Допустимые расстояния</h2>
+  <p>Таблица № 1 Правил. Ближе подходить нельзя, кроме самой работы под напряжением по схемам выше.</p>
+  <div class="card"><div class="tscroll"><table>
+    <thead><tr><th>Напряжение, кВ</th><th>От работников, их инструмента и приспособлений, от временных ограждений, м</th><th>От механизмов и подъёмных сооружений, стропов, грузов, м</th></tr></thead>
+    <tbody>
+    <tr><td>ВЛ до 1</td><td>0,6</td><td>1,0</td></tr>
+    <tr><td>Остальные электроустановки до 1</td><td>не нормируется (без прикосновения)</td><td>1,0</td></tr>
+    <tr><td>1–35</td><td>0,6</td><td>1,0</td></tr>
+    <tr><td>60 (постоянный ток) – 110</td><td>1,0</td><td>1,5</td></tr>
+    <tr><td>150</td><td>1,5</td><td>2,0</td></tr>
+    <tr><td>220</td><td>2,0</td><td>2,5</td></tr>
+    <tr><td>330</td><td>2,5</td><td>3,5</td></tr>
+    <tr><td>400 (постоянный ток) – 500</td><td>3,5</td><td>4,5</td></tr>
+    <tr><td>750</td><td>5,0</td><td>6,0</td></tr>
+    <tr><td>1150</td><td>8,0</td><td>10,0</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<section id="nav">
+  <h2>Наведённое напряжение</h2>
+  <div class="plain"><b class="t">Простыми словами</b>Линия отключена и заземлена с обоих концов, но рядом проходят действующие линии. Их ток «наводит» напряжение на отключённых проводах. Если на отдельных участках остаётся <b>больше 25 В</b> (при наибольшем рабочем токе влияющих ВЛ), линия считается находящейся под наведённым напряжением.</div>
+  <div class="card">
+    <svg viewBox="0 0 700 230" role="img" aria-label="Действующая линия наводит напряжение на соседней отключённой линии" style="width:100%;height:auto;display:block">
+      <rect x="0" y="0" width="700" height="230" rx="10" fill="var(--surface2)"/>
+      <text x="20" y="28" style="fill:var(--live);font-weight:600;font-size:15px">Действующая ВЛ: по проводам идёт ток</text>
+      <line x1="30" y1="52" x2="670" y2="52" stroke="var(--live)" stroke-width="5"/>
+      <line x1="30" y1="68" x2="670" y2="68" stroke="var(--live)" stroke-width="5"/>
+      <g stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-dasharray="5 5">
+        <path d="M200 76 L200 130"/><path d="M350 76 L350 130"/><path d="M500 76 L500 130"/></g>
+      <g fill="var(--accent)"><path d="M194 126 L200 138 L206 126Z"/><path d="M344 126 L350 138 L356 126Z"/><path d="M494 126 L500 138 L506 126Z"/></g>
+      <text x="360" y="106" style="fill:var(--accent);font-weight:600;font-size:14px">наводится напряжение</text>
+      <line x1="60" y1="150" x2="640" y2="150" stroke="var(--ink)" stroke-width="5"/>
+      <text x="20" y="182" style="fill:var(--ink);font-weight:600;font-size:15px">Ваша ВЛ: отключена и заземлена по концам в РУ</text>
+      <g stroke="var(--earth)" stroke-width="3"><path d="M60 150 L60 205 M48 205 L72 205 M52 211 L68 211"/><path d="M640 150 L640 205 M628 205 L652 205 M632 211 L648 211"/></g>
+      <text x="300" y="214" style="fill:var(--danger);font-weight:600;font-size:15px">на участках может быть &gt; 25 В</text>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h3>Что нужно знать и сделать до работы</h3>
+    <ul>
+      <li>Линии (участки) под наведённым напряжением определяет эксплуатирующая организация измерениями с пересчётом на наибольший рабочий ток влияющей ВЛ.</li>
+      <li>У работников, которые обслуживают ВЛ, должен быть перечень таких линий. Его нужно знать.</li>
+      <li>Сведения о наведённом напряжении записывают в наряде-допуске в строке «Отдельные указания». Расчётное значение указано в перечне ВЛ.</li>
+      <li>Все работы с прикосновением к проводу или грозотросу ведут по технологическим картам или ППР.</li>
+    </ul>
+    @@Q(38.43;all)@@ @@Q(4.4;1)@@
+    <div class="plain"><b class="t">Главная идея</b>В технологической карте или ППР прописывают <b>уравнивание потенциалов</b>: электрически соединяют между собой все части, которых можно коснуться одновременно. Это провод, а также металлические конструкции, машины, механизмы и приспособления. Тогда между ними нет разности потенциалов. Ещё прописывают, какие изолирующие средства использовать: перчатки, боты, штанги, штанги для переноса потенциала, шунтирующие комплекты спецодежды.</div>
+    @@Q(38.44;all)@@
+  </div>
+
+  <div class="card">
+    <h3>Два способа работать (п. 38.45)</h3>
+    <div class="cols">
+      <div><b>Способ А.</b> ВЛ заземлена <b>с обеих сторон в РУ и на рабочем месте.</b> Безопасность обеспечивают уравниванием потенциалов (п. 38.46) или технологией «без снятия напряжения» (п. 38.47).</div>
+      <div><b>Способ Б.</b> ВЛ <b>не заземлена в РУ</b>, заземление только на рабочем месте (п. 38.48).</div>
+    </div>
+    @@Q(38.45;all)@@
+  </div>
+
+  <div class="card">
+    <h3>Способ А: заземление с двух сторон и уравнивание потенциалов (п. 38.46)</h3>
+    <ul>
+      <li>ВЛ в ремонте заземлена с обеих сторон в РУ.</li>
+      <li>С металлической опоры: фазные провода (грозотрос) заземляют на стойку опоры. С железобетонной опоры — на стационарный заземлитель, исправный и соответствующий требованиям.</li>
+      <li>С телескопической вышки: рабочая площадка соединена с проводом (тросом) гибким проводником сечением <b>не менее 25 мм²</b>, сама вышка (шасси) заземлена, а провод заземлён на месте работ.</li>
+      <li>После соединения площадки с проводом нельзя входить в кабину и выходить из неё, а также прикасаться к корпусу вышки, стоя на земле.</li>
+      <li>Нельзя использовать «бесконечные» канаты из токопроводящих материалов.</li>
+      <li>Количество бригад на такой ВЛ не ограничено.</li>
+      <li>Если уравнять потенциалы на месте нельзя (например, деревянная опора), работают по п. 38.47 или 38.48.</li>
+    </ul>
+    @@Q(38.46;all)@@ @@Q(38.47;all)@@
+  </div>
+
+  <div class="card">
+    <h3>Способ Б: заземление только на рабочем месте (п. 38.48)</h3>
+    <div class="step"><span class="n">1</span><div>Со стороны РУ ВЛ <b>не заземляют</b>.</div></div>
+    <div class="step"><span class="n">2</span><div>К работе на одной ВЛ (одном электрически связанном участке) допускают <b>не более одной бригады</b>.</div></div>
+    <div class="step"><span class="n">3</span><div>ВЛ заземляют в одном месте (на месте работы) или на двух смежных опорах. На месте работы, кроме основного, ставят <b>дополнительное переносное заземление</b>. Работать можно только с опоры, где установлено заземление, или в пролёте между смежными заземлёнными опорами.</div></div>
+    <div class="step"><span class="n">4</span><div>Если нужно работать в двух и более пролётах, ВЛ делят на электрически не связанные участки, разъединяя петли на анкерных опорах. На каждом участке — одна бригада.</div></div>
+    <div class="step"><span class="n">5</span><div><b>Перед установкой или снятием заземления</b> провод (трос) заземляют штангой с дугогасящим устройством: она снимает статическую составляющую наведённого напряжения и локализует дуговой разряд. Заземляющий провод штанги заранее присоединяют к заземлителю. Штангу снимают только после установки (снятия) переносного заземления.</div></div>
+    <div class="step"><span class="n">6</span><div>Нет такой штанги: заземление на рабочем месте ставят или снимают только после временного заземления ВЛ в одном из РУ. Заземляющие ножи в РУ отключают только после установки (снятия) заземления на рабочем месте.</div></div>
+    <div class="step"><span class="n">7</span><div><b>Снятие заземлений:</b> сначала отсоединяют струбцины обоих заземлений от провода (грозотроса), потом от заземлителя.</div></div>
+    <div class="warn"><b class="t">Нельзя</b>На одной ВЛ (одном электрически связанном участке) одновременно работать бригадам с разной подготовкой рабочего места (способ А и способ Б вместе) — п. 38.49.</div>
+    @@Q(38.48;all)@@ @@Q(38.49;all)@@
+  </div>
+
+  <div class="card">
+    <h3>Работа с земли и монтаж проводов (п. 38.50–38.55)</h3>
+    <ul>
+      <li><b>С земли</b>, с проводом, опущенным до земли: электрозащитные средства (диэлектрические перчатки, штанги) или металлическая площадка, соединённая проводником с проводом. Соединять площадку с проводом можно только в средствах защиты и только когда на ней уже стоит работник. Приближаться к площадке без защиты от напряжения шага нельзя. Без средств защиты и площадки можно, если провод заземлён рядом с каждым местом прикосновения.</li>
+      <li><b>Монтаж</b> (подъём, визирование, натяжка, перекладка из роликов в зажимы): провод заземляют на анкерной опоре, откуда идёт раскатка, на конечной анкерной опоре, через которую идёт натяжка, и на каждой промежуточной опоре, на которую поднимается провод.</li>
+      <li>По окончании работы на промежуточной опоре заземление с провода на ней можно снять. Если работа с касанием провода возобновится, провод снова заземляют на той же опоре.</li>
+      <li><b>Стальные тяговые канаты:</b> сначала закрепляют на тяговом механизме и заземляют на тот же заземлитель, что и провод. Только после этого прикрепляют канат к проводу. Разъединять провод и канат можно только после выравнивания потенциалов.</li>
+      <li><b>Перекладка из роликов в зажимы</b> идёт в направлении, обратном раскатке. Заземление с перекладываемых проводов снимают только после перекладки в зажимы и окончания работ на опоре.</li>
+      <li>Смежный анкерный пролёт, где перекладка закончена, считают находящимся под наведённым напряжением. Работать с касанием проводов там можно только после заземления на рабочем месте.</li>
+    </ul>
+    @@Q(38.50;all)@@ @@Q(38.51;all)@@ @@Q(38.52;all)@@ @@Q(38.53;all)@@ @@Q(38.54;all)@@ @@Q(38.55;all)@@
+  </div>
+</section>
+
+<section id="test">
+  <h2>Проверь себя</h2>
+  <p>13 вопросов. В каждом нужно применить правило к ситуации. После ответа показан разбор по пункту Правил.</p>
+  <div class="card"><div id="quiz"></div><div class="res" id="quizRes" hidden></div><div style="margin-top:14px"><button class="btn" id="quizReset" type="button">Пройти заново</button></div></div>
+</section>
+
+<p class="note" style="margin-top:30px;font-size:14px;color:var(--muted)">Тексты пунктов взяты из ПОТ ЭУ (приказ Минтруда № 903н в ред. приказа № 279н от 29.04.2022), сноски на ГОСТ опущены. Перед экзаменом сверьте с действующей редакцией.</p>
+</main>
+
+<script>
+var $=function(s,r){return (r||document).querySelector(s)};
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+var SCH={'1a':{chainTxt:'Токоведущая часть – изоляция – человек – земля',meth:'метод «в контакте»',pot:'earth'},
+ '1b':{chainTxt:'Токоведущая часть – изоляция – человек – земля',meth:'метод «на расстоянии»',pot:'earth'},
+ '2':{chainTxt:'Токоведущая часть – человек – изоляция – земля',meth:'работа под потенциалом',pot:'live'},
+ '3':{chainTxt:'Токоведущая часть – изоляция – человек – изоляция – земля',meth:'метод «в изоляции»',pot:'float'}};
+@@SCENEJS@@
+function badge(){return ''}
+var STATE={'1a':{cov:['k1','k2','k3','k4'],work:true},'1b':{work:true},'2':{eq:true,work:true},'3':{cov:['k1','k2','k3','k4'],work:true}};
+[['sc1a','1a'],['sc1b','1b'],['sc2','2'],['sc3','3']].forEach(function(z){ $('#'+z[0]).innerHTML=sceneHTML(z[1],false,false,STATE[z[1]]); });
+@@GALLERYJS@@
+@@QUIZJS@@
+</script>
+</body>
+</html>
