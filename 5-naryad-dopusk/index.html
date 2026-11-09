@@ -67,6 +67,32 @@ select,input[type=text],input[type=date],textarea{width:100%;border:1px solid va
 .exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
 .q.done .exp{display:block}
 .score{font-weight:700;font-size:1.1rem;margin:14px 0}
+
+/* бланк */
+.paper{background:#fff;color:#111;font-family:"Times New Roman",Times,serif;font-size:15px;line-height:1.5;border:1px solid #888;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:22px 20px;margin:12px 0;border-radius:2px}
+.paper h3{text-align:center;margin:6px 0;font-size:1.15rem;letter-spacing:.03em}
+.paper h4{text-align:center;margin:18px 0 6px;font-size:1rem}
+.paper .side{text-align:center;font-style:italic;color:#555;margin:0 0 10px}
+.paper hr{border:0;border-top:2px dashed #999;margin:26px 0}
+.paper input.u,.paper select.u,.paper textarea.u{border:0;border-bottom:1px solid #444;border-radius:0;background:#f3f7ff;color:#111;padding:2px 4px;font:inherit;width:100%}
+.paper input.u:focus,.paper select.u:focus,.paper textarea.u:focus{outline:2px solid #1a5fb4;background:#e6efff}
+.paper .ln{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:6px 0}
+.paper .ln>span{white-space:nowrap}
+.paper .ln .u{flex:1;min-width:120px}
+.paper .ln .u.s{flex:0 0 70px;min-width:70px}
+.paper .ln .u.dt{flex:0 0 150px}
+.paper table{border-collapse:collapse;width:100%;font-size:.88rem;margin:6px 0}
+.paper th,.paper td{border:1px solid #333;padding:3px;vertical-align:top;background:#fff;color:#111}
+.paper th{background:#eee;font-weight:600;text-align:center}
+.paper td input.u,.paper td select.u{border-bottom:0;background:#f3f7ff;min-width:70px}
+.paper .rm{border:0;background:transparent;color:#c4262e;cursor:pointer;font-size:1.1rem;padding:0 4px}
+.paper .add{border:1px dashed #1a5fb4;background:transparent;color:#1a5fb4;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:.85rem;margin:2px 0}
+.paper .sig{border:1px dashed #888;background:#f3f7ff;color:#555;border-radius:6px;padding:2px 8px;cursor:pointer;font:inherit;font-size:.85rem;white-space:nowrap}
+.paper .sig.on{border:1px solid #1d7a46;background:#dff1e6;color:#1d7a46;font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic}
+.paper .tw{overflow-x:auto}
+.hint{position:sticky;bottom:8px;z-index:5;background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 14px;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.35);margin-top:10px}
+.hint b{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.cond{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -79,7 +105,7 @@ select,input[type=text],input[type=date],textarea{width:100%;border:1px solid va
 <nav class="tabs" role="tablist" id="tabs">
 <button class="tab" role="tab" aria-selected="true" data-t="roles">Роли и группы</button>
 <button class="tab" role="tab" aria-selected="false" data-t="steps">Этапы</button>
-<button class="tab" role="tab" aria-selected="false" data-t="fill">Заполнить наряд</button>
+<button class="tab" role="tab" aria-selected="false" data-t="fill">Бланк наряда</button>
 <button class="tab" role="tab" aria-selected="false" data-t="crew">Состав бригады</button>
 <button class="tab" role="tab" aria-selected="false" data-t="cheat">Сроки и цифры</button>
 <button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button>
@@ -130,38 +156,25 @@ select,input[type=text],input[type=date],textarea{width:100%;border:1px solid va
 
 <!-- ЗАПОЛНЕНИЕ -->
 <section id="fill" hidden>
-<div class="card"><h2>Заполните наряд-допуск и проверьте</h2>
-<p class="muted">Поля повторяют лицевую сторону бланка (приложение № 7). Заполните их, нажмите «Проверить», и вы увидите, какие требования Правил выполнены, а какие нарушены. Можно подставить готовый верный или ошибочный пример.</p>
-<div class="btns"><button class="btn" id="exGood">Верный пример</button><button class="btn" id="exBad">Пример с ошибками</button><button class="btn" id="exClear">Очистить</button></div>
-<div class="sh">Условия работы</div>
-<div class="form">
+<div class="card"><h2>Бланк наряда-допуска</h2>
+<p class="muted">Это бланк по рекомендуемому образцу (приложение № 7), лицевая и оборотная стороны. Заполняйте его прямо в клетках. Когда курсор в поле, внизу появляется подсказка, что и как писать. Подпись ставится нажатием на кнопку «подпись». Таблицы можно расширять кнопкой «+ строка». Затем выберите этап и нажмите «Проверить».</p>
+<div class="btns"><button class="btn" id="exGood">Заполнить образцом</button><button class="btn" id="exBad">Заполнить с ошибками</button><button class="btn" id="exClear">Очистить бланк</button></div>
+<div class="sh">Условия работы (в бланк не вписываются, нужны для проверки)</div>
+<div class="cond">
 <label>Напряжение электроустановки<select id="volt"><option value="lo">До 1000 В</option><option value="hi">Выше 1000 В</option></select></label>
-<label class="chk full"><input type="checkbox" id="live"> Работа под напряжением на токоведущих частях</label>
-<label class="chk full"><input type="checkbox" id="mech"> Работа с механизмами и подъёмными сооружениями</label>
-<label class="chk full"><input type="checkbox" id="multi"> В электроустановке одновременно работают две и более бригад</label>
-<label class="chk full"><input type="checkbox" id="induced"> Работа под наведённым напряжением</label>
-</div>
-<div class="sh">Лицевая сторона</div>
-<div class="form">
-<label>Выдающий наряд-допуск: группа<select id="gIssue"></select></label>
-<label>Ответственный руководитель работ<select id="rukOn"><option value="0">Не назначается</option><option value="1">Назначается</option></select></label>
-<label>Группа ответственного руководителя<select id="gRuk"></select></label>
-<label>Допускающий: группа<select id="gDop"></select></label>
-<label>Вторая роль в бригаде<select id="mode"><option value="pr">Производитель работ</option><option value="nab">Наблюдающий</option></select></label>
-<label>Группа производителя работ (наблюдающего)<select id="gPr"></select></label>
-<div class="full"><label>Члены бригады (фамилия, инициалы, группа)</label><div id="members"></div><button class="btn" id="addM" type="button">+ Добавить члена бригады</button></div>
-<label class="full">Поручается (объект и содержание работы)<input type="text" id="task" placeholder="Например: РУ-0,4 кВ, ремонт автомата Q3"></label>
-<label>Работу начать<input type="date" id="d1"></label>
-<label>Работу закончить<input type="date" id="d2"></label>
-<label class="full">Мероприятия по подготовке рабочих мест (что отключить, где заземлить, что ограждить)<textarea id="prep" rows="2" placeholder="Или «Не требуется», если подготовка рабочего места не нужна"></textarea></label>
-<label class="full">Отдельные указания<textarea id="spec" rows="2"></textarea></label>
-<label>Как передан наряд<select id="how"><option value="hand">Выдан на руки</option><option value="remote">Передан по телефону, радио, факсу или электронно</option></select></label>
+<label>Группа выдающего наряд-допуск<select id="gIssue"></select></label>
+<label>Как передан наряд<select id="how"><option value="hand">Выдан на руки</option><option value="remote">По телефону, радио, факсом или электронно</option></select></label>
 <label>Число экземпляров<select id="copies"><option>1</option><option selected>2</option><option>3</option></select></label>
-<label class="chk full"><input type="checkbox" id="pencil"> Записи сделаны карандашом или с исправлениями</label>
-<label class="chk full"><input type="checkbox" id="brief" checked> Целевой инструктаж выдающим наряд-допуск проведён и записан в таблице</label>
+<label class="chk"><input type="checkbox" id="live"> Работа под напряжением на токоведущих частях</label>
+<label class="chk"><input type="checkbox" id="mech"> С механизмами и подъёмными сооружениями</label>
+<label class="chk"><input type="checkbox" id="multi"> Две и более бригад в электроустановке</label>
+<label class="chk"><input type="checkbox" id="induced"> Под наведённым напряжением</label>
+<label class="chk"><input type="checkbox" id="pencil"> Записи карандашом или с исправлениями</label>
 </div>
-<div class="btns"><button class="btn pri" id="check">Проверить</button></div>
+<div id="paper" class="paper"></div>
+<div class="btns"><label style="display:flex;gap:8px;align-items:center">Проверить до этапа<select id="stage" style="width:auto"><option value="1">1. Выдача наряда</option><option value="2">2. Допуск бригады</option><option value="3">3. Окончание работ</option></select></label><button class="btn pri" id="check">Проверить</button></div>
 <div id="out"></div>
+<div class="hint" id="hint" hidden></div>
 </div>
 </section>
 
@@ -251,64 +264,182 @@ function ordPick(k,b){
 }
 $('ordReset').onclick=ordInit;ordInit();
 
-/* ===== ЗАПОЛНЕНИЕ ===== */
+/* ===== БЛАНК ===== */
 var GN={2:'II',3:'III',4:'IV',5:'V'};
 function fillSel(id,def){var s=$(id);s.innerHTML='';[2,3,4,5].forEach(function(g){var o=document.createElement('option');o.value=g;o.textContent=GN[g];s.appendChild(o)});s.value=def}
-fillSel('gIssue',4);fillSel('gRuk',5);fillSel('gDop',3);fillSel('gPr',3);fillSel('newG',3);
-function addMember(g,name){var d=document.createElement('div');d.className='row';
- var i=document.createElement('input');i.type='text';i.placeholder='Фамилия, инициалы';i.value=name||'';
- var s=document.createElement('select');[2,3,4,5].forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=GN[x];s.appendChild(o)});s.value=g||3;
- var b=document.createElement('button');b.type='button';b.textContent='×';b.className='btn';b.onclick=function(){d.remove()};
- d.appendChild(i);d.appendChild(s);d.appendChild(b);$('members').appendChild(d)}
-$('addM').onclick=function(){addMember(3,'')};
-function today(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
-function setForm(o){
- $('volt').value=o.volt;$('live').checked=o.live;$('mech').checked=o.mech;$('multi').checked=o.multi;$('induced').checked=o.induced;
- $('gIssue').value=o.gIssue;$('rukOn').value=o.rukOn;$('gRuk').value=o.gRuk;$('gDop').value=o.gDop;$('mode').value=o.mode;$('gPr').value=o.gPr;
- $('members').innerHTML='';o.members.forEach(function(m){addMember(m[0],m[1])});
- $('task').value=o.task;$('d1').value=today(0);$('d2').value=today(o.days);$('prep').value=o.prep;$('spec').value=o.spec;
- $('how').value=o.how;$('copies').value=o.copies;$('pencil').checked=o.pencil;$('brief').checked=o.brief;$('out').innerHTML=''}
-$('exGood').onclick=function(){setForm({volt:'lo',live:false,mech:false,multi:false,induced:false,gIssue:4,rukOn:'0',gRuk:4,gDop:3,mode:'pr',gPr:3,
- members:[[3,'Сидоров А. А.'],[3,'Кузнецов В. В.'],[2,'Орлов П. П.']],task:'РУ-0,4 кВ, замена автомата Q3',days:5,prep:'Отключить QF1, вывесить «Не включать! Работают люди», проверить отсутствие напряжения, заземлить шины, ограждения установить',spec:'Работу выполнять в диэлектрических перчатках',how:'hand',copies:'2',pencil:false,brief:true})};
-$('exBad').onclick=function(){setForm({volt:'hi',live:false,mech:false,multi:true,induced:false,gIssue:4,rukOn:'0',gRuk:4,gDop:3,mode:'pr',gPr:3,
- members:[[2,'Орлов П. П.'],[2,'Волков Д. Д.'],[2,'Зайцев Е. Е.'],[2,'Лисин К. К.'],[3,'Сидоров А. А.']],task:'',days:20,prep:'',spec:'',how:'remote',copies:'2',pencil:true,brief:false})};
-$('exClear').onclick=function(){setForm({volt:'lo',live:false,mech:false,multi:false,induced:false,gIssue:4,rukOn:'0',gRuk:5,gDop:3,mode:'pr',gPr:3,members:[],task:'',days:5,prep:'',spec:'',how:'hand',copies:'2',pencil:false,brief:true})};
+fillSel('gIssue',4);fillSel('newG',3);
+function I(k,h,p,c){return '<input type="text" class="u '+(c||'')+'" data-k="'+k+'" data-h="'+h+'" placeholder="'+(p||'')+'">'}
+function DT(k,h){return '<input type="date" class="u" data-k="'+k+'d" data-h="'+h+'"><input type="time" class="u s" data-k="'+k+'t" data-h="'+h+'">'}
+function GS(k,h){return '<select class="u s" data-k="'+k+'" data-h="'+h+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>'}
+function SG(k,h){return '<button type="button" class="sig" data-k="'+k+'" data-h="'+h+'">подпись</button>'}
+function cell(c,h){var t=c[0];
+ if(t==='t')return '<input type="text" class="u" data-c data-h="'+h+'">';
+ if(t==='g')return '<select class="u" data-c data-h="'+h+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>';
+ if(t==='dt')return '<input type="datetime-local" class="u" data-c data-h="'+h+'">';
+ if(t==='s')return '<button type="button" class="sig" data-c data-h="'+h+'">подпись</button>';
+ return ''}
+function TBL(n,head,cols,hint,sub){
+ var th='<tr>'+head.map(function(x){return '<th>'+x+'</th>'}).join('')+'<th></th></tr>';
+ return '<div class="tw"><table data-n="'+n+'" data-cols=\''+JSON.stringify(cols)+'\' data-h="'+hint+'"><thead>'+th+'</thead><tbody></tbody></table></div><button type="button" class="add" data-add="'+n+'">+ строка</button>'}
+var PAPER='';
+PAPER+='<p class="side">Лицевая сторона наряда-допуска</p>';
+PAPER+='<div class="ln"><span>Организация</span>'+I('org','Наименование организации.|п. 6.25')+'</div>';
+PAPER+='<div class="ln"><span>Подразделение</span>'+I('sub','Структурное подразделение (цех, служба, район, участок), в электроустановках которого предстоят работы.|п. 6.25')+'</div>';
+PAPER+='<h3>НАРЯД-ДОПУСК № '+I('num','Номер по системе нумерации, которую устанавливает работодатель.|п. 6.22','','s')+'</h3><p style="text-align:center;margin:0">для работы в электроустановках</p>';
+PAPER+='<div class="ln"><span>Ответственному руководителю работ</span>'+I('ruk','Фамилия, инициалы. Если ответственный руководитель не назначается, запишите «не назначается».|п. 6.25, 5.7')+GS('gruk','Группа по электробезопасности ответственного руководителя: V выше 1000 В, IV до 1000 В.|п. 5.7')+'</div>';
+PAPER+='<div class="ln"><span>допускающему</span>'+I('dop','Фамилия, инициалы допускающего. Если допускающий из дежурного оперативного персонала, можно записать «оперативному персоналу» без фамилии.|п. 6.25')+GS('gdop','Группа допускающего: IV выше 1000 В, III до 1000 В.|п. 5.8')+'</div>';
+PAPER+='<div class="ln"><span>Производителю работ</span>'+I('pr','Фамилия, инициалы производителя работ. Выдаётся производителю работ или наблюдающему.|п. 6.1, 5.9')+GS('gpr','Группа производителя: IV выше 1000 В и при работах под напряжением, III до 1000 В.|п. 5.9')+'</div>';
+PAPER+='<div class="ln"><span>наблюдающему</span>'+I('nab','Фамилия, инициалы наблюдающего (если бригада не имеет права самостоятельной работы). Не ниже III группы. Тогда в «Отдельных указаниях» запишите работника, возглавляющего бригаду.|п. 5.10')+GS('gnab','Группа наблюдающего: не ниже III.|п. 5.10')+'</div>';
+PAPER+='<div class="ln"><span>с членами бригады</span></div>';
+PAPER+=TBL('mem',['Фамилия, инициалы','Группа'],[['t'],['g']],'Члены бригады, выполняющие работы: фамилия, инициалы, группа. У механизмов и кранов укажите, кто водитель, крановщик, стропальщик.|п. 6.25, 5.15');
+PAPER+='<div class="ln"><span>поручается</span><textarea class="u" rows="2" data-k="task" data-h="Для РУ и КЛ: наименование электроустановки и присоединений и содержание работы. Для ВЛ: наименование линии, границы участка (номера опор), содержание работы.|п. 6.25"></textarea></div>';
+PAPER+='<div class="ln"><span>Работу начать: дата</span>'+DT('st','Дата и время начала работы. Срок наряда считается со дня начала работы.|п. 6.3, 6.23')+'</div>';
+PAPER+='<div class="ln"><span>Работу закончить: дата</span>'+DT('en','Дата и время окончания: не более 15 календарных дней со дня начала. Для работ под напряжением — не более 1 дня (смены).|п. 6.3')+'</div>';
+PAPER+='<h4>Мероприятия по подготовке рабочих мест к выполнению работ</h4>';
+PAPER+=TBL('prep',['1. Наименование электроустановок, где нужно провести отключения и установить заземления','2. Что должно быть отключено и где заземлено','3. Что должно быть изолировано (ограждено)'],[['t'],['t'],['t']],'Графа 1: электроустановки. Графа 2: аппараты и присоединения, с которыми проводятся операции, и места заземлений. Графа 3: что изолировать или оградить. Если подготовка не нужна — «Не требуется».|п. 6.26, 6.27');
+PAPER+='<div class="ln"><span>Отдельные указания</span><textarea class="u" rows="2" data-k="spec" data-h="Дополнительные меры, этапы под управлением руководителя, право повторного допуска, перевода, включения и т. д. При наблюдающем — работник, возглавляющий бригаду.|п. 6.28, 5.10"></textarea></div>';
+PAPER+='<div class="ln"><span>Наряд-допуск выдал: дата</span>'+DT('iss','Дата и время подписания наряда выдающим.|п. 6.29')+SG('issS','Подпись выдающего наряд-допуск.|п. 6.29')+'<span>Фамилия, инициалы</span>'+I('issF','Фамилия выдающего.|п. 6.29')+'</div>';
+PAPER+='<div class="ln"><span>Наряд-допуск продлил по: дата</span>'+DT('ext','Заполняется при продлении. Продлевать можно один раз, не более чем на 15 календарных дней. Работы под напряжением не продлеваются.|пп. 6.3, 6.4')+SG('extS','Подпись продлившего.|п. 6.29')+'<span>Фамилия, инициалы</span>'+I('extF','Фамилия продлившего: выдавшего наряд или другого работника с правом выдачи нарядов в этой электроустановке.|п. 6.4')+'</div>';
+PAPER+='<h4>Регистрация целевого инструктажа, проводимого выдающим наряд</h4>';
+PAPER+=TBL('ti1',['Провёл (должность, фамилия)','Получил (должность, фамилия)','Подпись проведшего','Подпись получившего'],[['t'],['t'],['s'],['s']],'Выдающий наряд-допуск инструктирует ответственного руководителя (или производителя, наблюдающего, если руководитель не назначен). Подписи подтверждают проведение и получение.|пп. 6.32, 10.7, 10.10');
+PAPER+='<h4>Разрешение на подготовку рабочих мест и на допуск к выполнению работ</h4>';
+PAPER+=TBL('perm',['1. Выдал (должность, фамилия)','2. Дата, время','3. Подпись получившего'],[['t'],['dt'],['s']],'Графа 1: должность и фамилия выдавшего разрешение (оперативный персонал не ниже IV группы). Графа 2: дата и время. Графа 3: подписи тех, кто готовил рабочие места. Если разрешения запрашиваются не одновременно — две строки.|пп. 6.30, 5.6');
+PAPER+='<hr><p class="side">Оборотная сторона наряда-допуска</p>';
+PAPER+='<div class="ln"><span>Рабочие места подготовлены. Под напряжением остались:</span>'+I('under','Допускающий указывает оставшиеся под напряжением токоведущие части ремонтируемого и соседних присоединений, ближайшие к рабочему месту.|п. 6.31')+'</div>';
+PAPER+='<div class="ln"><span>Допускающий</span>'+SG('dopS','Подписывается только при первичном допуске.|п. 6.31')+'<span>Ответственный руководитель работ (производитель работ или наблюдающий)</span>'+SG('rukS','Подписывается только при первичном допуске: ответственный руководитель, а если он не назначен — производитель или наблюдающий.|п. 6.31')+'</div>';
+PAPER+='<h4>Регистрация целевого инструктажа, проводимого допускающим при первичном допуске</h4>';
+PAPER+=TBL('ti2',['Провёл (должность, фамилия)','Получил (должность, фамилия)','Подпись проведшего','Подпись получившего'],[['t'],['t'],['s'],['s']],'Допускающий знакомит с содержанием наряда, показывает границы рабочего места, зону наведённого напряжения и токоведущие части, к которым нельзя приближаться. Инструктируются ответственный руководитель, производитель (наблюдающий) и члены бригады.|пп. 10.7, 10.9');
+PAPER+='<h4>Ежедневный допуск к работе и время ее окончания</h4>';
+PAPER+=TBL('daily',['1. Наименование рабочего места','2. Дата, время допуска','3. Подпись допускающего','4. Подпись производителя работ (наблюдающего)','5. Дата, время окончания','6. Подпись производителя работ (наблюдающего)'],[['t'],['dt'],['s'],['s'],['dt'],['s']],'Допуск бригады на подготовленное рабочее место и окончание работы в конце дня. Если производитель совмещает обязанности допускающего или ему разрешён повторный допуск — он расписывается в графах 3 и 4. Окончание рабочего дня оформляют в графах 5 и 6.|пп. 6.31, 13.3');
+PAPER+='<h4>Регистрация целевого инструктажа, проводимого ответственным руководителем работ (производителем работ, наблюдающим)</h4>';
+PAPER+=TBL('ti3',['Провёл (должность, фамилия)','Получил (должность, фамилия)','Подпись проведшего','Подпись получившего'],[['t'],['t'],['s'],['s']],'Руководитель инструктирует производителя (наблюдающего) и членов бригады, производитель или наблюдающий — членов бригады, в том числе введённых позже.|пп. 10.7, 10.8, 11.5');
+PAPER+='<h4>Изменения в составе бригады</h4>';
+PAPER+=TBL('chg',['1. Введён в состав бригады (фамилия, инициалы, группа)','2. Выведен из состава бригады (фамилия, инициалы, группа)','3. Дата, время','4. Разрешил (фамилия, инициалы)','Подпись'],[['t'],['t'],['dt'],['t'],['s']],'Кто введён и выведен, их группы, дата и время и работник, разрешивший изменение (выдавший наряд или другой с правом выдачи нарядов). Заверяется подписью получившего указание. При замене производителя, наблюдающего, руководителя или изменении состава более чем наполовину наряд выдаётся заново.|пп. 6.31, 11.5, 11.6');
+PAPER+='<div class="ln"><span>Работа полностью закончена, бригада удалена, заземления, установленные бригадой, сняты, сообщено (кому): должность</span>'+I('whoP','Должность того, кому сообщено о полном окончании работ (дежурный оперативный персонал или выдавший наряд).|пп. 14.2, 6.31')+'<span>фамилия, инициалы</span>'+I('whoF','Фамилия, инициалы получившего сообщение.|п. 6.31')+'</div>';
+PAPER+='<div class="ln"><span>Дата</span>'+DT('fin','Дата и время полного окончания работ.|п. 6.31')+'</div>';
+PAPER+='<div class="ln"><span>Производитель работ или наблюдающий</span>'+SG('finPr','Подпись производителя работ или наблюдающего после проверки рабочих мест.|пп. 14.1, 6.31')+'<span>Ответственный руководитель работ</span>'+SG('finRuk','Подпись ставится, только если ответственный руководитель назначался.|пп. 14.1, 6.31')+'</div>';
+$('paper').innerHTML=PAPER;
+var P=$('paper');
+function addRow(t,vals){var cols=JSON.parse(t.dataset.cols),h=t.dataset.h,tr=document.createElement('tr');
+ tr.innerHTML=cols.map(function(c){return '<td>'+cell(c,h)+'</td>'}).join('')+'<td><button type="button" class="rm" title="Удалить строку">×</button></td>';
+ t.querySelector('tbody').appendChild(tr);
+ if(vals){var cs=tr.querySelectorAll('[data-c]');vals.forEach(function(v,i){setEl(cs[i],v)})}}
+function setEl(e,v){if(!e)return;if(e.classList.contains('sig')){e.classList.toggle('on',!!v);e.textContent=v?'подписано':'подпись'}else e.value=v==null?'':v}
+function tbl(n){return P.querySelector('table[data-n="'+n+'"]')}
+function setTable(n,rows){var t=tbl(n);t.querySelector('tbody').innerHTML='';(rows&&rows.length?rows:[null]).forEach(function(r){addRow(t,r)})}
+P.addEventListener('click',function(e){var t=e.target;
+ if(t.dataset.add){addRow(tbl(t.dataset.add));return}
+ if(t.classList.contains('rm')){var tb=t.closest('tbody');if(tb.children.length>1)t.closest('tr').remove();else t.closest('tr').querySelectorAll('[data-c]').forEach(function(x){setEl(x,'')});return}
+ if(t.classList.contains('sig')){var on=!t.classList.contains('on');t.classList.toggle('on',on);t.textContent=on?'подписано':'подпись'}});
+var hint=$('hint');
+P.addEventListener('focusin',function(e){var h=e.target.dataset&&e.target.dataset.h;if(!h)return;var a=h.split('|');hint.hidden=false;hint.innerHTML='<b>Что писать'+(a[1]?' · '+a[1]:'')+'</b>'+a[0]});
+function K(k){return P.querySelector('[data-k="'+k+'"]')}
+function v(k){var e=K(k);return e?e.value.trim():''}
+function sg(k){var e=K(k);return !!(e&&e.classList.contains('on'))}
+function rows(n){return [].map.call(tbl(n).querySelectorAll('tbody tr'),function(tr){return [].map.call(tr.querySelectorAll('[data-c]'),function(e){return e.classList.contains('sig')?e.classList.contains('on'):e.value.trim()})})}
+function setK(k,x){var e=K(k);if(e)setEl(e,x)}
+function dstr(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function dts(n,t){return dstr(n)+'T'+t}
+function clearAll(){P.querySelectorAll('[data-k]').forEach(function(e){setEl(e,'')});['mem','prep','ti1','perm','ti2','daily','ti3','chg'].forEach(function(n){setTable(n)});
+ $('volt').value='lo';$('gIssue').value=4;$('how').value='hand';$('copies').value='2';['live','mech','multi','induced','pencil'].forEach(function(i){$(i).checked=false});$('out').innerHTML='';hint.hidden=true}
+function fillGood(){clearAll();
+ setK('org','ООО «Энергосервис»');setK('sub','Электроцех');setK('num','12');setK('ruk','не назначается');
+ setK('dop','Волков Д. Д.');setK('gdop',3);setK('pr','Петров И. И.');setK('gpr',3);
+ setTable('mem',[['Сидоров А. А.',3],['Кузнецов В. В.',3],['Орлов П. П.',2]]);
+ setK('task','РУ-0,4 кВ ТП-15, панель 2: замена автомата Q3');
+ setK('std',dstr(0));setK('stt','08:00');setK('end',dstr(4));setK('ent','17:00');
+ setTable('prep',[['ТП-15, РУ-0,4 кВ','Отключить QF1 и Q3, проверить отсутствие напряжения, заземлить шины панели 2','Соседние панели 1 и 3 оградить']]);
+ setK('spec','Работу выполнять в диэлектрических перчатках');
+ setK('issd',dstr(0));setK('isst','07:30');setK('issS',true);setK('issF','Иванов С. П.');
+ setTable('ti1',[['Выдающий наряд Иванов С. П.','Производитель работ Петров И. И.',true,true]]);
+ setTable('perm',[['Дежурный электрик Смирнов А. А.',dts(0,'08:00'),true]]);
+ setK('under','Панели 1 и 3: шины и аппараты');setK('dopS',true);setK('rukS',true);
+ setTable('ti2',[['Допускающий Волков Д. Д.','Производитель работ Петров И. И.',true,true],['Допускающий Волков Д. Д.','Член бригады Сидоров А. А.',true,true],['Допускающий Волков Д. Д.','Член бригады Кузнецов В. В.',true,true],['Допускающий Волков Д. Д.','Член бригады Орлов П. П.',true,true]]);
+ setTable('daily',[['Панель 2',dts(0,'08:30'),true,true,dts(0,'17:00'),true]]);
+ setTable('ti3',[['Производитель работ Петров И. И.','Член бригады Сидоров А. А.',true,true],['Производитель работ Петров И. И.','Член бригады Кузнецов В. В.',true,true],['Производитель работ Петров И. И.','Член бригады Орлов П. П.',true,true]]);
+ setK('whoP','Дежурный электрик');setK('whoF','Смирнов А. А.');setK('find',dstr(0));setK('fint','17:10');setK('finPr',true)}
+function fillBad(){clearAll();
+ $('volt').value='hi';$('multi').checked=true;$('pencil').checked=true;$('how').value='remote';$('copies').value='2';$('stage').value='1';
+ setK('sub','Электроцех');setK('ruk','не назначается');setK('dop','Волков Д. Д.');setK('gdop',3);setK('pr','Петров И. И.');setK('gpr',3);
+ setTable('mem',[['Орлов П. П.',2],['Волков Д. Д.',2],['Зайцев Е. Е.',2],['Лисин К. К.',2],['Сидоров А. А.',3]]);
+ setK('std',dstr(0));setK('stt','08:00');setK('end',dstr(20));setK('ent','17:00');
+ setK('issd',dstr(0));setK('issF','Иванов С. П.')}
+$('exGood').onclick=fillGood;$('exBad').onclick=fillBad;$('exClear').onclick=clearAll;
 function check(){
- var R=[],hi=$('volt').value==='hi',live=$('live').checked;
+ var R=[],st=+$('stage').value,hi=$('volt').value==='hi',live=$('live').checked;
  function add(ok,t,ref){R.push({ok:ok,t:t,ref:ref})}
- var gI=+$('gIssue').value;add(gI>=(hi?5:4),'Выдающий наряд-допуск: группа '+GN[gI]+'. Требуется '+(hi?'V (выше 1000 В)':'не ниже IV (до 1000 В)')+'.','п. 5.4');
- var need=live||$('mech').checked||$('multi').checked||$('induced').checked,on=$('rukOn').value==='1';
- if(need)add(on,need&&!on?'Ответственный руководитель не назначен, а по условиям работы он обязателен.':'Ответственный руководитель назначен: по условиям работы он обязателен.','п. 5.7');
- else add(true,'Ответственный руководитель по условиям работы не обязателен'+(on?' (назначен по решению выдающего)':' (в бланке записать «не назначается»)')+'.','пп. 5.7, 6.25');
- if(on){var gR=+$('gRuk').value;add(gR>=(hi?5:4),'Ответственный руководитель: группа '+GN[gR]+'. Требуется '+(hi?'V':'IV')+'.','п. 5.7')}
- var gD=+$('gDop').value;add(gD>=(hi?4:3),'Допускающий: группа '+GN[gD]+'. Требуется не ниже '+(hi?'IV':'III')+'.','п. 5.8');
- var nab=$('mode').value==='nab',gP=+$('gPr').value;
- if(nab){add(gP>=3,'Наблюдающий: группа '+GN[gP]+'. Требуется не ниже III.','п. 5.10');
-  add($('spec').value.trim().length>0,$('spec').value.trim()?'В «Отдельных указаниях» указан работник, возглавляющий бригаду.':'Не указан работник, возглавляющий бригаду, в строке «Отдельные указания».','пп. 5.10, 6.28')}
- else{var nd=(hi||live)?4:3;add(gP>=nd,'Производитель работ: группа '+GN[gP]+'. Требуется не ниже '+GN[nd]+(live?' (работа под напряжением)':hi?' (выше 1000 В)':' (до 1000 В)')+'.','п. 5.9')}
- var rows=document.querySelectorAll('#members .row'),g2=0,g3=0;
- rows.forEach(function(r){var g=+r.querySelector('select').value;if(g===2)g2++;else g3++});
- add(rows.length>0,rows.length?'Члены бригады указаны: '+rows.length+'.':'Не указаны члены бригады.','п. 6.25');
- if(!nab&&rows.length){add(g2<=3,'Члены бригады с группой II: '+g2+'. Не более 3.','п. 5.15');add(g2<=g3,'Работников с группой не ниже III: '+g3+', с группой II: '+g2+'. Допускается не более одного II на каждого с группой не ниже III.','п. 5.15')}
- if(nab)R.push({ok:null,t:'При надзоре наблюдающего состав бригады определяется условиями работы и возможностью надзора.',ref:'п. 5.15'});
- var tk=$('task').value.trim();add(!!tk,tk?'Заполнено «Поручается».':'Не заполнено «Поручается».','п. 6.25');
- var pr=$('prep').value.trim();add(!!pr,pr?'Заполнена таблица мероприятий по подготовке рабочих мест.':'Не заполнена таблица мероприятий (если подготовка не нужна, пишут «Не требуется»).','пп. 6.26, 6.27');
- var a=$('d1').value,b=$('d2').value;
- if(!a||!b)add(false,'Не указаны даты начала и окончания работы.','п. 6.23');
- else{var days=Math.round((new Date(b)-new Date(a))/864e5);
+ function H(t){R.push({h:t})}
+ H('Этап 1. Выдача наряда');
+ add(!!(v('org')&&v('sub')&&v('num')),(v('org')&&v('sub')&&v('num'))?'Заполнены организация, подразделение и номер наряда.':'Не заполнены организация, подразделение или номер наряда.','п. 6.25');
+ var gI=+$('gIssue').value;add(gI>=(hi?5:4),'Выдающий наряд-допуск: группа '+GN[gI]+'. Требуется '+(hi?'V':'не ниже IV')+'.','п. 5.4');
+ var need=live||$('mech').checked||$('multi').checked||$('induced').checked,ruk=v('ruk'),rukOn=!!ruk&&!/не\s*назнач/i.test(ruk);
+ if(need)add(rukOn,rukOn?'Ответственный руководитель назначен (по условиям работы он обязателен).':'Ответственный руководитель не назначен, а по условиям работы он обязателен.','п. 5.7');
+ else add(!!ruk,ruk?(rukOn?'Ответственный руководитель назначен.':'В строке ответственного руководителя записано «не назначается».'):'Строку ответственного руководителя нужно заполнить или записать «не назначается».','пп. 5.7, 6.25');
+ if(rukOn){var gR=+v('gruk');add(gR>=(hi?5:4),gR?'Ответственный руководитель: группа '+GN[gR]+'. Требуется '+(hi?'V':'IV')+'.':'У ответственного руководителя не указана группа.','п. 5.7')}
+ var dop=v('dop'),gD=+v('gdop');
+ if(!dop)add(false,'Не указан допускающий.','п. 6.25');
+ else if(/оператив/i.test(dop)&&!gD)add(true,'Допускающий: «оперативному персоналу» без фамилии допускается.','п. 6.25');
+ else add(gD>=(hi?4:3),gD?'Допускающий: группа '+GN[gD]+'. Требуется не ниже '+(hi?'IV':'III')+'.':'У допускающего не указана группа.','п. 5.8');
+ var pr=v('pr'),nab=v('nab'),gP=+v('gpr'),gN=+v('gnab');
+ add(!!(pr||nab),(pr||nab)?'Указан производитель работ или наблюдающий.':'Не указан ни производитель работ, ни наблюдающий.','п. 6.1');
+ if(pr){var nd=(hi||live)?4:3;add(gP>=nd,gP?'Производитель работ: группа '+GN[gP]+'. Требуется не ниже '+GN[nd]+(live?' (работа под напряжением)':hi?' (выше 1000 В)':' (до 1000 В)')+'.':'У производителя работ не указана группа.','п. 5.9')}
+ if(nab){add(gN>=3,gN?'Наблюдающий: группа '+GN[gN]+'. Требуется не ниже III.':'У наблюдающего не указана группа.','п. 5.10');add(!!v('spec'),v('spec')?'В «Отдельных указаниях» указан работник, возглавляющий бригаду.':'При наблюдающем в «Отдельных указаниях» не указан работник, возглавляющий бригаду.','пп. 5.10, 6.28')}
+ var M=rows('mem').filter(function(r){return r[0]||r[1]});
+ add(M.length>0,M.length?'Члены бригады указаны: '+M.length+'.':'Не указаны члены бригады.','п. 6.25');
+ add(M.every(function(r){return r[0]&&r[1]}),'У каждого члена бригады должны быть фамилия, инициалы и группа.','п. 6.23');
+ if(!nab&&M.length){var g2=M.filter(function(r){return +r[1]===2}).length,g3=M.filter(function(r){return +r[1]>=3}).length;
+  add(g2<=3,'Членов бригады с группой II: '+g2+'. Не более 3.','п. 5.15');add(g2<=g3,'Работников с группой не ниже III: '+g3+', с группой II: '+g2+'. Допускается не более одного II на каждого с группой не ниже III.','п. 5.15')}
+ add(!!v('task'),v('task')?'Заполнено «поручается».':'Не заполнено «поручается».','п. 6.25');
+ var d1=v('std'),d2=v('end');
+ if(!d1||!d2||!v('stt')||!v('ent'))add(false,'Не указаны дата и время начала и окончания работы.','п. 6.23');
+ else{var days=Math.round((new Date(d2)-new Date(d1))/864e5);
   if(days<0)add(false,'Дата окончания раньше даты начала.','п. 6.3');
   else if(live)add(days<=1,'Работа под напряжением: срок '+days+' дн. Наряд выдаётся не более чем на 1 календарный день (смену).','п. 6.3');
-  else add(days<=15,'Срок наряда: '+days+' дн. Не более 15 календарных дней (продление — один раз, ещё до 15).','п. 6.3')}
+  else add(days<=15,'Срок наряда: '+days+' дн. Не более 15 календарных дней со дня начала.','п. 6.3')}
+ var pp=rows('prep').filter(function(r){return r.some(Boolean)});
+ add(pp.length>0&&pp.every(function(r){return r[0]&&r[1]}),pp.length?'Таблица мероприятий заполнена (графы 1 и 2 непусты).':'Не заполнена таблица мероприятий (если подготовка не нужна, пишут «Не требуется»).','пп. 6.26, 6.27');
+ add(!!(v('issd')&&v('isst')&&sg('issS')&&v('issF')),(v('issd')&&v('isst')&&sg('issS')&&v('issF'))?'В строке «Наряд-допуск выдал» есть дата, время, подпись и фамилия.':'В строке «Наряд-допуск выдал» не хватает даты, времени, подписи или фамилии.','п. 6.29');
+ if(v('extd')){var de=Math.round((new Date(v('extd'))-new Date(d2))/864e5),dt=Math.round((new Date(v('extd'))-new Date(d1))/864e5);
+  add(!live,live?'Наряд на работы под напряжением не продлевается: на следующий день нужен новый.':'Продление оформлено для наряда не под напряжением.','п. 6.3');
+  add(de<=15&&dt<=30,'Продление до '+v('extd')+': на '+de+' дн. дальше срока окончания. Допустимо один раз не более чем на 15 календарных дней.','п. 6.3');
+  add(sg('extS')&&!!v('extF'),(sg('extS')&&v('extF'))?'Продление подписано, фамилия указана.':'Продление должно быть подписано с указанием фамилии продлившего.','пп. 6.4, 6.29')}
+ var t1=rows('ti1').filter(function(r){return r.some(Boolean)});
+ add(t1.length>0&&t1.every(function(r){return r[0]&&r[1]&&r[2]&&r[3]}),'Целевой инструктаж выдающего: должны быть оба имени и обе подписи.','пп. 6.32, 10.7');
  var cp=+$('copies').value,rem=$('how').value==='remote';
- add(rem?cp===3:cp===2,rem?(cp===3?'Передача по телефону, радио, факсом или электронно: 3 экземпляра.':'При дистанционной передаче нужно 3 экземпляра, указано '+cp+'.'):(cp===2?'Выдан на руки: 2 экземпляра.':'Выдан на руки: должно быть 2 экземпляра, указано '+cp+'.'),'п. 6.1');
- add(!$('pencil').checked,$('pencil').checked?'Записи карандашом или с исправлениями не допускаются.':'Записи сделаны разборчиво, без карандаша и исправлений.','п. 6.22');
- add($('brief').checked,$('brief').checked?'Целевой инструктаж выдающим проведён и записан.':'Целевой инструктаж выдающим не проведён: без него допуск не разрешается.','пп. 6.32, 10.7');
+ add(rem?cp===3:cp===2,rem?(cp===3?'Передача дистанционно: 3 экземпляра.':'При дистанционной передаче нужно 3 экземпляра, указано '+cp+'.'):(cp===2?'Выдан на руки: 2 экземпляра.':'Выдан на руки: нужно 2 экземпляра, указано '+cp+'.'),'п. 6.1');
+ add(!$('pencil').checked,$('pencil').checked?'Записи карандашом или с исправлениями не допускаются.':'Записи разборчивые, без карандаша и исправлений.','п. 6.22');
+ if(st>=2){H('Этап 2. Допуск бригады');
+  var pm=rows('perm').filter(function(r){return r.some(Boolean)});
+  add(pm.length>0&&pm.every(function(r){return r[0]&&r[1]&&r[2]}),'Разрешение на подготовку и допуск: должны быть заполнены все три графы.','п. 6.30');
+  add(!!v('under'),v('under')?'Указано, что осталось под напряжением.':'Не заполнено «Под напряжением остались».','п. 6.31');
+  add(sg('dopS'),sg('dopS')?'Допускающий расписался в первичном допуске.':'Нет подписи допускающего в первичном допуске.','п. 6.31');
+  add(sg('rukS'),sg('rukS')?'Руководитель (производитель, наблюдающий) расписался в первичном допуске.':'Нет подписи ответственного руководителя (производителя, наблюдающего) в первичном допуске.','п. 6.31');
+  var t2=rows('ti2').filter(function(r){return r.some(Boolean)});
+  add(t2.length>0&&t2.every(function(r){return r[0]&&r[1]&&r[2]&&r[3]}),'Целевой инструктаж допускающего: оба имени и обе подписи в каждой строке. Без инструктажей допуск не разрешается.','пп. 10.7, 10.9');
+  var got=t2.map(function(r){return r[1]}).join(' ').toLowerCase();
+  M.forEach(function(r){var nm=r[0].toLowerCase();if(nm&&got.indexOf(nm)<0)add(false,'Член бригады «'+r[0]+'» не значится среди получивших инструктаж допускающего.','пп. 10.7, 10.9')});
+  var dl=rows('daily').filter(function(r){return r.some(Boolean)});
+  add(dl.length>0&&dl.every(function(r){return r[0]&&r[1]&&r[2]&&r[3]}),'Ежедневный допуск: место, дата и время допуска, подписи допускающего и производителя (наблюдающего).','п. 6.31');
+  var t3=rows('ti3').filter(function(r){return r.some(Boolean)});
+  add(t3.length>0&&t3.every(function(r){return r[0]&&r[1]&&r[2]&&r[3]}),'Целевой инструктаж руководителя или производителя членам бригады: имена и подписи.','пп. 10.7, 10.8')}
+ if(st>=3){H('Этап 3. Окончание работ');
+  var ch=rows('chg').filter(function(r){return r.some(Boolean)});
+  if(ch.length)add(ch.every(function(r){return (r[0]||r[1])&&r[2]&&r[3]&&r[4]}),'Изменения в составе бригады: должен быть указан введённый или выведенный, дата и время, разрешивший и подпись.','пп. 6.31, 11.5');
+  else R.push({ok:null,t:'Изменений в составе бригады не было.',ref:'п. 11.5'});
+  var dl2=rows('daily').filter(function(r){return r.some(Boolean)});
+  add(dl2.length>0&&dl2.every(function(r){return r[4]&&r[5]}),'Окончание работ в конце дня: дата, время и подпись производителя (наблюдающего) в графах 5 и 6.','п. 6.31');
+  add(!!(v('whoP')&&v('whoF')),(v('whoP')&&v('whoF'))?'Указано, кому сообщено о полном окончании работ.':'Не указано, кому сообщено о полном окончании (должность и фамилия).','пп. 14.2, 6.31');
+  add(!!(v('find')&&v('fint')),(v('find')&&v('fint'))?'Указаны дата и время полного окончания.':'Не указаны дата и время полного окончания работ.','п. 6.31');
+  add(sg('finPr'),sg('finPr')?'Производитель (наблюдающий) расписался о полном окончании.':'Нет подписи производителя (наблюдающего) о полном окончании работ.','пп. 14.1, 6.31');
+  if(rukOn)add(sg('finRuk'),sg('finRuk')?'Ответственный руководитель расписался о полном окончании.':'Ответственный руководитель назначался, но не расписался о полном окончании.','пп. 14.1, 6.31');
+  else add(!sg('finRuk'),sg('finRuk')?'Ответственный руководитель не назначался, подпись в его строке не ставится.':'Ответственный руководитель не назначался, подпись в его строке не ставится: верно.','п. 6.31')}
  var bad=R.filter(function(r){return r.ok===false}).length;
- var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Нарушений: '+bad+'. Такой наряд выдавать нельзя.':'Нарушений не найдено. Наряд оформлен верно по проверяемым требованиям.')+'</div><ul class="res">';
- R.forEach(function(r){h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
- h+='</ul><div class="note">Проверка охватывает основные требования о группах, сроках, числе экземпляров и составе бригады. Полный перечень случаев, когда нужен ответственный руководитель, и особые группы допуска даны в пп. 5.7 и 5.9.</div>';
- $('out').innerHTML=h}
-$('check').onclick=check;$('exClear').onclick();
+ var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Замечаний: '+bad+'.':'Замечаний нет. Бланк оформлен верно по проверяемым требованиям.')+'</div><ul class="res">';
+ R.forEach(function(r){if(r.h){h+='</ul><div class="sh">'+r.h+'</div><ul class="res">';return}
+  h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
+ h+='</ul><div class="note">Проверка охватывает основные требования о группах, сроках, подписях, инструктажах и числе экземпляров. Полный перечень случаев, когда нужен ответственный руководитель, и особые группы допуска даны в пп. 5.7 и 5.9.</div>';
+ $('out').innerHTML=h;$('out').scrollIntoView({behavior:'smooth',block:'start'})}
+$('check').onclick=check;clearAll();
 
 /* ===== БРИГАДА ===== */
 var C0=[['Петров И. И.',3],['Сидоров А. А.',3],['Кузнецов В. В.',3],['Орлов П. П.',2],['Волков Д. Д.',2]];
