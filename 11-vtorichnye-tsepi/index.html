@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Работы во вторичных цепях и системах</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#1a5fb4;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#6aa7f5;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 20px}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+button,select,input,textarea{font:inherit;color:var(--fg)}
+button{cursor:pointer}
+.tab{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 14px}
+.tab[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.grid .card{margin:0}
+.muted{color:var(--muted)}
+.src{font-size:.8rem;color:var(--muted)}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 8px;font-size:.8rem;margin:2px 4px 2px 0}
+.note{font-size:.85rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+.paper.mini{margin:8px 0;padding:14px 14px;font-size:14px;box-shadow:none}
+.paper.mini .side{margin:0 0 8px}
+.paper .ln>.val{flex:1;min-width:120px;border-bottom:1px solid #444;padding:0 4px;white-space:normal}
+.hl{background:#fff1a0;border-radius:3px;padding:0 3px;position:relative}
+.hl sup{font:700 .65rem system-ui,sans-serif;color:#fff;background:#c4262e;border-radius:999px;padding:0 5px;margin-left:2px}
+.sgn{font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic;color:#1a3a8a}
+.exh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 4px}
+ol.legend{margin:6px 0 0;padding-left:0;list-style:none;font-size:.9rem}
+ol.legend li{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
+ol.legend li b{flex:none;background:#c4262e;color:#fff;border-radius:999px;font-size:.7rem;min-width:20px;height:20px;line-height:20px;text-align:center;margin-top:2px}
+.nofill{background:var(--chip);border-radius:8px;padding:10px 12px;font-size:.9rem;color:var(--muted);margin-top:10px}
+ul.resp{margin:4px 0 8px;padding-left:20px}ul.resp li{margin:3px 0}
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+details .in{padding:0 14px 14px}
+details .in p{margin:6px 0}
+.num{display:inline-block;min-width:26px;height:26px;line-height:26px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;margin-right:8px}
+/* форма */
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+label{display:block;font-size:.88rem;color:var(--muted)}
+label.chk{display:flex;gap:8px;align-items:flex-start;color:var(--fg);font-size:.92rem}
+select,input[type=text],input[type=date],textarea{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px}
+.full{grid-column:1/-1}
+.row{display:grid;grid-template-columns:1fr 90px 40px;gap:8px;margin-bottom:6px}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:8px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.res{list-style:none;padding:0;margin:0}
+.res li{padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:.92rem}
+.res li.ok{background:var(--okbg)}
+.res li.bad{background:var(--badbg)}
+.res li.info{background:var(--chip)}
+.verdict{font-weight:700;margin:10px 0}
+.sh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px}
+/* порядок и тест */
+.ord{display:grid;gap:8px}
+.ord button{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.ord button.used{opacity:.45}
+.ordres{margin-top:10px}
+.pick li{padding:6px 10px;background:var(--okbg);border-radius:8px;margin-bottom:4px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q p{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
+.q.done .exp{display:block}
+.score{font-weight:700;font-size:1.1rem;margin:14px 0}
+
+/* бланк */
+.paper{background:#fff;color:#111;font-family:"Times New Roman",Times,serif;font-size:15px;line-height:1.5;border:1px solid #888;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:22px 20px;margin:12px 0;border-radius:2px}
+.paper h3{text-align:center;margin:6px 0;font-size:1.15rem;letter-spacing:.03em}
+.paper h4{text-align:center;margin:18px 0 6px;font-size:1rem}
+.paper .side{text-align:center;font-style:italic;color:#555;margin:0 0 10px}
+.paper hr{border:0;border-top:2px dashed #999;margin:26px 0}
+.paper input.u,.paper select.u,.paper textarea.u{border:0;border-bottom:1px solid #444;border-radius:0;background:#f3f7ff;color:#111;padding:2px 4px;font:inherit;width:100%}
+.paper input.u:focus,.paper select.u:focus,.paper textarea.u:focus{outline:2px solid #1a5fb4;background:#e6efff}
+.paper .ln{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:6px 0}
+.paper .ln>span{white-space:nowrap}
+.paper .ln .u{flex:1;min-width:120px}
+.paper .ln .u.s{flex:0 0 100px;min-width:100px}
+.paper .ln .u.dt{flex:0 0 150px}
+.paper table{border-collapse:collapse;width:100%;font-size:.88rem;margin:6px 0}
+.paper th,.paper td{border:1px solid #333;padding:3px;vertical-align:top;background:#fff;color:#111}
+.paper th{background:#eee;font-weight:600;text-align:center}
+.paper td input.u,.paper td select.u{border-bottom:0;background:#f3f7ff;min-width:70px}
+.paper .rm{border:0;background:transparent;color:#c4262e;cursor:pointer;font-size:1.1rem;padding:0 4px}
+.paper .add{border:1px dashed #1a5fb4;background:transparent;color:#1a5fb4;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:.85rem;margin:2px 0}
+.paper .sig{border:1px dashed #888;background:#f3f7ff;color:#555;border-radius:6px;padding:2px 8px;cursor:pointer;font:inherit;font-size:.85rem;white-space:nowrap}
+.paper .sig.on{border:1px solid #1d7a46;background:#dff1e6;color:#1d7a46;font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic}
+.paper .tw{overflow-x:auto}
+.hint{position:sticky;bottom:8px;z-index:5;background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 14px;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.35);margin-top:10px}
+.hint b{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.cond{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+[hidden]{display:none!important}
+
+.opt input{margin-top:5px;flex:none}
+.opt.miss{border:2px dashed var(--ok)}
+.mrow{display:grid;grid-template-columns:1fr minmax(120px,40%);gap:8px;align-items:center;margin-bottom:8px}
+.mrow select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px;width:100%}
+.mrow.ok select{border-color:var(--ok);background:var(--okbg)}
+.mrow.bad select{border-color:var(--bad);background:var(--badbg)}
+.v-ok{color:var(--ok)}.v-bad{color:var(--bad)}
+.cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 14px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.bar select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px;min-width:0}
+.resf{font-size:1.1rem;font-weight:700;margin:14px 0}
+.opt.sel{background:var(--chip)}
+.kind{display:inline-block;border-radius:6px;padding:3px 10px;font-weight:700;font-size:.85rem;margin-bottom:6px}
+.k-o{background:var(--okbg);color:var(--ok)}.k-n{background:var(--badbg);color:var(--bad)}.k-l{background:#dbe8fb;color:#1a4f9c}.k-x{background:var(--chip);color:var(--muted)}
+@media (prefers-color-scheme:dark){.k-l{background:#1c2f4a;color:#8ab8f5}}
+.vbox{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px;background:var(--card)}
+.vbox ul{margin:6px 0 0;padding-left:20px}
+.row2{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.tw table th{font-size:.8rem}
+.paper td textarea.u,.paper td select.u,.paper td input.u{min-width:130px}
+.paper td .sig{min-width:90px}
+.paper label.pk{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Работы во вторичных цепях и системах</h1>
+<p class="lead">Сводный раздел: вторичные системы, трансформаторы тока и напряжения, опробование РЗА, оформление работ, допускающий и работа порознь, устройства ТАИ и эксплуатация РЗА. Основа — приказ № 903н (пп. 2.5, 3.10, 5.7, 6.12, 6.13, 6.26, 7.11, 7.17, 7.18, 11.2, 23.5, 32, 39.28, 42, 43) и ПТЭЭСС (пп. 592–611).</p>
+<div class="note">Пособие сделано по редакции приказа Минтруда № 903н от 01.09.2022. В тексте приказа указан срок действия до 31.12.2025, поэтому перед применением на практике сверьте цифры с действующими Правилами.</div>
+<nav class="tabs" role="tablist" id="tabs"><button class="tab" role="tab" aria-selected="true" data-t="rules">Правила</button><button class="tab" role="tab" aria-selected="false" data-t="choose">Как оформить</button><button class="tab" role="tab" aria-selected="false" data-t="blank">Бланк наряда</button><button class="tab" role="tab" aria-selected="false" data-t="steps">Этапы</button><button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button></nav>
+<section id="rules">
+<div class="grid">
+<div class="card"><h2>Что такое вторичные системы</h2>
+<p>Устройства управления, сигнализации, автоматики, защиты и измерений, связанные между собой вторичными цепями (совокупность кабелей и проводов, соединяющих эти устройства).</p>
+<p>Работы в них не считаются специальными «работами под напряжением на токоведущих частях», хотя напряжение там может быть.</p><div class="src">п. 2.5</div></div>
+<div class="card"><h2>Заземление вторичных цепей</h2>
+<ul class="resp"><li>вторичные цепи (обмотки) измерительных трансформаторов тока и напряжения должны иметь постоянные заземления;</li><li>в сложных схемах РЗА для группы электрически соединённых вторичных обмоток допускается заземление только в одной точке;</li><li>все работы в схемах сложных защит выполняются по программам, в которых указаны меры безопасности.</li></ul><div class="src">п. 42.1</div></div>
+<div class="card"><h2>Трансформаторы тока</h2>
+<ul class="resp"><li>запрещено использовать шины в цепи первичной обмотки ТТ как токоведущие при монтажных и сварочных работах (п. 32.1);</li><li>до окончания монтажа вторичных цепей, приборов, РЗА вторичные обмотки ТТ замкнуты накоротко (п. 32.2);</li><li>при проверке полярности прибор присоединяют к зажимам вторичной обмотки до подачи импульса в первичную (п. 32.3);</li><li>перед разрывом токовой цепи вторичную обмотку закорачивают на специальных зажимах или испытательными блоками (п. 42.2);</li><li>между ТТ и закороткой нельзя выполнять работы, которые могут привести к размыканию цепи (п. 42.2).</li></ul><div class="src">пп. 32.1–32.3, 42.2</div></div>
+<div class="card"><h2>Трансформаторы напряжения</h2>
+<p>При работах во вторичных устройствах и цепях ТН с подачей напряжения от постороннего источника должны быть приняты меры, исключающие возможность обратной трансформации.</p>
+<p>Силовые трансформаторы и ТН, связанные с участком, при подготовке рабочего места отключают, а их схемы разбирают и со стороны других обмоток (п. 17.2).</p><div class="src">пп. 42.3, 17.2</div></div>
+<div class="card"><h2>Проверка и опробование</h2>
+<p>Проверка и опробование действия РЗА и электроавтоматики, в том числе с отключением или включением коммутационных аппаратов, выполняются по п. 7.11. Производителю работ при работах по распоряжению разрешается:</p>
+<ul class="resp"><li>отключать и включать вторичные системы и устройства связи;</li><li>опробовать устройства защиты и электроавтоматики на отключение и включение выключателей — с разрешения оперативного персонала.</li></ul><div class="src">пп. 42.4, 7.11</div></div>
+<div class="card"><h2>Допускающий и работа порознь</h2>
+<ul class="resp"><li>производитель с IV группой из персонала, обслуживающего РЗА, средства измерений, приборы учёта и вторичные цепи, вправе совмещать обязанности допускающего и определять меры безопасности — если для подготовки рабочего места не нужны отключения, заземление, временные ограждения в части выше 1000 В (п. 42.5);</li><li>производитель с IV группой единолично и члены бригады с III группой могут работать отдельно от других членов бригады, если цепи и устройства расположены в РУ и помещениях, где токоведущие части выше 1000 В отсутствуют, полностью ограждены или на высоте, не требующей ограждения (п. 42.6);</li><li>на условиях п. 6.13: рабочие места подготовлены до допуска; отдельно вправе находиться члены бригады с III группой, которых производитель привёл и проинструктировал.</li></ul><div class="src">пп. 42.5, 42.6, 6.13</div></div>
+<div class="card"><h2>Как оформляются работы</h2>
+<ul class="resp"><li>по распоряжению — работы по п. 7.11, 7.17 (один работник с IV группой с переносным компьютером), 7.18 (двое: производитель IV, член бригады не ниже III);</li><li>по наряду-допуску — по усмотрению выдающего (п. 7.3); один наряд допускается на проверку устройств защиты, измерений, блокировки, электроавтоматики, телемеханики, связи на разных рабочих местах (п. 6.12);</li><li>отключения во вторичных системах и устройствах связи в таблицу мероприятий наряда указывать не требуется (п. 6.26);</li><li>в ОРУ при работах по распоряжению во вторичных системах ограждать рабочее место не требуется (п. 23.5).</li></ul><div class="src">пп. 7.3, 6.12, 6.26, 23.5</div></div>
+<div class="card"><h2>Ответственный руководитель и одиночное пребывание</h2>
+<ul class="resp"><li>ответственный руководитель при работах без снятия напряжения с временной изоляцией токоведущих частей назначается, но не для работ во вторичных системах, приборах учёта, СДТУ, АСДУ и на ВЛИ 0,38 кВ (п. 5.7);</li><li>выше 1000 В нельзя оставаться одному производителю или членам бригады без производителя, но исключения: регулировка выключателей и разъединителей с приводами в другом помещении; монтаж и проверка вторичных систем и устройств связи; прокладка кабелей; испытания с повышенным напряжением (п. 11.2).</li></ul><div class="src">пп. 5.7, 11.2</div></div>
+<div class="card"><h2>Предохранители и мегаомметр</h2>
+<ul class="resp"><li>под напряжением и под нагрузкой допускается снимать и устанавливать предохранители во вторичных системах, включая приводы и агрегатные шкафы коммутационных аппаратов и устройства связи (п. 3.10);</li><li>измерения мегаомметром во вторичных цепях — по распоряжению или по перечню работ текущей эксплуатации (п. 39.28).</li></ul><div class="src">пп. 3.10, 39.28</div></div>
+<div class="card"><h2>Устройства ТАИ (раздел XLIII)</h2>
+<ul class="resp"><li>операции с коммутационной аппаратурой на пультах, распределительных щитах и сборках — оперативный персонал; или по наряду производитель при записи в «Отдельных указаниях»; или по распоряжению с записью в графе 7 журнала (п. 43.2);</li><li>подготовку участка технологического оборудования перед допуском проводит оперативный персонал цеха (п. 43.3);</li><li>опробование и проверка под напряжением, пробное включение — с разрешения начальника смены при условиях: работа прекращена, бригада удалена, заземления, ограждения и плакаты сняты (п. 43.4);</li><li>по распоряжению — работы, не требующие изменения технологической схемы или режима (п. 43.5);</li><li>допускающий — оперативный персонал цеха с III группой; производитель с IV группой вправе совмещать (п. 43.8).</li></ul><div class="src">пп. 43.2–43.8</div></div>
+<div class="card"><h2>Работы в устройствах ТАИ единолично с III группой</h2>
+<ul class="resp"><li>наладка регистрационной части приборов;</li><li>замена манометров (кроме электроконтактных), дифманометров, термопар, термометров сопротивления;</li><li>устранение дефектов в приборах теплотехнического контроля на блочных и групповых щитах управления;</li><li>профилактика переключателей точек температурных измерений;</li><li>ремонт комплекса технических средств вычислительной техники АСУ;</li><li>наладка и проверка параметров настройки электронных блоков авторегуляторов;</li><li>уплотнение коробок зажимов, надписи и маркировка, обдувка щитов сжатым воздухом.</li></ul><div class="src">п. 43.5</div></div>
+<div class="card"><h2>Эксплуатация РЗА по ПТЭЭСС (пп. 592–611)</h2>
+<ul class="resp"><li>ЛЭП и оборудование — в работе и под опробованием только с включёнными устройствами РЗА; при выводе части оставшиеся защищают от всех видов повреждений, иначе — временная защита или отключение присоединения (п. 592);</li><li>вторичные обмотки ТТ замкнуты на реле или закорочены; вторичные цепи ТТ, ТН и обмотки фильтров присоединения заземлены (пп. 599–600);</li><li>оперативный персонал проверяет соответствие РЗА схемам первичных соединений, фиксирует срабатывания, информирует диспетчера; на каждую панель — таблицы положений переключающих устройств (пп. 604–605);</li><li>персоналу разрешены только операции, описанные в инструкциях; при угрозе ложного срабатывания устройство выводят по инструкции без разрешения диспетчера и немедленно сообщают ему (пп. 606–609);</li><li>техническое обслуживание — по приказу Минэнерго № 555 (пп. 610–611).</li></ul><div class="src">ПТЭЭСС, пп. 592–611 (по ответу документа)</div></div>
+</div>
+<div class="card"><h2>Где что искать (свод по пунктам)</h2>
+<div class="scroll"><table>
+<tr><th>Вопрос</th><th>Пункты приказа № 903н</th></tr>
+<tr><td>Что такое вторичные системы</td><td>2.5</td></tr>
+<tr><td>Заземление вторичных цепей, сложные защиты</td><td>42.1</td></tr>
+<tr><td>Трансформаторы тока: монтаж, закоротка, полярность</td><td>32.1–32.3, 42.2</td></tr>
+<tr><td>Подача напряжения от постороннего источника</td><td>42.3</td></tr>
+<tr><td>Опробование РЗА с отключением и включением выключателей</td><td>42.4, 7.11</td></tr>
+<tr><td>Совмещение допускающего, работа порознь</td><td>42.5, 42.6, 6.13</td></tr>
+<tr><td>Оформление: распоряжение, наряд, таблица мероприятий</td><td>7.11, 7.17, 7.18, 6.12, 6.26, 23.5</td></tr>
+<tr><td>Ответственный руководитель, одиночное пребывание</td><td>5.7, 11.2</td></tr>
+<tr><td>Предохранители, мегаомметр</td><td>3.10, 39.28</td></tr>
+<tr><td>Приборы учёта</td><td>42.7–42.12 (раздел 10 сайта)</td></tr>
+<tr><td>Устройства ТАИ</td><td>43.1–43.8</td></tr>
+<tr><td>Журнал и перечень текущей эксплуатации</td><td>6.6, 8.1–8.6 (разделы 9, 10)</td></tr>
+</table></div></div>
+</section>
+<section id="choose" hidden>
+<div class="card"><h2>Как оформить и что учесть</h2>
+<p class="muted">Выберите работу во вторичных цепях: подсказка покажет, как она оформляется, какие меры и группы нужны, и пункт. Это ориентир по тексту Правил.</p>
+<label>Работа<select id="work"></select></label>
+<div id="verdictBox" class="vbox"></div></div></section>
+<section id="blank" hidden>
+<div class="card"><h2>Фрагмент наряда-допуска на работы во вторичных цепях</h2>
+<p class="muted">Заполните бланк, отметьте условия работы ниже и нажмите «Проверить». Проверка сверяет группы, меры по трансформаторам тока и напряжения, совмещение допускающего, работу порознь и записи в «Отдельных указаниях». Когда курсор в клетке, внизу появляется подсказка.</p>
+<div class="btns"><button class="btn" id="exGood">Образец: проверка РЗА с опробованием</button><button class="btn" id="exBad">Заполнить с ошибками</button><button class="btn" id="exClear">Очистить</button></div>
+<div class="sh">Условия работы (в бланк не вписываются, нужны для проверки)</div>
+<div class="cond">
+<label class="chk"><input type="checkbox" id="hv"> В РУ есть неогражденные токоведущие части выше 1000 В</label>
+<label class="chk"><input type="checkbox" id="prepHv"> Для подготовки нужны отключения, заземление или временные ограждения в части выше 1000 В</label>
+<label class="chk"><input type="checkbox" id="ct"> Работа требует разрыва токовой цепи</label>
+<label class="chk"><input type="checkbox" id="ctShort"> Вторичная обмотка ТТ предварительно закорочена на зажимах или испытательных блоках</label>
+<label class="chk"><input type="checkbox" id="ctRisk"> Между ТТ и закороткой предстоят работы, которые могут привести к размыканию цепи</label>
+<label class="chk"><input type="checkbox" id="tn"> В цепи ТН подаётся напряжение от постороннего источника</label>
+<label class="chk"><input type="checkbox" id="tnMeas"> Приняты меры против обратной трансформации</label>
+<label class="chk"><input type="checkbox" id="gnd"> Вторичные цепи ТТ и ТН имеют постоянные заземления</label>
+<label class="chk"><input type="checkbox" id="cplx"> Работа в схемах сложных защит</label>
+<label class="chk"><input type="checkbox" id="prog"> Есть программа с мерами безопасности</label>
+</div>
+<div id="paper" class="paper"></div>
+<div class="btns"><button class="btn pri" id="check">Проверить</button></div>
+<div id="out"></div>
+<div class="hint" id="hint" hidden></div>
+</div></section>
+<section id="steps" hidden>
+<p class="muted">Откройте этап: кто что делает и как это видно в бланке. На примере заполненные клетки выделены жёлтым с номерами и поясняются ниже.</p>
+<div id="stepList"></div></section>
+<section id="quiz" hidden>
+<div class="bar">
+<select id="topic"><option value="0">Все темы</option></select>
+<select id="kind"><option value="all">Все типы вопросов</option><option value="s">Один верный ответ</option><option value="m">Несколько верных ответов</option><option value="x">Сопоставление</option></select>
+<label class="cntl">Вопросов: <input type="number" id="cnt" min="1" step="1" inputmode="numeric" placeholder="все"></label>
+<button class="btn pri" id="start">Начать</button>
+</div>
+<div class="bar" id="chips"><span class="muted">Быстрый выбор:</span><button class="chip" data-c="5">5</button><button class="chip" data-c="10">10</button><button class="chip" data-c="20">20</button><button class="chip" data-c="30">30</button><button class="chip" data-c="">Все</button><span class="muted" id="avail"></span></div>
+<p class="lead">Варианты ответов похожи и отличаются деталями. В вопросах «выберите все верные» засчитывается только точный выбор. Варианты перемешиваются при каждом запуске.</p>
+<div class="score" id="score" hidden></div>
+<div id="qs"></div>
+<div class="resf" id="final"></div>
+</section>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+ document.querySelectorAll('main>section').forEach(function(s){s.hidden=s.id!==t.dataset.t})}});
+var GN={2:'II',3:'III',4:'IV',5:'V'};
+function esc2(x){return String(x).replace(/'/g,'&#39;').replace(/</g,'&lt;')}
+function I(k,h,p,c){return '<input type="text" class="u '+(c||'')+'" data-k="'+k+'" data-h="'+esc2(h)+'" placeholder="'+(p||'')+'">'}
+function DT(k,h){return '<input type="date" class="u" data-k="'+k+'d" data-h="'+esc2(h)+'"><input type="time" class="u s" data-k="'+k+'t" data-h="'+esc2(h)+'">'}
+function GS(k,h){return '<select class="u s" data-k="'+k+'" data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>'}
+function SG(k,h){return '<button type="button" class="sig" data-k="'+k+'" data-h="'+esc2(h)+'">подпись</button>'}
+function SEL(k,opts,h){return '<select class="u" data-k="'+k+'" data-h="'+esc2(h)+'">'+opts.map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>'}
+function cell(c,h){var t=c[0];
+ if(t==='t')return '<textarea class="u" rows="2" data-c data-h="'+esc2(h)+'"></textarea>';
+ if(t==='n')return '<input type="number" step="0.1" min="0" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='g')return '<select class="u" data-c data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>';
+ if(t==='dt')return '<input type="datetime-local" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='s')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">подпись</button>';
+ if(t==='ss')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">провёл</button><br><button type="button" class="sig" data-c data-h="'+esc2(h)+'" style="margin-top:4px">получил</button>';
+ if(t==='sel')return '<select class="u" data-c data-h="'+esc2(h)+'">'+c[1].map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>';
+ return ''}
+function TBL(n,head,cols,hint,hh){
+ var th='<tr>'+head.map(function(x){return '<th>'+x+'</th>'}).join('')+'<th></th></tr>';
+ return '<div class="tw"><table data-n="'+n+'" data-cols=\''+esc2(JSON.stringify(cols))+'\' data-h="'+esc2(hint)+'"'+(hh?' data-hh=\''+esc2(JSON.stringify(hh))+'\'':'')+'><thead>'+th+'</thead><tbody></tbody></table></div><button type="button" class="add" data-add="'+n+'">+ строка</button>'}
+var P=$('paper');
+function setEl(e,v){if(!e)return;
+ if(e.classList.contains('sig')){if(!e.dataset.o)e.dataset.o=e.textContent;e.classList.toggle('on',!!v);e.textContent=v?'подписано':e.dataset.o}
+ else if(e.type==='checkbox')e.checked=!!v;else e.value=v==null?'':v}
+function addRow(t,vals){var cols=JSON.parse(t.dataset.cols.replace(/&#39;/g,"'")),h=t.dataset.h,hh=t.dataset.hh?JSON.parse(t.dataset.hh):null,tr=document.createElement('tr');
+ tr.innerHTML=cols.map(function(c,j){return '<td>'+cell(c,(hh&&hh[j])||h)+'</td>'}).join('')+'<td><button type="button" class="rm" title="Удалить строку">×</button></td>';
+ t.querySelector('tbody').appendChild(tr);
+ tr.querySelectorAll('.sig').forEach(function(b){b.dataset.o=b.textContent});
+ if(vals){var cs=tr.querySelectorAll('[data-c]');vals.forEach(function(v,i){setEl(cs[i],v)})}}
+function tbl(n){return P.querySelector('table[data-n="'+n+'"]')}
+function setTable(n,rows){var t=tbl(n);t.querySelector('tbody').innerHTML='';(rows&&rows.length?rows:[null]).forEach(function(r){addRow(t,r)})}
+P.addEventListener('click',function(e){var t=e.target;
+ if(t.dataset&&t.dataset.add){addRow(tbl(t.dataset.add));return}
+ if(t.classList.contains('rm')){var tb=t.closest('tbody');if(tb.children.length>1)t.closest('tr').remove();else t.closest('tr').querySelectorAll('[data-c]').forEach(function(x){setEl(x,'')});return}
+ if(t.classList.contains('sig')){var on=!t.classList.contains('on');if(!t.dataset.o)t.dataset.o=t.textContent;t.classList.toggle('on',on);t.textContent=on?'подписано':t.dataset.o}});
+var hint=$('hint');
+P.addEventListener('focusin',function(e){var h=e.target.dataset&&e.target.dataset.h;if(!h)return;var a=h.split('|');hint.hidden=false;hint.innerHTML='<b>Что писать'+(a[1]?' · '+a[1]:'')+'</b>'+a[0]});
+function K(k){return P.querySelector('[data-k="'+k+'"]')}
+function v(k){var e=K(k);return e?e.value.trim():''}
+function ck(k){var e=K(k);return !!(e&&e.checked)}
+function sg(k){var e=K(k);return !!(e&&e.classList.contains('on'))}
+function rows(n){return [].map.call(tbl(n).querySelectorAll('tbody tr'),function(tr){return [].map.call(tr.querySelectorAll('[data-c]'),function(e){return e.classList.contains('sig')?e.classList.contains('on'):e.value.trim()})})}
+function setK(k,x){var e=K(k);if(e)setEl(e,x)}
+function dstr(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function dts(n,t){return dstr(n)+'T'+t}
+function PG(x){var m=(x||'').match(/(?:^|[\s,.])(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/);return {g:m?{II:2,III:3,IV:4,V:5}[m[1]]:0,n:(x||'').replace(/[,\s]*(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/,'').trim()}}
+function MEM(x){return (x||'').split(';').map(function(s){return s.trim()}).filter(Boolean).map(PG)}
+function Hl(n,t){return '<span class="hl">'+t+'<sup>'+n+'</sup></span>'}
+function Sg(t){return '<span class="sgn">'+t+'</span>'}
+function Ln(l,v){return '<div class="ln"><span>'+l+'</span><span class="val">'+v+'</span></div>'}
+function Tb(head,rows){return '<div class="tw"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>'}
+function exBlock(e){if(!e)return '';
+ if(e.none)return '<div class="exh">Как это выглядит в бланке</div><div class="nofill">'+e.none+'</div>';
+ var h='<div class="exh">Как это заполняется (пример)</div><div class="paper mini"><p class="side">'+e.side+'</p>'+e.html+'</div><ol class="legend">'+e.legend.map(function(t,k){return '<li><b>'+(k+1)+'</b><span>'+t+'</span></li>'}).join('')+'</ol>';
+ if(e.note)h+='<div class="nofill">'+e.note+'</div>';return h}
+function renderSteps(S,EX,box){var sl=$(box);S.forEach(function(s,i){var d=document.createElement('details');
+ d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div>'+exBlock(EX[i])+'<button class="closeb" type="button">▲ Свернуть</button></div>';sl.appendChild(d)})}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'})}});
+function showResult(R,note,out){var bad=R.filter(function(r){return r.ok===false}).length;
+ var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Замечаний: '+bad+'.':'Замечаний нет. Оформлено верно по проверяемым требованиям.')+'</div><ul class="res">';
+ R.forEach(function(r){if(r.h){h+='</ul><div class="sh">'+r.h+'</div><ul class="res">';return}
+  h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
+ h+='</ul><div class="note">'+note+'</div>';var o=$(out||'out');o.innerHTML=h;o.scrollIntoView({behavior:'smooth',block:'start'})}
+/* ===== тест ===== */
+var KIND={s:'Один верный ответ',m:'Несколько верных ответов',x:'Сопоставление'};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var total,done,right;
+function qupd(){$('score').textContent='Отвечено: '+done+' из '+total+'. Верно: '+right;if(done===total)$('final').textContent='Итог: '+right+' из '+total+' ('+Math.round(100*right/total)+' %)'}
+function qfinish(box,ok,q){box.classList.add('done');done++;if(ok)right++;
+ var e=box.querySelector('.exp');e.innerHTML='<div class="verdict '+(ok?'v-ok':'v-bad')+'">'+(ok?'Верно.':'Неверно.')+'</div>'+q.e;qupd()}
+function filt(){var tp=+$('topic').value,kd=$('kind').value;return Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)})}
+function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='Доступно по выбранным условиям: '+n;var vv=c.value;document.querySelectorAll('#chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.c===vv)})}
+function buildQuiz(){
+ var cn=Math.max(0,Math.floor(+$('cnt').value)||0);var L=filt();L=cn&&cn<L.length?shuf(L).slice(0,cn):shuf(L);
+ var box=$('qs');box.innerHTML='';$('final').textContent='';total=L.length;done=0;right=0;$('score').hidden=false;
+ if(!L.length){$('score').textContent='По выбранным условиям вопросов нет.';return}
+ L.forEach(function(q,i){var d=document.createElement('div');d.className='q';
+  d.innerHTML='<div class="meta">Вопрос '+(i+1)+' · '+KIND[q.t]+'</div><p class="t"></p>';d.querySelector('.t').textContent=q.q;
+  var o=document.createElement('div');o.className='opts';d.appendChild(o);var ex=document.createElement('div');ex.className='exp';
+  if(q.t==='s'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var b=document.createElement('button');b.className='opt';b.textContent=q.o[k];b.dataset.k=k;
+    b.onclick=function(){if(d.classList.contains('done'))return;[].forEach.call(o.children,function(x){if(+x.dataset.k===q.a)x.classList.add('ok')});if(k!==q.a)b.classList.add('bad');qfinish(d,k===q.a,q)};o.appendChild(b)});d.appendChild(ex)}
+  if(q.t==='m'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var l=document.createElement('label');l.className='opt';l.dataset.k=k;l.innerHTML='<input type="checkbox"><span></span>';l.querySelector('span').textContent=q.o[k];o.appendChild(l)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(l){var k=+l.dataset.k,on=l.querySelector('input').checked,should=q.a.indexOf(k)>=0;l.querySelector('input').disabled=true;
+     if(should&&on)l.classList.add('ok');else if(should&&!on){l.classList.add('miss');ok=false}else if(!should&&on){l.classList.add('bad');ok=false}});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  if(q.t==='x'){var ro=shuf(q.r.map(function(t,k){return k}));q.l.forEach(function(lt){var r=document.createElement('div');r.className='mrow';r.innerHTML='<span></span><select><option value="">выберите</option></select>';r.firstChild.textContent=lt;var s=r.lastChild;ro.forEach(function(k){var op=document.createElement('option');op.value=k;op.textContent=q.r[k];s.appendChild(op)});o.appendChild(r)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(r,li){var s=r.querySelector('select'),good=s.value!==''&&q.r[+s.value]===q.r[q.a[li]];r.classList.add(good?'ok':'bad');if(!good){ok=false;r.querySelector('span').textContent=q.l[li]+' → верно: '+q.r[q.a[li]]}s.disabled=true});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  box.appendChild(d)});qupd();$('score').scrollIntoView({block:'start'})}
+function initQuiz(TOPICS){var sel=$('topic');TOPICS.forEach(function(t){var o=document.createElement('option');o.value=t[0];o.textContent=t[0]+'. '+t[1];sel.appendChild(o)});
+ document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
+ ['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();$('start').onclick=buildQuiz}
+
+/* ===== подбор ===== */
+var W=[
+['Монтаж, наладка, ремонт, ТО вторичных систем и устройств связи','o','Выполняется по распоряжению. Производитель вправе отключать и включать устройства и опробовать защиту и электроавтоматику на отключение и включение выключателей — с разрешения оперативного персонала. По усмотрению выдающего можно оформить и нарядом. Из случая п. 5.7 «работы без снятия напряжения с временной изоляцией токоведущих частей» вторичные системы исключены; в остальных случаях п. 5.7 (механизмы, две бригады и др.) ответственный руководитель назначается по общим условиям.','7.11, 7.3, 5.7'],
+['Опробование РЗА с отключением или включением выключателей','l','Выполняется по п. 7.11: производителем работ с разрешения оперативного персонала. Перед опробованием бригада и безопасность — как при работе с коммутационными аппаратами.','42.4, 7.11'],
+['Разрыв токовой цепи измерительных приборов, РЗА, электроавтоматики','l','Цепь вторичной обмотки ТТ предварительно закорачивается на специально предназначенных зажимах или с помощью испытательных блоков. Между ТТ и закороткой нельзя выполнять работы, которые могут привести к размыканию цепи.','42.2'],
+['Проверка полярности вторичных обмоток ТТ','l','Прибор, указывающий полярность, присоединяют к зажимам вторичной обмотки до подачи импульса в первичную обмотку ТТ.','32.3'],
+['Монтаж вторичных цепей, приборов, РЗА (до окончания монтажа)','l','Вторичные обмотки ТТ должны быть замкнуты накоротко до окончания монтажа. Шины в цепи первичной обмотки ТТ нельзя использовать как токоведущие при монтажных и сварочных работах.','32.1, 32.2'],
+['Подача напряжения от постороннего источника во вторичные цепи ТН','l','Должны быть приняты меры, исключающие возможность обратной трансформации.','42.3'],
+['Работы в схемах сложных защит','l','Выполняются по программам, в которых указаны меры безопасности. Заземление группы электрически соединённых вторичных обмоток допускается в одной точке.','42.1'],
+['Скачивание осциллограмм и логов, параметрирование терминалов РЗА, коммутаторов, снятие показаний микропроцессорных счётчиков (переносной компьютер)','o','По распоряжению, один работник с IV группой и правом производителя работ, в электроустановках до и выше 1000 В.','7.17'],
+['Подключение регистраторов качества электроэнергии, осциллографов во вторичные цепи РЗА, снятие векторных диаграмм в цепях учёта','o','По распоряжению, два работника: производитель с IV группой и член бригады не ниже III.','7.18'],
+['Производитель совмещает обязанности допускающего','l','Допускается производителю с IV группой из персонала, обслуживающего РЗА, средства измерений, приборы учёта и вторичные цепи, если для подготовки не нужны отключения, заземление, установка временных ограждений в части выше 1000 В. Меры безопасности определяет он.','42.5'],
+['Работа отдельно от других членов бригады во вторичных цепях и устройствах РЗА','l','Производитель с IV группой единолично и члены бригады с III группой — на условиях п. 6.13. Цепи и устройства должны быть в РУ и помещениях, где токоведущие части выше 1000 В отсутствуют, полностью ограждены или расположены на высоте, не требующей ограждения.','42.6, 6.13'],
+['Измерения мегаомметром во вторичных цепях','o','По распоряжению или по перечню работ в порядке текущей эксплуатации.','39.28'],
+['Снятие и установка предохранителей во вторичных системах под напряжением и под нагрузкой','o','Допускается, включая работы в приводах и агрегатных шкафах коммутационных аппаратов и в устройствах связи.','3.10'],
+['Отключения во вторичных системах в таблице мероприятий наряда','x','Указывать в таблице «Мероприятия по подготовке рабочих мест» отключения во вторичных системах и устройствах связи не требуется.','6.26'],
+['Ограждение рабочего места в ОРУ при работах по распоряжению во вторичных системах','x','Ограждать рабочее место не требуется.','23.5'],
+['Операции с коммутационной аппаратурой на пультах, щитах и сборках устройств ТАИ','l','Выполняет оперативный персонал; или по наряду-допуску производитель, если разрешение подтверждено записью в «Отдельных указаниях»; или по распоряжению с записью в графе 7 журнала учёта работ.','43.2'],
+['Опробование и проверка под напряжением, пробное включение узлов устройств ТАИ','l','С разрешения начальника смены (оперативного персонала) технологического цеха, участка при условиях: работа прекращена, бригада от опробуемого оборудования удалена, защитные заземления, ограждения и плакаты сняты.','43.4'],
+['Работы в устройствах ТАИ, не требующие изменения технологической схемы или режима','o','По распоряжению. Работником с III группой единолично — работы по перечню п. 43.5 (наладка регистрационной части, замена манометров кроме электроконтактных, термопар, уплотнение коробок зажимов и др.).','43.5']];
+(function(){var s=$('work');W.forEach(function(w,i){var o=document.createElement('option');o.value=i;o.textContent=w[0];s.appendChild(o)});
+ var KN={o:['k-o','Допускается по распоряжению'],l:['k-l','С условиями'],n:['k-n','Нельзя'],x:['k-x','Правило оформления']};
+ function show(){var w=W[+s.value];$('verdictBox').innerHTML='<span class="kind '+KN[w[1]][0]+'">'+KN[w[1]][1]+'</span><p style="margin:6px 0">'+w[2]+'</p><div class="src">Приказ № 903н, '+w[3]+'</div>'}
+ s.onchange=show;show()})();
+/* ===== бланк ===== */
+var PAPER='<p class="side">Фрагмент лицевой стороны наряда-допуска</p>';
+PAPER+='<div class="ln"><span>Поручается</span><textarea class="u" rows="2" data-k="task" data-h="Объект и содержание работы: устройство, присоединение, что именно проверяется или ремонтируется.|п. 6.25"></textarea></div>';
+PAPER+='<div class="ln"><span>Производителю работ</span>'+I('pr','Фамилия, инициалы производителя работ.|п. 5.9')+GS('gpr','Группа производителя: III; IV — если совмещает допускающего (п. 42.5) или работает единолично порознь (п. 42.6).|пп. 5.9, 42.5, 42.6')+'</div>';
+PAPER+='<div class="ln"><span>Допускающему</span>'+I('dop','Допускающий из оперативного персонала. Если обязанности совмещает производитель с IV группой, запишите «совмещает производитель работ» и отметьте в «Отдельных указаниях».|п. 42.5')+GS('gdop','Группа допускающего: IV выше 1000 В, III до 1000 В.|п. 5.8')+'</div>';
+PAPER+='<div class="ln"><span>с членами бригады</span></div>'+TBL('mem',['Фамилия, инициалы','Группа'],[['t'],['g']],'Члены бригады с группами. Состав — по п. 5.15: на каждого с группой не ниже III можно включить одного со II группой, но не более трёх. Работать отдельно от производителя могут члены бригады с III группой.|пп. 5.15, 42.6');
+PAPER+='<h4>Мероприятия по подготовке рабочих мест к выполнению работ</h4>'+TBL('prep',['1. Электроустановка','2. Что отключить и где заземлить','3. Что изолировать (оградить)'],[['t'],['t'],['t']],'Отключения во вторичных системах и устройствах связи в таблицу указывать не требуется. Если подготовка рабочего места не нужна, напишите «не требуется».|пп. 6.26, 6.27');
+PAPER+='<div class="sh" style="color:#555">Отдельные указания (отметьте включённое в наряд)</div>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="a" data-h="Разрешение производителю отключать и включать устройства и опробовать защиту и электроавтоматику на отключение и включение выключателей. Даётся записью, опробование — с разрешения оперативного персонала.|пп. 7.11, 42.4"><span>Производителю разрешено отключать и включать устройства и опробовать защиту и электроавтоматику (с разрешения оперативного персонала)</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="b" data-h="Производитель с IV группой совмещает обязанности допускающего и определяет меры безопасности для подготовки рабочего места.|пп. 42.5, 43.8"><span>Производитель с IV группой совмещает обязанности допускающего и определяет меры безопасности</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="c" data-h="Члены бригады с III группой работают отдельно от производителя. Рабочие места подготовлены до допуска, членов бригады производитель привёл и проинструктировал.|пп. 42.6, 6.13"><span>Члены бригады с III группой работают отдельно от производителя</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="d" data-h="Разрешение производителю оперировать коммутационной аппаратурой на пультах, щитах и сборках устройств ТАИ.|п. 43.2"><span>Производителю разрешены операции с коммутационной аппаратурой устройств ТАИ</span></label>';
+PAPER+='<div class="ln"><span>Прочее</span><textarea class="u" rows="2" data-k="spec" data-h="Дополнительные меры безопасности по условиям работы.|п. 6.28"></textarea></div>';
+$('paper').innerHTML=PAPER;
+function clearAll(){P.querySelectorAll('[data-k]').forEach(function(e){setEl(e,'')});setTable('mem');setTable('prep');['hv','prepHv','ct','ctShort','ctRisk','tn','tnMeas','gnd','cplx','prog'].forEach(function(i){$(i).checked=false});$('out').innerHTML='';hint.hidden=true}
+function fillGood(){clearAll();setK('task','РУ-110 кВ, панель РЗА-3: проверка и опробование защиты линии Л-12 с отключением и включением выключателя');setK('pr','Петров И. И.');setK('gpr',4);setK('dop','совмещает производитель работ');
+ setTable('mem',[['Сидоров А. А.',3]]);setTable('prep',[['РУ-110 кВ, ячейка Л-12','Не требуется (отключения во вторичных системах не указываются)','Не требуется']]);
+ setK('a',true);setK('b',true);setK('spec','Опробование с разрешения оперативного персонала');
+ ['ct','ctShort','gnd','cplx','prog'].forEach(function(i){$(i).checked=true})}
+function fillBad(){clearAll();setK('task','Панель РЗА-3');setK('pr','Петров И. И.');setK('gpr',3);setK('dop','совмещает производитель работ');
+ setTable('mem',[['Орлов П. П.',2],['Зайцев Е. Е.',2],['Лисин К. К.',2],['Волков Д. Д.',2],['Сидоров А. А.',3]]);
+ setK('b',true);setK('c',true);setK('a',true);['hv','prepHv','ct','ctRisk','tn','cplx'].forEach(function(i){$(i).checked=true})}
+$('exGood').onclick=fillGood;$('exBad').onclick=fillBad;$('exClear').onclick=clearAll;
+function cc(i){return $(i).checked}
+function check(){var R=[];function add(ok,t,ref){R.push({ok:ok,t:t,ref:ref})}
+ add(!!v('task'),v('task')?'Заполнено «Поручается».':'Не заполнено «Поручается».','п. 6.25');
+ var g=+v('gpr'),pr=v('pr');
+ add(!!pr&&g>0,(pr&&g>0)?'Производитель работ: '+pr+', группа '+GN[g]+'.':'У производителя работ не указана фамилия или группа.','п. 5.9');
+ var b=ck('b'),c=ck('c');
+ if(b){add(g>=4,g>=4?'Производитель совмещает обязанности допускающего, группа IV.':'Совмещать обязанности допускающего может производитель с IV группой, указана '+(g?GN[g]:'пустая группа')+'.','п. 42.5');
+  add(!cc('prepHv'),!cc('prepHv')?'Для подготовки не нужны отключения, заземление, временные ограждения в части выше 1000 В: совмещение допустимо.':'Совмещение допускается, только если для подготовки не требуются отключения, заземление, установка временных ограждений в части электроустановки выше 1000 В.','п. 42.5')}
+ else add(!!v('dop'),v('dop')?'Допускающий указан.':'Не указан допускающий.','п. 5.8');
+ var mem=rows('mem').filter(function(r){return r[0]||r[1]});
+ add(mem.length>0&&mem.every(function(r){return r[0]&&r[1]}),mem.length?(mem.every(function(r){return r[0]&&r[1]})?'Члены бригады указаны с группами: '+mem.length+'.':'У каждого члена бригады должны быть фамилия и группа.'):'Не указаны члены бригады.','п. 5.15');
+ var g2=mem.filter(function(r){return +r[1]===2}).length,g3=mem.filter(function(r){return +r[1]>=3}).length;
+ if(mem.length)add(g2<=3&&g2<=g3,'Члены бригады: с группой не ниже III — '+g3+', со II — '+g2+'. Допускается не более одного II на каждого с группой не ниже III и не более трёх II.','п. 5.15');
+ if(c){add(g>=4,g>=4?'Работа порознь: производитель с IV группой.':'Работать отдельно от других членов бригады единолично вправе производитель с IV группой.','п. 42.6');
+  add(!cc('hv'),!cc('hv')?'Цепи и устройства расположены там, где токоведущие части выше 1000 В отсутствуют, ограждены или на высоте, не требующей ограждения.':'Работать порознь можно, только если в РУ и помещениях токоведущие части выше 1000 В отсутствуют, полностью ограждены или расположены на высоте, не требующей ограждения.','п. 42.6');
+  add(mem.length>0&&mem.every(function(r){return +r[1]>=3}),'Отдельно от производителя вправе находиться члены бригады с III группой.','пп. 42.6, 6.13')}
+ R.push({h:'Меры по цепям'});
+ if(cc('ct')){add(cc('ctShort'),cc('ctShort')?'Токовая цепь предварительно закорочена на специальных зажимах или испытательных блоках.':'Перед разрывом токовой цепи вторичную обмотку ТТ нужно предварительно закоротить на специально предназначенных зажимах или с помощью испытательных блоков.','п. 42.2');
+  add(!cc('ctRisk'),!cc('ctRisk')?'Между ТТ и закороткой нет работ, ведущих к размыканию цепи.':'Во вторичной цепи между ТТ и закороткой нельзя выполнять работы, которые могут привести к размыканию цепи.','п. 42.2')}
+ else R.push({ok:null,t:'Разрыв токовой цепи не требуется.',ref:'п. 42.2'});
+ if(cc('tn'))add(cc('tnMeas'),cc('tnMeas')?'Приняты меры против обратной трансформации.':'При подаче напряжения от постороннего источника в цепи ТН нужны меры, исключающие обратную трансформацию.','п. 42.3');
+ add(cc('gnd'),cc('gnd')?'Вторичные цепи имеют постоянные заземления.':'Вторичные цепи ТТ и ТН должны иметь постоянные заземления (в сложных схемах для группы соединённых обмоток — в одной точке).','п. 42.1');
+ if(cc('cplx'))add(cc('prog'),cc('prog')?'Работа в сложных защитах выполняется по программе с мерами безопасности.':'Все работы в схемах сложных защит выполняются по программам с указанием мер безопасности.','п. 42.1');
+ R.push({h:'Оформление'});
+ var pp=rows('prep').filter(function(r){return r.some(Boolean)});
+ add(pp.length>0,pp.length?'Таблица мероприятий заполнена (отключения во вторичных системах в неё не вносят).':'Не заполнена таблица мероприятий: если подготовка не нужна, напишите «не требуется». Отключения во вторичных системах указывать не требуется.','пп. 6.26, 6.27');
+ if(ck('a'))R.push({ok:null,t:'Разрешение на отключение и включение устройств и опробование защиты внесено в «Отдельные указания». Опробование выполняется с разрешения оперативного персонала.',ref:'пп. 7.11, 42.4'});
+ else R.push({ok:null,t:'Разрешение производителю опробовать защиту и электроавтоматику на отключение и включение выключателей в «Отдельных указаниях» не отмечено: при необходимости оно записывается.',ref:'пп. 7.11, 42.4'});
+ R.push({ok:null,t:'Ответственный руководитель: из случая п. 5.7 «работы без снятия напряжения с временной изоляцией» вторичные системы исключены; в остальных случаях п. 5.7 (механизмы, две бригады и др.) он назначается по общим условиям.',ref:'п. 5.7'});
+ showResult(R,'Проверка охватывает основные требования пп. 5.9, 5.15, 6.26, 7.11, 32, 42. Условия работы отмечаются в блоке над бланком.','out')}
+$('check').onclick=check;clearAll();
+/* ===== этапы ===== */
+var S=[
+['Определить способ оформления','Работник, выдающий наряд или распоряжение','Работы во вторичных системах допускаются по распоряжению (п. 7.11, 7.17, 7.18) или по наряду-допуску по усмотрению выдающего (п. 7.3). Выдающий определяет меры безопасности и состав бригады.','7.3, 7.11, 7.17, 7.18'],
+['Заполнить «Поручается» и состав','Выдающий наряд','Указывают устройство и содержание работы, производителя с группой, допускающего, членов бригады с группами. Если обязанности допускающего совмещает производитель с IV группой, это записывают.','5.8, 5.9, 42.5, 6.25'],
+['Записать отдельные указания','Выдающий наряд','В «Отдельных указаниях» оформляют разрешения: опробовать защиту, совмещать допускающего, работать порознь, оперировать аппаратурой ТАИ.','6.28, 7.11, 42.5, 42.6, 43.2'],
+['Таблица мероприятий','Выдающий наряд','Отключения во вторичных системах и устройствах связи в таблицу указывать не требуется. Если подготовка не нужна, пишут «не требуется».','6.26, 6.27'],
+['Подготовка: заземления и закоротки','Допускающий или производитель, совмещающий допускающего','Проверяют постоянные заземления вторичных цепей, закорачивают токовую цепь на зажимах или испытательных блоках перед разрывом, принимают меры против обратной трансформации.','42.1–42.3'],
+['Допуск','Допускающий или производитель, совмещающий допускающего','Допуск и целевой инструктаж по обычным правилам: подписи в наряде. Для работы порознь производитель приводит членов бригады на рабочие места и инструктирует.','10.5–10.10, 6.13'],
+['Выполнение работы','Производитель работ, члены бригады','Между ТТ и закороткой нельзя выполнять работы, ведущие к размыканию цепи. Опробование с отключением и включением выключателей — с разрешения оперативного персонала.','42.2, 42.4, 7.11'],
+['Окончание','Производитель работ, допускающий','Закоротки и временные меры снимаются по окончании работ, место сдаётся допускающему, наряд закрывается.','14.1–14.5']];
+var EX=[
+{none:'Записей в бланке на этом этапе нет. Решение принимает выдающий. Для работ по п. 7.17, 7.18 достаточно распоряжения с записью в журнале учёта.'},
+{side:'Лицевая сторона: «Поручается» и состав',html:Ln('Поручается',Hl(1,'РУ-110 кВ, панель РЗА-3: проверка и опробование защиты линии Л-12'))+Ln('Производителю работ',Hl(2,'Петров И. И., IV'))+Ln('допускающему',Hl(3,'совмещает производитель работ'))+Ln('с членами бригады',Hl(4,'Сидоров А. А., III')),
+ legend:['Устройство и содержание работы.','Производитель с IV группой.','Совмещение обязанностей допускающего допускается производителю с IV группой, если не требуются отключения, заземление, ограждения в части выше 1000 В.','Члены бригады с группами.']},
+{side:'Лицевая сторона: «Отдельные указания»',html:Ln('Отдельные указания',Hl(1,'Производителю разрешено отключать и включать устройства и опробовать защиту на отключение и включение выключателей с разрешения оперативного персонала. ')+Hl(2,'Производитель Петров И. И. совмещает обязанности допускающего и определяет меры безопасности.')),
+ legend:['Разрешение по п. 7.11 оформляется записью.','Совмещение допускающего — п. 42.5.']},
+{side:'Лицевая сторона: таблица мероприятий',html:Tb(['1. Электроустановка','2. Что отключить и где заземлить','3. Что изолировать (оградить)'],[[Hl(1,'РУ-110 кВ, ячейка Л-12'),Hl(2,'Не требуется'),Hl(3,'Не требуется')]]),
+ legend:['Электроустановка.','Отключения во вторичных системах в таблицу не вносят: пишут «не требуется».','Ограждение не требуется.']},
+{none:'Записей в наряде нет. Выполняются меры: постоянные заземления вторичных цепей, закоротка токовой цепи, меры против обратной трансформации.'},
+{side:'Оборотная сторона: целевой инструктаж и допуск',html:Tb(['Провёл','Получил','Подпись проведшего','Подпись получившего'],[[Hl(1,'Производитель Петров И. И. (совмещает допускающего)'),Hl(2,'Член бригады Сидоров А. А.'),Hl(3,Sg('Петров')),Hl(4,Sg('Сидоров'))]]),
+ legend:['Инструктаж проводит допускающий, здесь — производитель.','Получает член бригады.','Подпись проведшего.','Подпись получившего.']},
+{none:'Записей в наряде нет. Разрешение оперативного персонала на опробование фиксируется в оперативном журнале.'},
+{side:'Оборотная сторона: окончание',html:Ln('Работа полностью закончена, бригада удалена, сообщено',Hl(1,'Дежурный Смирнов А. А. · 14.11.2026, 17:10'))+Ln('Производитель работ',Hl(2,Sg('Петров'))),
+ legend:['Должность и фамилия, дата и время сообщения.','Подпись производителя работ.']}];
+renderSteps(S,EX,'stepList');
+var Q=[
+{t:'s',n:1,q:'Что относится к вторичным системам по п. 2.5?',o:['Устройства управления, сигнализации, автоматики, защиты и измерений, связанные между собой вторичными цепями (кабелями и проводами)','Только трансформаторы тока и напряжения','Только устройства РЗА','Кабели напряжением выше 1000 В'],a:0,e:'Работы во вторичных системах не относятся к специальным «работам под напряжением на токоведущих частях».'},
+{t:'m',n:1,q:'Что требует п. 42.1 в отношении вторичных цепей? Выберите все верные варианты.',o:['Вторичные цепи (обмотки) измерительных ТТ и ТН должны иметь постоянные заземления','В сложных схемах для группы электрически соединённых обмоток допускается заземление только в одной точке','Все работы в схемах сложных защит выполняются по программам с мерами безопасности','Вторичные цепи заземляют на время работ','Заземление выполняют в двух точках во всех схемах'],a:[0,1,2],e:'П. 42.1.'},
+{t:'s',n:1,q:'Какие предохранители можно снимать и устанавливать под напряжением и под нагрузкой (п. 3.10)?',o:['Во вторичных системах (включая приводы и агрегатные шкафы коммутационных аппаратов и устройства связи), ТН и пробочного типа','Любые предохранители','Только в силовых цепях до 1000 В','Никакие'],a:0,e:'Остальные предохранители снимают при снятом напряжении; допускается под напряжением, но без нагрузки.'},
+{t:'m',n:2,q:'Какие требования установлены для трансформаторов тока (пп. 32.1–32.3)? Выберите все верные варианты.',o:['Нельзя использовать шины в цепи первичной обмотки ТТ как токоведущие при монтажных и сварочных работах','До окончания монтажа вторичных цепей вторичные обмотки ТТ замкнуты накоротко','Прибор полярности присоединяют к вторичной обмотке до подачи импульса в первичную','Вторичные обмотки до окончания монтажа остаются разомкнутыми','Прибор полярности присоединяют после подачи импульса'],a:[0,1,2],e:'Пп. 32.1–32.3.'},
+{t:'s',n:2,q:'Что делают перед разрывом токовой цепи измерительных приборов, РЗА, электроавтоматики (п. 42.2)?',o:['Вторичную обмотку ТТ предварительно закорачивают на специально предназначенных зажимах или с помощью испытательных блоков','Вторичную обмотку ТТ заземляют в любой точке','Размыкают первичную цепь','Отключают ТН'],a:0,e:'Между ТТ и закороткой нельзя выполнять работы, которые могут привести к размыканию цепи.'},
+{t:'s',n:2,q:'Какие меры принимают при подаче напряжения от постороннего источника во вторичные цепи ТН (п. 42.3)?',o:['Меры, исключающие возможность обратной трансформации','Меры против перегрева','Отключение защиты','Заземление первичной обмотки'],a:0,e:'П. 42.3.'},
+{t:'s',n:2,q:'Зачем силовые трансформаторы и ТН, связанные с выделенным участком, отключают и разбирают их схемы и с других сторон (п. 17.2)?',o:['Для исключения возможности обратной трансформации','Для уменьшения тока КЗ','Для упрощения проверки','Для выравнивания напряжения'],a:0,e:'П. 17.2.'},
+{t:'s',n:3,q:'Что разрешает п. 7.11 производителю работ при монтаже, наладке, ремонте и ТО вторичных систем и устройств связи по распоряжению?',o:['Отключать и включать устройства и опробовать защиту и электроавтоматику на отключение и включение выключателей с разрешения оперативного персонала','Опробовать защиту без разрешения','Оперировать любыми коммутационными аппаратами','Работать без оформления'],a:0,e:'П. 42.4: проверка и опробование — по п. 7.11.'},
+{t:'s',n:3,q:'Кто и сколько работников выполняет по распоряжению скачивание осциллограмм и параметрирование терминалов РЗА переносным компьютером (п. 7.17)?',o:['Один работник с IV группой и правом производителя работ','Два работника с III группой','Один работник со II группой','Бригада из трёх работников'],a:0,e:'Также скачивание логов коммутаторов, снятие показаний микропроцессорных счётчиков оптическим портом.'},
+{t:'s',n:3,q:'Кто выполняет по распоряжению подключение регистраторов качества электроэнергии и осциллографов во вторичные цепи РЗА (п. 7.18)?',o:['Два работника: производитель с IV группой и член бригады не ниже III','Один работник с IV группой','Два работника с III группой','Два работника со II группой'],a:0,e:'Также снятие векторных диаграмм в цепях учёта.'},
+{t:'s',n:3,q:'Что указывать в таблице мероприятий наряда в отношении отключений во вторичных системах и устройствах связи (п. 6.26)?',o:['Указывать не требуется','Обязательно указывать все отключения','Указывать только в «Отдельных указаниях»','Указывать только выше 1000 В'],a:0,e:'П. 6.26.'},
+{t:'s',n:3,q:'Нужно ли ограждать рабочее место в ОРУ при работах по распоряжению во вторичных системах (п. 23.5)?',o:['Не требуется','Требуется всегда','Требуется только выше 330 кВ','Требуется при двух бригадах'],a:0,e:'П. 23.5.'},
+{t:'s',n:3,q:'Чем оформляются измерения мегаомметром во вторичных цепях (п. 39.28)?',o:['По распоряжению или по перечню работ текущей эксплуатации','Только по наряду-допуску','Не оформляются','Только по перечню'],a:0,e:'П. 39.28.'},
+{t:'m',n:3,q:'Какие утверждения верны об оформлении работ во вторичных цепях? Выберите все верные варианты.',o:['Работы по п. 7.11 допускаются по распоряжению','По усмотрению выдающего их можно провести по наряду-допуску (п. 7.3)','Один наряд допускается на проверку устройств защиты, измерений, блокировки, электроавтоматики, телемеханики, связи на разных рабочих местах (п. 6.12)','Опробование с отключением выключателей допускается без разрешения оперативного персонала','Наряд на такие работы запрещён'],a:[0,1,2],e:'Опробование — с разрешения оперативного персонала (п. 7.11).'},
+{t:'s',n:4,q:'Кто вправе совмещать обязанности допускающего при работах в РЗА, средствах измерений, приборах учёта и вторичных цепях (п. 42.5)?',o:['Производитель работ с IV группой из персонала, обслуживающего эти устройства — если для подготовки не нужны отключения, заземление, временные ограждения в части выше 1000 В','Любой член бригады','Наблюдающий с III группой','Ответственный руководитель с III группой'],a:0,e:'Меры безопасности для подготовки рабочего места определяет сам производитель.'},
+{t:'s',n:4,q:'При каком условии допускается совмещение допускающего по п. 42.5?',o:['Для подготовки рабочего места не требуется выполнения отключений, заземления, установки временных ограждений в части электроустановки выше 1000 В','Для подготовки требуются отключения и заземление','Только при напряжении до 220 В','Только при наличии ответственного руководителя'],a:0,e:'П. 42.5.'},
+{t:'s',n:4,q:'Кто вправе работать отдельно от других членов бригады во вторичных цепях и устройствах РЗА (п. 42.6)?',o:['Производитель с IV группой единолично и члены бригады с III группой — на условиях п. 6.13','Любые члены бригады со II группой','Только наблюдающий','Только ответственный руководитель'],a:0,e:'Цепи и устройства в РУ и помещениях, где токоведущие части выше 1000 В отсутствуют, полностью ограждены или на высоте, не требующей ограждения.'},
+{t:'s',n:4,q:'Что должен сделать производитель, если члены бригады будут работать отдельно (п. 6.13)?',o:['Привести их на рабочие места и проинструктировать о мерах безопасности; рабочие места подготовлены до допуска','Оставить без инструктажа','Назначить наблюдающего','Оформить новый наряд на каждого'],a:0,e:'Отдельно вправе находиться члены бригады с группой III.'},
+{t:'m',n:4,q:'Что допускается при пребывании в электроустановках выше 1000 В одного производителя или членов бригады без производителя (п. 11.2)? Выберите все верные варианты.',o:['Регулировка выключателей и разъединителей, приводы которых вынесены в другое помещение','Монтаж и проверка вторичных систем и устройств связи','Прокладка силовых и контрольных кабелей','Испытания оборудования с подачей повышенного напряжения при наблюдении за ним','Работа на сборных шинах','Ремонт трансформаторов'],a:[0,1,2,3],e:'Такие работы выполняются по наряду-допуску на условиях пп. 6.12, 6.13.'},
+{t:'s',n:4,q:'Назначается ли ответственный руководитель при работах во вторичных системах (п. 5.7)?',o:['Для работ без снятия напряжения с временной изоляцией он назначается, кроме работ во вторичных системах, приборах учёта, СДТУ, АСДУ и на ВЛИ 0,38 кВ','Назначается всегда','Назначается только выше 1000 В','Не назначается никогда'],a:0,e:'Необходимость назначения в других случаях определяет выдающий наряд.'},
+{t:'s',n:5,q:'Кто вправе выполнять операции с коммутационной аппаратурой на пультах, распределительных щитах и сборках устройств ТАИ (п. 43.2)?',o:['Оперативный персонал; по наряду — производитель при записи в «Отдельных указаниях»; по распоряжению — с записью в графе 7 журнала','Любой член бригады','Только наблюдающий','Только ответственный руководитель'],a:0,e:'П. 43.2.'},
+{t:'s',n:5,q:'Кто проводит подготовку участка технологического оборудования перед допуском к работам на устройствах ТАИ (п. 43.3)?',o:['Оперативный персонал цеха, участка, в управлении которого находится технологическое оборудование','Производитель работ','Ответственный руководитель','Бригада'],a:0,e:'П. 43.3.'},
+{t:'m',n:5,q:'При каких условиях выполняются опробование и проверка под напряжением, пробное включение узлов устройств ТАИ (п. 43.4)? Выберите все верные варианты.',o:['С разрешения начальника смены (оперативного персонала) технологического цеха, участка','Работа прекращена','Бригада от опробуемого энергооборудования удалена','Защитные заземления, ограждения и плакаты сняты','Допускается без снятия заземлений','Только по письменному распоряжению'],a:[0,1,2,3],e:'Работы с многократным включением и отключением в процессе опробования допускается проводить без оформления перерывов в наряде, но с выполнением каждый раз необходимых мер.'},
+{t:'s',n:5,q:'Что можно выполнять по распоряжению в устройствах ТАИ (п. 43.5)?',o:['Работы, не требующие изменения технологической схемы или режима работы оборудования','Любые работы','Только работы под напряжением','Только работы выше 1000 В'],a:0,e:'Единолично с III группой — работы по перечню п. 43.5.'},
+{t:'m',n:5,q:'Какие работы в устройствах ТАИ работник с III группой выполняет единолично по распоряжению (п. 43.5)? Выберите все верные варианты.',o:['Наладка регистрационной части приборов','Замена манометров (кроме электроконтактных), дифманометров, термопар, термометров сопротивления','Профилактика переключателей точек температурных измерений','Ремонт комплекса технических средств вычислительной техники АСУ','Замена электроконтактных манометров','Работы с изменением технологической схемы'],a:[0,1,2,3],e:'Также уплотнение коробок зажимов, надписи и маркировка, обдувка щитов сжатым воздухом.'},
+{t:'s',n:5,q:'Кто является допускающим к работам в устройствах ТАИ (п. 43.8)?',o:['Оперативный персонал цеха, участка технологического объекта, имеющий группу III','Электротехнический персонал с IV группой','Выдающий наряд','Любой член бригады'],a:0,e:'Производитель с IV группой из электротехнического персонала вправе совмещать обязанности допускающего с записью в «Отдельных указаниях».'},
+{t:'s',n:6,q:'Что требует п. 592 ПТЭЭСС в отношении РЗА?',o:['ЛЭП и оборудование — в работе и под опробованием только с включёнными устройствами РЗА; при выводе части оставшиеся защищают от всех видов повреждений, иначе временная защита или отключение присоединения','РЗА включают после опробования','РЗА можно выводить при отсутствии нагрузки','Опробование без РЗА допускается с разрешения диспетчера'],a:0,e:'ПТЭЭСС, п. 592.'},
+{t:'s',n:6,q:'Как должны быть выполнены вторичные обмотки ТТ и вторичные цепи ТТ, ТН (пп. 599–600 ПТЭЭСС)?',o:['Вторичные обмотки ТТ замкнуты на реле или закорочены; вторичные цепи ТТ, ТН и обмотки фильтров присоединения заземлены','Вторичные обмотки ТТ разомкнуты; цепи не заземляются','Заземляются только на время работ','Заземляется только ТН'],a:0,e:'ПТЭЭСС, пп. 599–600.'},
+{t:'m',n:6,q:'Что делает оперативный персонал в отношении РЗА (пп. 604–605 ПТЭЭСС)? Выберите все верные варианты.',o:['Проверяет соответствие РЗА схемам первичных соединений','Фиксирует срабатывания','Информирует диспетчерское управление','Для каждой панели ведутся таблицы положений переключающих устройств','Самостоятельно меняет уставки'],a:[0,1,2,3],e:'ПТЭЭСС, пп. 604–605.'},
+{t:'s',n:6,q:'Что разрешено персоналу при угрозе ложного срабатывания устройства РЗА (пп. 606–609 ПТЭЭСС)?',o:['Вывести устройство по инструкции без разрешения диспетчера, немедленно сообщив ему','Вывести устройство по своему усмотрению без инструкции','Вывести устройство только с письменного разрешения','Не выводить ни при каких условиях'],a:0,e:'Разрешено выполнять только операции, описанные в инструкциях.'},
+{t:'s',n:6,q:'По какому приказу Минэнерго проводится ТО устройств РЗА (пп. 610–611 ПТЭЭСС)?',o:['№ 555','№ 1013','№ 796','№ 757'],a:0,e:'№ 1013 — ТОиР объектов электроэнергетики, № 796 — работа с персоналом, № 757 — переключения.'}
+];
+initQuiz([[1,'Вторичные системы и заземление (пп. 2.5, 42.1, 3.10)'],[2,'Цепи ТТ и ТН (пп. 32, 42.2, 42.3, 17.2)'],[3,'Опробование и оформление (пп. 7.11, 7.17, 7.18, 6.26, 23.5, 39.28)'],[4,'Допускающий и работа порознь (пп. 42.5, 42.6, 6.13, 11.2, 5.7)'],[5,'Устройства ТАИ (раздел XLIII)'],[6,'РЗА по ПТЭЭСС (пп. 592–611)']]);
+</script>
+<style>
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line,#ccc);background:var(--chip,var(--surface2,#eee));color:var(--fg,var(--ink,#111));border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#floatClose{position:fixed;right:14px;bottom:14px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:#1a5fb4;color:#fff;font:600 15px/1 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+#floatClose[hidden]{display:none}
+</style>
+<div id="pageVersion" style="text-align:center;font:12px system-ui,sans-serif;color:#888;padding:18px 0 70px">Версия страницы: 09.11.2026, со сворачиванием</div>
+<button id="floatClose" type="button" hidden>▲ Свернуть открытое</button>
+<script>
+(function(){
+ var fb=document.getElementById('floatClose');
+ function opened(){return [].slice.call(document.querySelectorAll('details[open]'))}
+ function upd(){fb.hidden=!opened().length}
+ document.querySelectorAll('details').forEach(function(d){
+  if(!d.querySelector(':scope>.closeb,:scope>.in>.closeb')){var b=document.createElement('button');b.type='button';b.className='closeb';b.textContent='▲ Свернуть';d.appendChild(b)}
+  d.addEventListener('toggle',upd)});
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'});upd()}});
+ fb.addEventListener('click',function(){var h=window.innerHeight,list=opened(),vis=list.filter(function(d){var r=d.getBoundingClientRect();return r.bottom>0&&r.top<h});
+  if(!vis.length)vis=list.slice(-1);
+  vis.forEach(function(d){d.open=false});
+  if(vis[0])vis[0].scrollIntoView({block:'nearest'});upd()});
+ upd();
+})();
+</script>
+</body>
+</html>
