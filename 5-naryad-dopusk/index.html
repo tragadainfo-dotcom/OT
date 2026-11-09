@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Наряд-допуск</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#1a5fb4;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#6aa7f5;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 20px}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+button,select,input,textarea{font:inherit;color:var(--fg)}
+button{cursor:pointer}
+.tab{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 14px}
+.tab[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.grid .card{margin:0}
+.muted{color:var(--muted)}
+.src{font-size:.8rem;color:var(--muted)}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 8px;font-size:.8rem;margin:2px 4px 2px 0}
+.note{font-size:.85rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+details .in{padding:0 14px 14px}
+details .in p{margin:6px 0}
+.num{display:inline-block;min-width:26px;height:26px;line-height:26px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;margin-right:8px}
+/* форма */
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+label{display:block;font-size:.88rem;color:var(--muted)}
+label.chk{display:flex;gap:8px;align-items:flex-start;color:var(--fg);font-size:.92rem}
+select,input[type=text],input[type=date],textarea{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px}
+.full{grid-column:1/-1}
+.row{display:grid;grid-template-columns:1fr 90px 40px;gap:8px;margin-bottom:6px}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:8px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.res{list-style:none;padding:0;margin:0}
+.res li{padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:.92rem}
+.res li.ok{background:var(--okbg)}
+.res li.bad{background:var(--badbg)}
+.res li.info{background:var(--chip)}
+.verdict{font-weight:700;margin:10px 0}
+.sh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px}
+/* порядок и тест */
+.ord{display:grid;gap:8px}
+.ord button{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.ord button.used{opacity:.45}
+.ordres{margin-top:10px}
+.pick li{padding:6px 10px;background:var(--okbg);border-radius:8px;margin-bottom:4px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q p{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
+.q.done .exp{display:block}
+.score{font-weight:700;font-size:1.1rem;margin:14px 0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Наряд-допуск</h1>
+<p class="lead">Кто за что отвечает, как заполнять и оформлять наряд-допуск, как менять состав бригады, продлевать и закрывать. Основа — приказ Минтруда № 903н, главы V–XV и приложение № 7.</p>
+<div class="note">Пособие сделано по редакции приказа от 01.09.2022. В тексте приказа указан срок действия до 31.12.2025, поэтому перед применением на практике сверьте цифры с действующими Правилами.</div>
+<nav class="tabs" role="tablist" id="tabs">
+<button class="tab" role="tab" aria-selected="true" data-t="roles">Роли и группы</button>
+<button class="tab" role="tab" aria-selected="false" data-t="steps">Этапы</button>
+<button class="tab" role="tab" aria-selected="false" data-t="fill">Заполнить наряд</button>
+<button class="tab" role="tab" aria-selected="false" data-t="crew">Состав бригады</button>
+<button class="tab" role="tab" aria-selected="false" data-t="cheat">Сроки и цифры</button>
+<button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button>
+</nav>
+
+<!-- РОЛИ -->
+<section id="roles">
+<div class="grid">
+<div class="card"><h2>Выдающий наряд-допуск</h2><span class="tag">V группа: выше 1000 В</span><span class="tag">не ниже IV: до 1000 В</span>
+<p>Определяет, можно ли безопасно выполнить работу. Отвечает за достаточность мер безопасности, состав бригады, назначение ответственных, соответствие групп работников и целевой инструктаж руководителю работ (производителю, наблюдающему). Право выдачи — у административно-технического персонала. Оперативному персоналу его даёт ОРД организации.</p><div class="src">пп. 5.3, 5.4</div></div>
+<div class="card"><h2>Выдающий разрешение на подготовку рабочего места и допуск</h2><span class="tag">оперативный персонал, не ниже IV</span>
+<p>Отвечает за команды на отключение и заземление, за достаточность мер по отключению и заземлению с учётом фактической схемы, за учёт и координацию бригад и за информацию о полном окончании работ. Право даёт ОРД организации.</p><div class="src">пп. 5.5, 5.6</div></div>
+<div class="card"><h2>Ответственный руководитель работ</h2><span class="tag">V группа: выше 1000 В</span><span class="tag">IV группа: до 1000 В</span>
+<p>Назначается из административно-технического персонала. Отвечает за выполнение мер по подготовке рабочего места и их достаточность, за дополнительные меры и за целевой инструктаж. Обязателен, например, при работах с механизмами и подъёмными сооружениями, при двух и более бригадах, при работах под наведённым напряжением и под напряжением.</p><div class="src">п. 5.7</div></div>
+<div class="card"><h2>Допускающий</h2><span class="tag">IV группа: выше 1000 В</span><span class="tag">III группа: до 1000 В</span>
+<p>Из оперативного персонала. Готовит рабочее место или оценивает достаточность принятых мер, инструктирует бригаду и допускает к работе. Исключения для ВЛ и КЛ описаны в п. 5.13.</p><div class="src">пп. 5.8, 5.13</div></div>
+<div class="card"><h2>Производитель работ</h2><span class="tag">IV группа: выше 1000 В</span><span class="tag">III группа: до 1000 В</span>
+<p>Из электротехнического персонала. Группа IV нужна также при работах под напряжением, в подземных сооружениях с вредными газами, при перетяжке и замене проводов ВЛ до 1000 В на опорах ВЛ выше 1000 В. Отвечает за соответствие рабочего места наряду, инструктаж, средства защиты, плакаты, ограждения, заземления и постоянный контроль за бригадой.</p><div class="src">п. 5.9</div></div>
+<div class="card"><h2>Наблюдающий</h2><span class="tag">не ниже III группы</span><span class="tag">IV — в случае п. 7.7</span>
+<p>Надзирает за бригадами, у которых нет права самостоятельной работы в электроустановках. Не может совмещать надзор с выполнением работы. Ответственный за технологию — работник, возглавляющий бригаду; его фамилия записывается в «Отдельные указания».</p><div class="src">пп. 5.10, 11.1</div></div>
+<div class="card"><h2>Член бригады</h2><span class="tag">III группа</span><span class="tag">II — по норме ниже</span>
+<p>При бригаде под руководством производителя работ — III группа (на ВЛ по п. 38.23 — IV). На каждого с группой не ниже III можно включить одного работника с группой II, но всего II группы не больше трёх.</p><div class="src">пп. 5.11, 5.15</div></div>
+</div>
+<div class="card"><h2>Кто кому проводит целевой инструктаж по наряду-допуску</h2>
+<div class="scroll"><table><tr><th>Кто проводит</th><th>Кому</th></tr>
+<tr><td>Выдающий наряд-допуск</td><td>Ответственному руководителю. Если его нет или он совмещает обязанности выдающего — производителю работ или наблюдающему.</td></tr>
+<tr><td>Допускающий</td><td>Ответственному руководителю, производителю работ или наблюдающему и членам бригады.</td></tr>
+<tr><td>Ответственный руководитель</td><td>Производителю работ или наблюдающему и членам бригады.</td></tr>
+<tr><td>Производитель работ или наблюдающий</td><td>Членам бригады, в том числе введённым в бригаду позже.</td></tr></table></div>
+<p class="src">пп. 10.7, 11.5. Без целевых инструктажей допуск к работе не разрешается. Подписи проводивших и получивших ставятся в таблицах наряда-допуска (п. 10.10).</p></div>
+<div class="card"><h2>Совмещение обязанностей (таблица № 2)</h2>
+<div class="scroll"><table><tr><th>Ответственный работник</th><th>Может дополнительно выполнять</th></tr>
+<tr><td>Выдающий наряд-допуск</td><td>Обязанности ответственного руководителя, производителя работ, допускающего (в электроустановках без местного оперативного персонала)</td></tr>
+<tr><td>Выдающий разрешение на подготовку и допуск</td><td>Обязанности выдающего наряд-допуск, ответственного руководителя, допускающего (в электроустановках без местного оперативного персонала)</td></tr>
+<tr><td>Ответственный руководитель</td><td>Обязанности производителя работ, допускающего (в электроустановках без местного оперативного персонала)</td></tr>
+<tr><td>Производитель работ из оперативного и оперативно-ремонтного персонала</td><td>Допускающий (в электроустановках с простой наглядной схемой)</td></tr>
+<tr><td>Производитель работ с группой IV</td><td>Допускающий (в случаях п. 42.5)</td></tr></table></div>
+<p class="src">п. 5.13, таблица № 2</p></div>
+</section>
+
+<!-- ЭТАПЫ -->
+<section id="steps" hidden>
+<p class="muted">Откройте этап, чтобы увидеть, кто что делает. Ниже — тренажёр на порядок этапов.</p>
+<div id="stepList"></div>
+<div class="card"><h2>Тренажёр: расставьте этапы по порядку</h2><p class="muted">Нажимайте на этапы в том порядке, в котором они происходят.</p>
+<div class="ord" id="ord"></div><div class="ordres" id="ordres"></div><div class="btns"><button class="btn" id="ordReset">Начать заново</button></div></div>
+</section>
+
+<!-- ЗАПОЛНЕНИЕ -->
+<section id="fill" hidden>
+<div class="card"><h2>Заполните наряд-допуск и проверьте</h2>
+<p class="muted">Поля повторяют лицевую сторону бланка (приложение № 7). Заполните их, нажмите «Проверить», и вы увидите, какие требования Правил выполнены, а какие нарушены. Можно подставить готовый верный или ошибочный пример.</p>
+<div class="btns"><button class="btn" id="exGood">Верный пример</button><button class="btn" id="exBad">Пример с ошибками</button><button class="btn" id="exClear">Очистить</button></div>
+<div class="sh">Условия работы</div>
+<div class="form">
+<label>Напряжение электроустановки<select id="volt"><option value="lo">До 1000 В</option><option value="hi">Выше 1000 В</option></select></label>
+<label class="chk full"><input type="checkbox" id="live"> Работа под напряжением на токоведущих частях</label>
+<label class="chk full"><input type="checkbox" id="mech"> Работа с механизмами и подъёмными сооружениями</label>
+<label class="chk full"><input type="checkbox" id="multi"> В электроустановке одновременно работают две и более бригад</label>
+<label class="chk full"><input type="checkbox" id="induced"> Работа под наведённым напряжением</label>
+</div>
+<div class="sh">Лицевая сторона</div>
+<div class="form">
+<label>Выдающий наряд-допуск: группа<select id="gIssue"></select></label>
+<label>Ответственный руководитель работ<select id="rukOn"><option value="0">Не назначается</option><option value="1">Назначается</option></select></label>
+<label>Группа ответственного руководителя<select id="gRuk"></select></label>
+<label>Допускающий: группа<select id="gDop"></select></label>
+<label>Вторая роль в бригаде<select id="mode"><option value="pr">Производитель работ</option><option value="nab">Наблюдающий</option></select></label>
+<label>Группа производителя работ (наблюдающего)<select id="gPr"></select></label>
+<div class="full"><label>Члены бригады (фамилия, инициалы, группа)</label><div id="members"></div><button class="btn" id="addM" type="button">+ Добавить члена бригады</button></div>
+<label class="full">Поручается (объект и содержание работы)<input type="text" id="task" placeholder="Например: РУ-0,4 кВ, ремонт автомата Q3"></label>
+<label>Работу начать<input type="date" id="d1"></label>
+<label>Работу закончить<input type="date" id="d2"></label>
+<label class="full">Мероприятия по подготовке рабочих мест (что отключить, где заземлить, что ограждить)<textarea id="prep" rows="2" placeholder="Или «Не требуется», если подготовка рабочего места не нужна"></textarea></label>
+<label class="full">Отдельные указания<textarea id="spec" rows="2"></textarea></label>
+<label>Как передан наряд<select id="how"><option value="hand">Выдан на руки</option><option value="remote">Передан по телефону, радио, факсу или электронно</option></select></label>
+<label>Число экземпляров<select id="copies"><option>1</option><option selected>2</option><option>3</option></select></label>
+<label class="chk full"><input type="checkbox" id="pencil"> Записи сделаны карандашом или с исправлениями</label>
+<label class="chk full"><input type="checkbox" id="brief" checked> Целевой инструктаж выдающим наряд-допуск проведён и записан в таблице</label>
+</div>
+<div class="btns"><button class="btn pri" id="check">Проверить</button></div>
+<div id="out"></div>
+</div>
+</section>
+
+<!-- БРИГАДА -->
+<section id="crew" hidden>
+<div class="card"><h2>Изменение состава бригады</h2>
+<p class="muted">Наряд выдан на бригаду из пяти человек. Работа уже идёт. Вводите и выводите членов бригады и смотрите, допустим ли состав и нужен ли новый наряд.</p>
+<div class="sh">Текущий состав</div><div class="scroll"><table id="crewT"></table></div>
+<div class="btns"><label style="display:flex;gap:8px;align-items:center">Группа нового члена<select id="newG" style="width:auto"></select></label><button class="btn" id="addC">Ввести в бригаду</button><button class="btn" id="chgPr">Заменить производителя работ</button><button class="btn" id="resetC">Сбросить</button></div>
+<div class="sh">Что показывает Правила</div><ul class="res" id="crewRes"></ul>
+<div class="sh">Как оформляется изменение (пп. 11.5, 6.31)</div>
+<ol><li>Изменение разрешает выдавший наряд-допуск или другой работник с правом выдачи нарядов в этой электроустановке.</li><li>Указание можно передать по телефону, радио или с нарочным допускающему, ответственному руководителю или производителю работ.</li><li>Получивший указание записывает изменение в таблицу «Изменения в составе бригады» (кто введён и выведен, группы, дата и время, кто разрешил) и заверяет подписью.</li><li>Производитель работ или наблюдающий проводит целевой инструктаж введённым в бригаду.</li></ol></div>
+</section>
+
+<!-- ЦИФРЫ -->
+<section id="cheat" hidden>
+<div class="card"><h2>Сроки и числа</h2><div class="scroll"><table>
+<tr><th>Что</th><th>Норма</th><th>Пункт</th></tr>
+<tr><td>Число экземпляров</td><td>2. При передаче по телефону, радио, факсом или электронно — 3 (если производитель работ не совмещает допускающего)</td><td>6.1</td></tr>
+<tr><td>Срок наряда-допуска</td><td>Не более 15 календарных дней со дня начала работы</td><td>6.3</td></tr>
+<tr><td>Продление</td><td>1 раз, не более чем на 15 календарных дней. Перерывы в работе наряд не отменяют</td><td>6.3</td></tr>
+<tr><td>Работы под напряжением</td><td>Не более 1 календарного дня (смены). На следующий день — новый наряд</td><td>6.3</td></tr>
+<tr><td>Кто продлевает</td><td>Выдавший наряд или другой работник с правом выдачи нарядов в этой электроустановке</td><td>6.4</td></tr>
+<tr><td>Однотипная работа на нескольких подстанциях</td><td>Срок наряда — 1 сутки</td><td>6.14</td></tr>
+<tr><td>Хранение закрытых нарядов</td><td>1 год. Если были аварии, инциденты, несчастные случаи — в архиве вместе с материалами расследования</td><td>6.5</td></tr>
+<tr><td>Хранение журнала учёта работ</td><td>1 месяц со дня регистрации полного окончания работы по последнему наряду или распоряжению</td><td>6.6</td></tr>
+<tr><td>Члены бригады с группой II</td><td>Не более 3, и не более одного на каждого с группой не ниже III</td><td>5.15</td></tr>
+<tr><td>Новый наряд при изменениях</td><td>Замена ответственного руководителя, производителя работ, наблюдающего, изменение состава более чем наполовину или условий работы</td><td>11.6</td></tr>
+<tr><td>Записи в наряде</td><td>Разборчиво, не карандашом, без исправлений. Дата: число, месяц и две последние цифры года (или год полностью). Инициалы и группа каждого работника</td><td>6.22, 6.23</td></tr>
+</table></div></div>
+<div class="card"><h2>Главное о бланке (приложение № 7)</h2>
+<p><b>Лицевая сторона.</b> Организация и подразделение, номер наряда. Ответственный руководитель, допускающий, производитель работ, наблюдающий, члены бригады с группами. Что поручается, сроки. Таблица мероприятий по подготовке рабочих мест (3 графы). Отдельные указания. Строки «выдал» и «продлил» с датой, временем, подписью и фамилией. Регистрация инструктажа выдающего. Таблица «Разрешение на подготовку рабочих мест и на допуск».</p>
+<p><b>Оборотная сторона.</b> «Рабочие места подготовлены. Под напряжением остались» с подписями допускающего и руководителя (производителя, наблюдающего) при первичном допуске. Инструктаж допускающего. Таблица «Ежедневный допуск к работе и время ее окончания». Инструктаж руководителя или производителя. «Изменения в составе бригады». Строка о полном окончании работ.</p><p class="src">пп. 6.25–6.31</p></div>
+</section>
+
+<!-- ТЕСТ -->
+<section id="quiz" hidden>
+<div id="qs"></div><div class="score" id="score"></div><button class="btn" id="qreset">Пройти заново</button>
+</section>
+</main>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+ ['roles','steps','fill','crew','cheat','quiz'].forEach(function(id){$(id).hidden=id!==t.dataset.t})}});
+
+/* ===== ЭТАПЫ ===== */
+var S=[
+['Оформление наряда-допуска','Выдающий наряд-допуск','Оформляет наряд в 2 экземплярах и выдаёт на руки производителю работ (или наблюдающему) и допускающему. Срок — не более 15 календарных дней. Записи разборчивые, без карандаша и исправлений. При передаче по телефону, радио, факсом или электронно — 3 экземпляра.','6.1, 6.3, 6.22'],
+['Целевой инструктаж выдающего','Выдающий наряд → ответственный руководитель (или производитель, наблюдающий)','Проводится до допуска бригады. Фиксируется подписями в таблице регистрации инструктажа на лицевой стороне наряда.','6.32, 10.7'],
+['Разрешение на подготовку рабочего места и допуск','Оперативный персонал не ниже IV группы','Передаётся лично, по телефону, радио, с нарочным или через оперативный персонал промежуточной подстанции. Не выдаётся до прибытия бригады на место работ. Допуск — только по одному наряду-допуску или распоряжению.','9.1–9.3, 6.30'],
+['Подготовка рабочего места','Допускающий и подготавливающие место','Технические мероприятия выполняются в установленном порядке. Менять предусмотренные нарядом меры нельзя. При сомнении в достаточности мер подготовка прекращается, работа откладывается до нового наряда.','10.1, 10.2, глава XVI'],
+['Проверка подготовки и допуск на рабочем месте','Допускающий, ответственный руководитель, производитель или наблюдающий','Допускающий проверяет выполнение мероприятий осмотром и по записям. Руководитель и производитель (наблюдающий) выясняют у допускающего, что сделано, и вместе проверяют место осмотром. Допуск проводится непосредственно на рабочем месте: допускающий сверяет состав бригады по удостоверениям и доказывает отсутствие напряжения.','10.3–10.6'],
+['Целевой инструктаж допускающего','Допускающий → руководитель, производитель, члены бригады','Допускающий знакомит с содержанием наряда, показывает границы рабочего места, зону с наведённым напряжением и токоведущие части, к которым нельзя приближаться. Без инструктажей допуск не разрешается.','10.7, 10.9'],
+['Оформление допуска','Допускающий, руководитель или производитель','Подписи под строкой «Рабочие места подготовлены. Под напряжением остались» (только при первичном допуске). Допуск оформляется в двух экземплярах наряда, запись в оперативном журнале и в журнале учёта работ.','6.31, 10.11, 6.5, 6.6'],
+['Инструктаж бригады руководителем или производителем','Ответственный руководитель, производитель работ или наблюдающий','Даёт указания по технологии безопасной работы, средствам защиты, инструменту, подъёмным сооружениям. Подписи в таблице наряда.','10.7, 10.8, 10.10'],
+['Надзор за бригадой','Производитель, ответственный руководитель, наблюдающий','Постоянный контроль за всеми членами бригады. При нарушениях бригаду удаляют с рабочего места, наряд изымают, новый допуск — только по новому наряду. Наблюдающий не совмещает надзор с работой.','11.1–11.4'],
+['Перерывы в работе','Производитель работ или наблюдающий','На обед: бригада удалена, двери закрыты на замок, наряд у производителя. В конце дня: бригада удалена, плакаты, ограждения, флажки и заземления не снимаются (кроме работ под напряжением), наряд сдаётся допускающему.','13.1, 13.2'],
+['Повторный допуск в последующие дни','Допускающий или с его разрешения ответственный руководитель','Производитель или наблюдающий сначала проверяет целость плакатов, ограждений, флажков и заземлений. Записи в таблице «Ежедневный допуск».','13.3, 6.31'],
+['Перевод на другое рабочее место','Допускающий; руководитель, производитель или наблюдающий — по поручению','В РУ выше 1000 В переводит допускающий, оформляется в наряде. В РУ до 1000 В, на одной ВЛ, КЛ — производитель или наблюдающий без записи в наряде.','12.1–12.4'],
+['Изменение состава бригады и продление','Выдавший наряд или другой с правом выдачи','Запись в таблице «Изменения в составе бригады». Продление один раз, не более чем на 15 календарных дней, подписью продлившего и записью допускающего, руководителя или производителя.','11.5, 11.6, 6.3, 6.4'],
+['Полное окончание работ','Производитель работ или наблюдающий, ответственный руководитель','Удалить бригаду, снять временные ограждения, переносные плакаты, флажки и заземления бригады, закрыть двери. Подписи в наряде, сообщение о полном окончании. Наряд сдаётся допускающему.','14.1–14.3'],
+['Осмотр и закрытие','Допускающий','Осматривает рабочие места, сообщает выдающему разрешение и оперативному персоналу о возможности включения. Запись в журнале учёта работ и в оперативном журнале.','14.4, 14.5'],
+['Включение электроустановки','Оперативный персонал','Перед включением проверяет готовность (чистота места, отсутствие инструмента), снимает временные ограждения, переносные плакаты и заземления подготовки, восстанавливает постоянные ограждения. Допускающему из оперативно-ремонтного персонала право на включение может быть дано в «Отдельных указаниях».','15.1, 15.2']
+];
+var sl=$('stepList');
+S.forEach(function(s,i){var d=document.createElement('details');d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div></div>';sl.appendChild(d)});
+var ordIdx,ordPicked;
+function ordInit(){
+ var idx=[0,1,2,3,4,5,6,7,8,9,10,11,12,13];ordPicked=[];
+ // перемешать детерминированно-псевдослучайно
+ for(var i=idx.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=idx[i];idx[i]=idx[j];idx[j]=t}
+ ordIdx=idx;var c=$('ord');c.innerHTML='';$('ordres').innerHTML='';
+ var main=[0,1,2,3,4,5,6,7,13,14];
+ // для тренажёра берём 8 ключевых этапов
+ var keys=[0,1,2,3,4,5,13,14];
+ ordIdx=keys.slice().sort(function(){return Math.random()-.5});
+ ordIdx.forEach(function(k){var b=document.createElement('button');b.textContent=S[k][0];b.onclick=function(){ordPick(k,b)};c.appendChild(b)});
+}
+function ordPick(k,b){
+ var expected=[0,1,2,3,4,5,13,14][ordPicked.length];
+ var r=$('ordres');
+ if(k===expected){ordPicked.push(k);b.classList.add('used');b.disabled=true;
+  r.innerHTML='<ol class="pick">'+ordPicked.map(function(x){return '<li>'+S[x][0]+'</li>'}).join('')+'</ol>'+(ordPicked.length===8?'<div class="verdict" style="color:var(--ok)">Верно, порядок правильный.</div>':'');
+ } else {r.innerHTML='<ol class="pick">'+ordPicked.map(function(x){return '<li>'+S[x][0]+'</li>'}).join('')+'</ol><div class="verdict" style="color:var(--bad)">Неверно: «'+S[k][0]+'» сейчас не следующий этап. Подумайте ещё.</div>'}
+}
+$('ordReset').onclick=ordInit;ordInit();
+
+/* ===== ЗАПОЛНЕНИЕ ===== */
+var GN={2:'II',3:'III',4:'IV',5:'V'};
+function fillSel(id,def){var s=$(id);s.innerHTML='';[2,3,4,5].forEach(function(g){var o=document.createElement('option');o.value=g;o.textContent=GN[g];s.appendChild(o)});s.value=def}
+fillSel('gIssue',4);fillSel('gRuk',5);fillSel('gDop',3);fillSel('gPr',3);fillSel('newG',3);
+function addMember(g,name){var d=document.createElement('div');d.className='row';
+ var i=document.createElement('input');i.type='text';i.placeholder='Фамилия, инициалы';i.value=name||'';
+ var s=document.createElement('select');[2,3,4,5].forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=GN[x];s.appendChild(o)});s.value=g||3;
+ var b=document.createElement('button');b.type='button';b.textContent='×';b.className='btn';b.onclick=function(){d.remove()};
+ d.appendChild(i);d.appendChild(s);d.appendChild(b);$('members').appendChild(d)}
+$('addM').onclick=function(){addMember(3,'')};
+function today(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function setForm(o){
+ $('volt').value=o.volt;$('live').checked=o.live;$('mech').checked=o.mech;$('multi').checked=o.multi;$('induced').checked=o.induced;
+ $('gIssue').value=o.gIssue;$('rukOn').value=o.rukOn;$('gRuk').value=o.gRuk;$('gDop').value=o.gDop;$('mode').value=o.mode;$('gPr').value=o.gPr;
+ $('members').innerHTML='';o.members.forEach(function(m){addMember(m[0],m[1])});
+ $('task').value=o.task;$('d1').value=today(0);$('d2').value=today(o.days);$('prep').value=o.prep;$('spec').value=o.spec;
+ $('how').value=o.how;$('copies').value=o.copies;$('pencil').checked=o.pencil;$('brief').checked=o.brief;$('out').innerHTML=''}
+$('exGood').onclick=function(){setForm({volt:'lo',live:false,mech:false,multi:false,induced:false,gIssue:4,rukOn:'0',gRuk:4,gDop:3,mode:'pr',gPr:3,
+ members:[[3,'Сидоров А. А.'],[3,'Кузнецов В. В.'],[2,'Орлов П. П.']],task:'РУ-0,4 кВ, замена автомата Q3',days:5,prep:'Отключить QF1, вывесить «Не включать! Работают люди», проверить отсутствие напряжения, заземлить шины, ограждения установить',spec:'Работу выполнять в диэлектрических перчатках',how:'hand',copies:'2',pencil:false,brief:true})};
+$('exBad').onclick=function(){setForm({volt:'hi',live:false,mech:false,multi:true,induced:false,gIssue:4,rukOn:'0',gRuk:4,gDop:3,mode:'pr',gPr:3,
+ members:[[2,'Орлов П. П.'],[2,'Волков Д. Д.'],[2,'Зайцев Е. Е.'],[2,'Лисин К. К.'],[3,'Сидоров А. А.']],task:'',days:20,prep:'',spec:'',how:'remote',copies:'2',pencil:true,brief:false})};
+$('exClear').onclick=function(){setForm({volt:'lo',live:false,mech:false,multi:false,induced:false,gIssue:4,rukOn:'0',gRuk:5,gDop:3,mode:'pr',gPr:3,members:[],task:'',days:5,prep:'',spec:'',how:'hand',copies:'2',pencil:false,brief:true})};
+function check(){
+ var R=[],hi=$('volt').value==='hi',live=$('live').checked;
+ function add(ok,t,ref){R.push({ok:ok,t:t,ref:ref})}
+ var gI=+$('gIssue').value;add(gI>=(hi?5:4),'Выдающий наряд-допуск: группа '+GN[gI]+'. Требуется '+(hi?'V (выше 1000 В)':'не ниже IV (до 1000 В)')+'.','п. 5.4');
+ var need=live||$('mech').checked||$('multi').checked||$('induced').checked,on=$('rukOn').value==='1';
+ if(need)add(on,need&&!on?'Ответственный руководитель не назначен, а по условиям работы он обязателен.':'Ответственный руководитель назначен: по условиям работы он обязателен.','п. 5.7');
+ else add(true,'Ответственный руководитель по условиям работы не обязателен'+(on?' (назначен по решению выдающего)':' (в бланке записать «не назначается»)')+'.','пп. 5.7, 6.25');
+ if(on){var gR=+$('gRuk').value;add(gR>=(hi?5:4),'Ответственный руководитель: группа '+GN[gR]+'. Требуется '+(hi?'V':'IV')+'.','п. 5.7')}
+ var gD=+$('gDop').value;add(gD>=(hi?4:3),'Допускающий: группа '+GN[gD]+'. Требуется не ниже '+(hi?'IV':'III')+'.','п. 5.8');
+ var nab=$('mode').value==='nab',gP=+$('gPr').value;
+ if(nab){add(gP>=3,'Наблюдающий: группа '+GN[gP]+'. Требуется не ниже III.','п. 5.10');
+  add($('spec').value.trim().length>0,$('spec').value.trim()?'В «Отдельных указаниях» указан работник, возглавляющий бригаду.':'Не указан работник, возглавляющий бригаду, в строке «Отдельные указания».','пп. 5.10, 6.28')}
+ else{var nd=(hi||live)?4:3;add(gP>=nd,'Производитель работ: группа '+GN[gP]+'. Требуется не ниже '+GN[nd]+(live?' (работа под напряжением)':hi?' (выше 1000 В)':' (до 1000 В)')+'.','п. 5.9')}
+ var rows=document.querySelectorAll('#members .row'),g2=0,g3=0;
+ rows.forEach(function(r){var g=+r.querySelector('select').value;if(g===2)g2++;else g3++});
+ add(rows.length>0,rows.length?'Члены бригады указаны: '+rows.length+'.':'Не указаны члены бригады.','п. 6.25');
+ if(!nab&&rows.length){add(g2<=3,'Члены бригады с группой II: '+g2+'. Не более 3.','п. 5.15');add(g2<=g3,'Работников с группой не ниже III: '+g3+', с группой II: '+g2+'. Допускается не более одного II на каждого с группой не ниже III.','п. 5.15')}
+ if(nab)R.push({ok:null,t:'При надзоре наблюдающего состав бригады определяется условиями работы и возможностью надзора.',ref:'п. 5.15'});
+ var tk=$('task').value.trim();add(!!tk,tk?'Заполнено «Поручается».':'Не заполнено «Поручается».','п. 6.25');
+ var pr=$('prep').value.trim();add(!!pr,pr?'Заполнена таблица мероприятий по подготовке рабочих мест.':'Не заполнена таблица мероприятий (если подготовка не нужна, пишут «Не требуется»).','пп. 6.26, 6.27');
+ var a=$('d1').value,b=$('d2').value;
+ if(!a||!b)add(false,'Не указаны даты начала и окончания работы.','п. 6.23');
+ else{var days=Math.round((new Date(b)-new Date(a))/864e5);
+  if(days<0)add(false,'Дата окончания раньше даты начала.','п. 6.3');
+  else if(live)add(days<=1,'Работа под напряжением: срок '+days+' дн. Наряд выдаётся не более чем на 1 календарный день (смену).','п. 6.3');
+  else add(days<=15,'Срок наряда: '+days+' дн. Не более 15 календарных дней (продление — один раз, ещё до 15).','п. 6.3')}
+ var cp=+$('copies').value,rem=$('how').value==='remote';
+ add(rem?cp===3:cp===2,rem?(cp===3?'Передача по телефону, радио, факсом или электронно: 3 экземпляра.':'При дистанционной передаче нужно 3 экземпляра, указано '+cp+'.'):(cp===2?'Выдан на руки: 2 экземпляра.':'Выдан на руки: должно быть 2 экземпляра, указано '+cp+'.'),'п. 6.1');
+ add(!$('pencil').checked,$('pencil').checked?'Записи карандашом или с исправлениями не допускаются.':'Записи сделаны разборчиво, без карандаша и исправлений.','п. 6.22');
+ add($('brief').checked,$('brief').checked?'Целевой инструктаж выдающим проведён и записан.':'Целевой инструктаж выдающим не проведён: без него допуск не разрешается.','пп. 6.32, 10.7');
+ var bad=R.filter(function(r){return r.ok===false}).length;
+ var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Нарушений: '+bad+'. Такой наряд выдавать нельзя.':'Нарушений не найдено. Наряд оформлен верно по проверяемым требованиям.')+'</div><ul class="res">';
+ R.forEach(function(r){h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
+ h+='</ul><div class="note">Проверка охватывает основные требования о группах, сроках, числе экземпляров и составе бригады. Полный перечень случаев, когда нужен ответственный руководитель, и особые группы допуска даны в пп. 5.7 и 5.9.</div>';
+ $('out').innerHTML=h}
+$('check').onclick=check;$('exClear').onclick();
+
+/* ===== БРИГАДА ===== */
+var C0=[['Петров И. И.',3],['Сидоров А. А.',3],['Кузнецов В. В.',3],['Орлов П. П.',2],['Волков Д. Д.',2]];
+var crew,orig,added,prChanged;
+function crewInit(){crew=C0.map(function(x){return {n:x[0],g:x[1],o:true}});added=0;prChanged=false;crewDraw()}
+function crewDraw(){
+ var t=$('crewT');t.innerHTML='<tr><th>Работник</th><th>Группа</th><th></th></tr>';
+ crew.forEach(function(m,i){var tr=document.createElement('tr');tr.innerHTML='<td>'+m.n+(m.o?'':' <span class="tag">введён</span>')+'</td><td>'+GN[m.g]+'</td><td></td>';
+  var b=document.createElement('button');b.className='btn';b.textContent='Вывести';b.onclick=function(){if(crew.length>1){crew.splice(i,1);crewDraw()}};tr.lastChild.appendChild(b);t.appendChild(tr)});
+ var removed=C0.length-crew.filter(function(m){return m.o}).length;
+ var g2=crew.filter(function(m){return m.g===2}).length,g3=crew.length-g2;
+ var half=C0.length/2,res=[];
+ res.push([g2<=3,'Работников с группой II: '+g2+' (не более 3).','п. 5.15']);
+ res.push([g2<=g3,'С группой не ниже III: '+g3+', с группой II: '+g2+'. На каждого с группой не ниже III допускается не более одного работника с группой II.','п. 5.15']);
+ var many=removed>half||added>half;
+ res.push([!many&&!prChanged,prChanged?'Заменён производитель работ: наряд-допуск нужно выдать заново.':many?'Состав изменён более чем наполовину (выведено '+removed+', введено '+added+' при исходных '+C0.length+'): наряд-допуск нужно выдать заново.':'Состав изменён не более чем наполовину (выведено '+removed+', введено '+added+' при исходных '+C0.length+'): достаточно записи в таблице «Изменения в составе бригады».',prChanged?'п. 11.6':'п. 11.6']);
+ if(added)res.push([null,'Введённым в бригаду (новых: '+added+') производитель работ или наблюдающий обязан провести целевой инструктаж.','п. 11.5']);
+ $('crewRes').innerHTML=res.map(function(r){return '<li class="'+(r[0]===true?'ok':r[0]===false?'bad':'info')+'">'+(r[0]===true?'✓ ':r[0]===false?'✗ ':'ℹ ')+r[1]+' <span class="src">('+r[2]+')</span></li>'}).join('')+'<li class="info">Примечание: приказ не поясняет, как считать «более чем наполовину». Здесь сравнивается число выведенных или введённых с половиной исходного состава.</li>';
+}
+$('addC').onclick=function(){added++;crew.push({n:'Новый работник '+added,g:+$('newG').value,o:false});crewDraw()};
+$('chgPr').onclick=function(){prChanged=true;crewDraw()};
+$('resetC').onclick=crewInit;crewInit();
+
+/* ===== ТЕСТ ===== */
+var Q=[
+['Сколько экземпляров наряда-допуска оформляется при выдаче на руки?',['1','2','3','По числу членов бригады'],1,'п. 6.1: наряд оформляется в двух экземплярах и выдаётся производителю работ (или наблюдающему) и допускающему.'],
+['Сколько экземпляров оформляется при передаче наряда по телефону, радио, факсом или электронно (если производитель не совмещает допускающего)?',['2','3','4','1'],1,'п. 6.1: в трёх экземплярах. Один остаётся у выдающего.'],
+['На какой срок разрешается выдавать наряд-допуск?',['Не более 5 календарных дней','Не более 15 календарных дней со дня начала работы','Не более 30 календарных дней','На один месяц'],1,'п. 6.3: не более 15 календарных дней со дня начала работы.'],
+['Сколько раз можно продлить наряд-допуск?',['Один раз, не более чем на 15 календарных дней','Дважды','Сколько нужно','Продлевать нельзя'],0,'п. 6.3: продлевать один раз на срок не более 15 календарных дней.'],
+['На какой срок выдаётся наряд на работы под напряжением на токоведущих частях?',['Не более 1 календарного дня (смены)','Не более 3 дней','Не более 15 дней','Не более 7 дней'],0,'п. 6.3: не более 1 календарного дня (рабочей смены). На следующие дни оформляется новый наряд.'],
+['Кто имеет право продлить наряд-допуск?',['Любой член бригады','Выдавший наряд или другой работник с правом выдачи нарядов в этой электроустановке','Только допускающий','Только производитель работ'],1,'п. 6.4.'],
+['Сколько хранятся наряды-допуски, работы по которым полностью закончены?',['1 месяц','6 месяцев','1 год','5 лет'],2,'п. 6.5: 1 год. Если были аварии, инциденты или несчастные случаи, наряды хранят в архиве вместе с материалами расследования.'],
+['Какую группу по электробезопасности должен иметь выдающий наряд-допуск при эксплуатации электроустановок выше 1000 В?',['III','IV','V','II'],2,'п. 5.4: V группа выше 1000 В, не ниже IV до 1000 В.'],
+['Какую группу должен иметь допускающий в электроустановках до 1000 В?',['II','III','IV','V'],1,'п. 5.8: IV выше 1000 В, III до 1000 В.'],
+['Группа производителя работ по наряду-допуску в электроустановках выше 1000 В?',['III','IV','V','II'],1,'п. 5.9: IV выше 1000 В, III до 1000 В. При работах под напряжением — IV.'],
+['Не ниже какой группы должен быть наблюдающий?',['II','III','IV','V'],1,'п. 5.10: не ниже III.'],
+['Сколько членов бригады с группой II можно включить на одного работника с группой не ниже III?',['Не более одного (всего II не более трёх)','Двух','Любое число','Ни одного'],0,'п. 5.15: на каждого с группой не ниже III один с группой II, но всего II группы не более трёх.'],
+['Кто может изменить состав бригады после допуска?',['Производитель работ сам','Выдавший наряд-допуск или другой работник с правом выдачи нарядов в этой электроустановке','Допускающий сам','Любой член бригады'],1,'п. 11.5. Указание можно передать по телефону, радио или с нарочным.'],
+['В каком случае наряд-допуск нужно выдать заново?',['При замене производителя работ, наблюдающего или ответственного руководителя, изменении состава более чем наполовину или условий работы','При любом вводе одного работника','При перерыве на обед','При продлении'],0,'п. 11.6.'],
+['Допускается ли заполнять наряд-допуск карандашом и исправлять текст?',['Да, в небольших случаях','Нет, не допускается','Да, если исправил выдающий','Только дату'],1,'п. 6.22: записи разборчивые, заполнение карандашом и исправление не допускается.'],
+['Можно ли допустить бригаду к работе без целевых инструктажей?',['Да, если бригада опытная','Нет, без целевых инструктажей допуск не разрешается','Да, если нет времени','Только для выше 1000 В'],1,'п. 10.7.'],
+['Где проводится допуск к работе по наряду-допуску?',['В кабинете руководителя','Непосредственно на рабочем месте','По телефону','В помещении оперативного персонала'],1,'п. 10.5.'],
+['Можно ли выдать разрешение на допуск до прибытия бригады на место работ?',['Да','Нет, не допускается','Да, по телефону','Только в ночную смену'],1,'п. 9.2.'],
+['Бригада уходит на обед. Как оформляется допуск после перерыва?',['Новым наряд-допуском','Производитель или наблюдающий допускает без указания в наряде','Допускающий с записью в наряде','Ответственный руководитель, запись в журнале'],1,'п. 13.1: допуск после перерыва в течение рабочего дня выполняет производитель или наблюдающий без указания в наряде.'],
+['Что делают с плакатами, ограждениями и заземлениями при перерыве в связи с окончанием рабочего дня (не под напряжением)?',['Снимают','Не снимают','Снимают только заземления','Снимает бригада'],1,'п. 13.2: плакаты безопасности, ограждения, флажки, заземления не снимаются. Наряд сдаётся допускающему.'],
+['Кто осуществляет повторный допуск в последующие дни на подготовленное рабочее место?',['Допускающий или с его разрешения ответственный руководитель','Любой член бригады','Выдающий наряд','Только диспетчер'],0,'п. 13.3. Производитель или наблюдающий может допустить бригаду, если ему это поручено записью в «Отдельных указаниях».'],
+['Кто оформляет полное окончание работ в наряде?',['Допускающий','Производитель работ, а при назначении ответственного руководителя — ответственный руководитель','Выдающий наряд','Любой член бригады'],1,'п. 14.1: подписью оформляет производитель работ, а в случае назначения ответственного руководителя — ответственный руководитель.'],
+['Нужно ли оформлять в наряде перевод бригады в РУ до 1000 В на другое рабочее место?',['Да, всегда','Нет, переводит производитель или наблюдающий без оформления','Только в журнале','Да, допускающим'],1,'п. 12.3.'],
+['При обнаружении нарушений Правил, угрожающих безопасности бригады, что делают?',['Продолжают работу, исправляя по ходу','Удаляют бригаду, изымают наряд, допускают снова только по новому наряду после устранения нарушений','Только делают замечание','Вызывают допускающего'],1,'п. 11.4.'],
+['Что делают при сомнении в достаточности мер подготовки рабочего места?',['Продолжают подготовку','Прекращают подготовку и откладывают работу до выдачи нового наряда','Меняют меры по месту','Звонят производителю'],1,'п. 10.1: изменять предусмотренные нарядом меры нельзя.'],
+['Как долго хранится журнал учёта работ по нарядам-допускам и распоряжениям?',['1 месяц со дня регистрации полного окончания последней работы','1 год','3 года','Постоянно'],0,'п. 6.6: один месяц.']
+];
+var score,answered;
+function build(){
+ score=0;answered=0;var box=$('qs');box.innerHTML='';$('score').textContent='';
+ Q.forEach(function(q,i){var d=document.createElement('div');d.className='q';var p=document.createElement('p');p.textContent=(i+1)+'. '+q[0];d.appendChild(p);
+  var o=document.createElement('div');o.className='opts';
+  q[1].forEach(function(t,j){var b=document.createElement('button');b.className='opt';b.textContent=t;
+   b.onclick=function(){if(d.classList.contains('done'))return;d.classList.add('done');
+    [].forEach.call(o.children,function(x,k){if(k===q[2])x.classList.add('ok')});
+    if(j===q[2])score++;else b.classList.add('bad');
+    answered++;if(answered===Q.length)$('score').textContent='Результат: '+score+' из '+Q.length};
+   o.appendChild(b)});
+  d.appendChild(o);var e=document.createElement('div');e.className='exp';e.textContent=q[3]+' (приказ № 903н)';d.appendChild(e);box.appendChild(d)})}
+$('qreset').onclick=build;build();
+</script>
+</body>
+</html>
