@@ -572,5 +572,28 @@ function build(){
   d.appendChild(o);var e=document.createElement('div');e.className='exp';e.textContent=q[3]+' (приказ № 903н)';d.appendChild(e);box.appendChild(d)})}
 $('qreset').onclick=build;build();
 </script>
+<style>
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line,#ccc);background:var(--chip,var(--surface2,#eee));color:var(--fg,var(--ink,#111));border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#floatClose{position:fixed;right:14px;bottom:14px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:#1a5fb4;color:#fff;font:600 15px/1 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+#floatClose[hidden]{display:none}
+</style>
+<button id="floatClose" type="button" hidden>▲ Свернуть открытое</button>
+<script>
+(function(){
+ var fb=document.getElementById('floatClose');
+ function opened(){return [].slice.call(document.querySelectorAll('details[open]'))}
+ function upd(){fb.hidden=!opened().length}
+ document.querySelectorAll('details').forEach(function(d){
+  if(!d.querySelector(':scope>.closeb,:scope>.in>.closeb')){var b=document.createElement('button');b.type='button';b.className='closeb';b.textContent='▲ Свернуть';d.appendChild(b)}
+  d.addEventListener('toggle',upd)});
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'});upd()}});
+ fb.addEventListener('click',function(){var h=window.innerHeight,list=opened(),vis=list.filter(function(d){var r=d.getBoundingClientRect();return r.bottom>0&&r.top<h});
+  if(!vis.length)vis=list.slice(-1);
+  vis.forEach(function(d){d.open=false});
+  if(vis[0])vis[0].scrollIntoView({block:'nearest'});upd()});
+ upd();
+})();
+</script>
 </body>
 </html>
