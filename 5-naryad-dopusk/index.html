@@ -32,6 +32,8 @@ th{background:var(--chip)}
 .scroll{overflow-x:auto}
 details{border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
 summary{cursor:pointer;padding:12px 14px;font-weight:600}
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
 details .in{padding:0 14px 14px}
 details .in p{margin:6px 0}
 .num{display:inline-block;min-width:26px;height:26px;line-height:26px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;margin-right:8px}
@@ -245,7 +247,8 @@ var S=[
 ['Включение электроустановки','Оперативный персонал','Перед включением проверяет готовность (чистота места, отсутствие инструмента), снимает временные ограждения, переносные плакаты и заземления подготовки, восстанавливает постоянные ограждения. Допускающему из оперативно-ремонтного персонала право на включение может быть дано в «Отдельных указаниях».','15.1, 15.2']
 ];
 var sl=$('stepList');
-S.forEach(function(s,i){var d=document.createElement('details');d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div></div>';sl.appendChild(d)});
+S.forEach(function(s,i){var d=document.createElement('details');d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div><button class="closeb" type="button">▲ Свернуть</button></div>';sl.appendChild(d)});
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'})}});
 var ordIdx,ordPicked;
 function ordInit(){
  var idx=[0,1,2,3,4,5,6,7,8,9,10,11,12,13];ordPicked=[];
