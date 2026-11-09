@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Плакаты безопасности</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#c4262e;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+.lead{color:var(--muted);margin:0 0 20px}
+nav.tabs,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button{font:inherit;cursor:pointer}
+.tab,.chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:999px;padding:8px 14px}
+.tab[aria-selected=true],.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.stage{display:flex;justify-content:center;align-items:center;min-height:150px;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(128,128,128,.07) 10px 20px);border-radius:8px;padding:14px}
+.grp{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.card h3{margin:0;font-size:1.05rem}
+.card dl{margin:0;font-size:.92rem}
+.card dt{font-weight:600;margin-top:8px}
+.card dd{margin:2px 0 0;color:var(--muted)}
+.src{font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:auto}
+.note{font-size:.82rem;background:var(--chip);border-radius:6px;padding:6px 8px;color:var(--muted)}
+/* плакаты */
+.pl{font-family:Arial,Helvetica,sans-serif;text-align:center;line-height:1.1;display:flex;align-items:center;justify-content:center;gap:8px;border:3px solid #d62027;background:#fff;color:#d62027;padding:8px 10px;max-width:250px;width:100%;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.pl b{display:block;font-size:1.05rem;text-transform:uppercase}
+.pl small{display:block;font-size:.8rem;font-weight:700;margin-top:2px}
+.pl.red{background:#d62027;color:#fff;border-color:#d62027}
+.pl.warn{color:#111;padding:12px 10px;min-height:96px;justify-content:flex-start}
+.pl.warn b{font-size:1.15rem}
+.pl.warn small{font-weight:600}
+.pl.warn .t{flex:1}
+.pl.blue{border:6px solid #1a73c9;color:#111;padding:20px 8px;min-height:110px;max-width:150px;flex-direction:column;gap:2px}
+.pl.blue b{font-size:1.15rem}
+.pl.ind{background:#1a73c9;border-color:#7fb4ea;color:#fff;max-width:200px;padding:14px}
+.pl.field{max-width:230px}
+.pl.field b{font-size:.78rem}.pl.field small{font-size:.68rem}
+.bolt{width:30px;height:46px;flex:none;fill:#d62027}
+.tri{width:110px;height:100px}
+/* тест */
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q p{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:8px;padding:10px 12px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
+.q.done .exp{display:block}
+.score{font-weight:700;font-size:1.1rem;margin:14px 0}
+.reset{border:1px solid var(--fg);background:transparent;color:var(--fg);border-radius:8px;padding:8px 14px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Плакаты безопасности</h1>
+<p class="lead">Какие плакаты бывают в электроустановках, где и когда их вывешивают. Основа — Правила по охране труда при эксплуатации электроустановок (приказ Минтруда № 903н).</p>
+<nav class="tabs" role="tablist">
+<button class="tab" role="tab" aria-selected="true" data-tab="cat">Плакаты</button>
+<button class="tab" role="tab" aria-selected="false" data-tab="order">Порядок</button>
+<button class="tab" role="tab" aria-selected="false" data-tab="quiz">Тест</button>
+</nav>
+
+<section id="cat">
+<div class="chips" id="chips"></div>
+<div class="grid" id="grid"></div>
+</section>
+
+<section id="order" hidden>
+<div class="q"><p>Когда вывешиваются плакаты при подготовке рабочего места со снятием напряжения (п. 16.1)</p>
+<ol>
+<li>Произведены необходимые отключения.</li>
+<li>Приняты меры против ошибочной подачи напряжения.</li>
+<li>На приводах и ключах управления вывешены <b>запрещающие</b> плакаты («Не включать! Работают люди» и др.).</li>
+<li>Проверено отсутствие напряжения.</li>
+<li>Установлено заземление.</li>
+<li>Вывешены <b>указательные</b> плакаты «Заземлено», ограждены рабочие места и токоведущие части под напряжением, вывешены <b>предупреждающие</b> и <b>предписывающие</b> плакаты («Стой! Напряжение», «Работать здесь», «Влезать здесь»).</li>
+</ol></div>
+<div class="q"><p>Важно помнить</p>
+<ul>
+<li>Не допускается убирать или переставлять плакаты и ограждения, установленные допускающим, до полного окончания работы, кроме случаев, указанных в графе «Отдельные указания» наряда-допуска (п. 23.8).</li>
+<li>Плакаты «Не включать! Работа на линии» и «Работа под напряжением. Повторно не включать!» вывешиваются и снимаются по команде диспетчерского или оперативного персонала (пп. 18.2, 18.3).</li>
+<li>Плакаты «Стой! Напряжение» на ограждениях вывешивают обращёнными внутрь огражденного пространства (п. 23.2, 23.5).</li>
+</ul></div>
+</section>
+
+<section id="quiz" hidden>
+<div id="qs"></div>
+<div class="score" id="score"></div>
+<button class="reset" id="reset">Пройти заново</button>
+</section>
+</main>
+
+<script>
+var BOLT='<svg class="bolt" viewBox="0 0 30 46" aria-hidden="true"><path d="M17 0 3 25h9L8 46 27 18h-10z"/></svg>';
+var TRI='<svg class="tri" viewBox="0 0 110 100" role="img" aria-label="Знак: опасность поражения электрическим током"><path d="M55 5 106 95H4z" fill="#ffd400" stroke="#111" stroke-width="6" stroke-linejoin="round"/><path d="M60 28 40 60h14l-6 24 24-36H59z" fill="#111"/></svg>';
+var G={ban:'Запрещающие',warn:'Предупреждающие',req:'Предписывающие',ind:'Указательные'};
+var P=[
+{g:'ban',cls:'',h:'Не включать!',s:'Работают люди',
+ where:'На приводах (рукоятках) коммутационных аппаратов с ручным управлением: выключателей, отделителей, разъединителей, рубильников, автоматов. У однополюсных разъединителей — на приводе каждого полюса. На ключах и кнопках дистанционного и местного управления, на автоматах или у снятых предохранителей цепей управления и силовых цепей. На присоединениях до 1000 В без коммутационных аппаратов — у снятых предохранителей.',
+ why:'Чтобы по ошибке не подали напряжение на рабочее место.',src:'п. 18.1'},
+{g:'ban',cls:'',h:'Не открывать!',s:'Работают люди',
+ where:'На задвижках, закрывающих доступ воздуха в пневматические приводы разъединителей.',
+ why:'Чтобы не открыли подачу воздуха и не включили разъединитель.',src:'п. 18.1'},
+{g:'ban',cls:'red',h:'Не включать!',s:'Работа на линии',
+ where:'На приводах разъединителей, которыми отключена для работ ВЛ, КВЛ или КЛ. Вывешивается один плакат независимо от числа работающих бригад.',
+ why:'Чтобы не подали напряжение на линию, где работают люди.',
+ who:'Вывешивается и снимается по команде диспетчерского или оперативного персонала, в чьём управлении находится линия. Перед снятием нужно подтверждение об окончании работ и удалении всех бригад.',src:'п. 18.2'},
+{g:'ban',cls:'',h:'Работа под напряжением',s:'Повторно не включать!',
+ where:'На приводах ручного и ключах дистанционного управления коммутационных аппаратов при работах под напряжением. Не требуется при работах до 35 кВ методом на расстоянии (изолирующими штангами) и на токоведущих частях до 1000 В в ТП и КТП методом в контакте.',
+ why:'Чтобы после отключения защитой линию не включили повторно, пока идёт работа под напряжением.',
+ who:'Вывешивается и снимается по команде диспетчерского или оперативного персонала.',src:'пп. 16.2, 18.3'},
+{g:'warn',cls:'warn',bolt:1,h:'Стой!',s:'Напряжение',
+ where:'На временных ограждениях токоведущих частей, оставшихся под напряжением; на ограждениях камер, шкафах и панелях, граничащих с рабочим местом; на канате или шнуре, выгораживающем рабочее место в ОРУ; на конструкциях в ОРУ, по которым можно пройти к частям под напряжением; на шторке отсека КРУ.',
+ why:'Предупредить, что за границей рабочего места токоведущие части под напряжением.',
+ who:'Обращаются внутрь огражденного пространства (при снятии напряжения со всего ОРУ линейные разъединители ограждаются плакатами наружу). Плакаты на конструкциях в ОРУ может устанавливать работник с группой III из ремонтного персонала под руководством допускающего.',src:'пп. 23.2, 23.4–23.6, 29.1'},
+{g:'warn',cls:'warn',bolt:1,h:'Испытание',s:'Опасно для жизни',
+ where:'На ограждении (щиты, канаты) испытываемого оборудования, испытательной установки и соединительных проводов; на дверях или ограждении камеры, где расположен противоположный конец испытываемой КЛ.',
+ why:'Предупредить посторонних об опасности при испытаниях повышенным напряжением.',
+ who:'Обращён наружу. Ограждение устанавливают работники, проводящие испытание. При необходимости выставляется охрана из членов бригады с группой II.',src:'пп. 39.8–39.10'},
+{g:'warn',cls:'warn',bolt:1,h:'Не влезай!',s:'Убьёт',
+ where:'Внизу на конструкциях, граничащих с той, по которой разрешено подниматься.',
+ why:'Чтобы работник не поднялся по конструкции, не предназначенной для подъёма и расположенной рядом с частями под напряжением.',src:'п. 23.6'},
+{g:'warn',cls:'field',h:'Опасное электрическое поле',s:'Без средств защиты проход запрещён',
+ where:'В зонах биологически активного электрического поля: в ОРУ и на ВЛ напряжением 330 кВ и выше.',
+ why:'Предупредить о превышении допустимой напряжённости поля.',
+ note:'Название этого плаката в тексте приказа не приводится. Привязка сделана по смыслу раздела XXIV (пп. 24.1–24.4): предельно допустимая напряжённость ЭП — 25 кВ/м, при 5 кВ/м и ниже пребывание разрешено весь рабочий день. Допустимое время при уровнях выше 5 кВ/м: T = 50/E − 2 (ч).',src:'раздел XXIV'},
+{g:'warn',tri:1,h:'Опасность поражения электрическим током',
+ where:'Общий предупреждающий знак: на дверях и ограждениях электроустановок, шкафах и щитах.',
+ why:'Предупредить об электрической опасности.',
+ note:'В приказе № 903н этот знак не описан. Данные о его применении даны общими словами и требуют проверки по ГОСТ 12.4.026.',src:'вне приказа'},
+{g:'req',cls:'blue',h:'Влезать',s:'здесь',
+ where:'На стационарных лестницах и конструкциях, по которым для проведения работ разрешено подниматься.',
+ why:'Показать путь подъёма, по которому разрешено подниматься на высоту.',src:'п. 23.6'},
+{g:'req',cls:'blue',h:'Работать',s:'здесь',
+ where:'На подготовленных рабочих местах: на оборудовании, на котором предстоит работать, и в месте прохода внутрь выгороженного рабочего места. В КРУ — на тележке или в отсеке, где предстоит работать.',
+ why:'Показать бригаде место, где разрешено работать.',
+ who:'Нельзя убирать или переставлять до полного окончания работы, кроме случаев, оговорённых в наряде-допуске.',src:'пп. 23.7, 23.8, 29.1'},
+{g:'ind',cls:'ind',h:'Заземлено',
+ where:'На приводах разъединителей, отделителей и выключателей нагрузки, при ошибочном включении которых не исключается подача напряжения на заземлённый участок; на ключах и кнопках дистанционного управления коммутационными аппаратами.',
+ why:'Показать, что участок заземлён и подавать на него напряжение нельзя.',src:'пп. 16.1, 23.1'}
+];
+function poster(p){
+ if(p.tri) return TRI;
+ var t='<div class="t"><b>'+p.h+'</b>'+(p.s?'<small>'+p.s+'</small>':'')+'</div>';
+ return '<div class="pl '+p.cls+'">'+(p.bolt?BOLT:'')+t+'</div>';
+}
+var cur='all';
+function esc(x){return x}
+function render(){
+ var g=document.getElementById('grid'),h='';
+ P.forEach(function(p){ if(cur!=='all'&&p.g!==cur)return;
+  h+='<article class="card"><div class="stage">'+poster(p)+'</div><div class="grp">'+G[p.g]+'</div><h3>'+p.h+(p.s&&!p.tri?(/[!.]$/.test(p.h)?' ':'. ')+p.s:'')+'</h3><dl><dt>Где вывешивают</dt><dd>'+p.where+'</dd><dt>Зачем</dt><dd>'+p.why+'</dd>'+(p.who?'<dt>Кто и как</dt><dd>'+p.who+'</dd>':'')+'</dl>'+(p.note?'<div class="note">'+p.note+'</div>':'')+'<div class="src">Источник: приказ № 903н, '+p.src+'</div></article>';});
+ g.innerHTML=h;
+}
+var chips=document.getElementById('chips');
+[['all','Все']].concat(Object.keys(G).map(function(k){return [k,G[k]]})).forEach(function(c){
+ var b=document.createElement('button');b.className='chip';b.textContent=c[1];b.setAttribute('aria-pressed',c[0]==='all');
+ b.onclick=function(){cur=c[0];[].forEach.call(chips.children,function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');render()};
+ chips.appendChild(b)});
+render();
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+ ['cat','order','quiz'].forEach(function(id){document.getElementById(id).hidden=id!==t.dataset.tab})}});
+/* тест */
+var Q=[
+['Отключили выключатель с ручным приводом для ремонта. Какой плакат вывесить на привод?',['Не включать! Работают люди','Работать здесь','Заземлено','Стой! Напряжение'],0,'п. 18.1: на приводах коммутационных аппаратов с ручным управлением вывешивают «Не включать! Работают люди».'],
+['Закрыли задвижку подачи воздуха в пневматический привод разъединителя. Какой плакат вывесить на задвижку?',['Не включать! Работают люди','Не открывать! Работают люди','Испытание. Опасно для жизни','Влезать здесь'],1,'п. 18.1: на задвижках, закрывающих доступ воздуха в пневмоприводы, вывешивают «Не открывать! Работают люди».'],
+['ВЛ отключена для работ, на ней работают три бригады. Сколько плакатов «Не включать! Работа на линии» вывешивается на приводах разъединителей?',['По одному на каждую бригаду','Один плакат независимо от числа бригад','Три на каждый привод','Плакат не нужен'],1,'п. 18.2: вывешивается один плакат независимо от числа работающих бригад.'],
+['Участок заземлён. Какой плакат вывесить на привод разъединителя, при ошибочном включении которого напряжение могло бы попасть на этот участок?',['Заземлено','Не открывать! Работают люди','Работать здесь','Не влезай! Убьёт'],0,'п. 23.1: на таких приводах и на ключах дистанционного управления вывешивают «Заземлено».'],
+['Рабочее место в ОРУ выгорожено канатом. Какой плакат вешают на канат и как он обращён?',['Стой! Напряжение, внутрь огражденного пространства','Стой! Напряжение, наружу','Испытание. Опасно для жизни, внутрь','Работать здесь, наружу'],0,'п. 23.5: плакаты «Стой! Напряжение» вывешивают обращёнными внутрь огражденного пространства.'],
+['Оборудование ограждено щитами для испытаний. Какой плакат вывесить и как он обращён?',['Стой! Напряжение, внутрь','Испытание. Опасно для жизни, наружу','Работать здесь, наружу','Заземлено, внутрь'],1,'п. 39.8: плакат «Испытание. Опасно для жизни» обращён наружу.'],
+['Какой плакат вывешивают внизу на конструкциях, граничащих с той, по которой разрешено подниматься?',['Влезать здесь!','Работать здесь','Не влезай! Убьёт','Заземлено'],2,'п. 23.6: на граничащих конструкциях внизу вывешивают «Не влезай! Убьёт».'],
+['Какой плакат вывешивают на стационарной лестнице, по которой для работ разрешено подниматься?',['Не влезай! Убьёт','Влезать здесь!','Стой! Напряжение','Не открывать! Работают люди'],1,'п. 23.6: на таких лестницах и конструкциях вывешивают «Влезать здесь!».'],
+['Какой плакат вывешивают на оборудовании на подготовленном рабочем месте?',['Заземлено','Работать здесь','Стой! Напряжение','Не включать! Работа на линии'],1,'п. 23.7: на подготовленных рабочих местах вывешивают «Работать здесь».'],
+['Кто может убрать или переставить плакаты, установленные допускающим, до полного окончания работы?',['Производитель работ','Любой член бригады','Никто, кроме случаев, оговорённых в графе «Отдельные указания» наряда-допуска','Ответственный руководитель'],2,'п. 23.8: убирать или переставлять плакаты до полного окончания работы не допускается, кроме указанных в наряде случаев.'],
+['Работник какой группы по электробезопасности из ремонтного персонала может устанавливать плакаты «Стой! Напряжение» на конструкциях в ОРУ (под руководством допускающего)?',['II','III','IV','V'],1,'п. 23.6: право имеет работник с группой III из ремонтного персонала под руководством допускающего.'],
+['Работы под напряжением до 35 кВ методом на расстоянии (изолирующими штангами). Нужно ли вывешивать «Работа под напряжением. Повторно не включать!» на привод?',['Да, всегда','Нет, не требуется','Только в ночное время','Только на ключ управления'],1,'п. 18.3: в этом случае вывешивать плакат на приводах и ключах не требуется.'],
+['По чьей команде снимают плакат «Не включать! Работа на линии»?',['Производителя работ','Диспетчерского или оперативного персонала, в чьём управлении находится линия','Любого члена бригады','Допускающего без подтверждения'],1,'п. 18.2: плакат вывешивается и снимается по команде диспетчерского или оперативного персонала после подтверждения об окончании работ и удалении всех бригад.']
+];
+var score,answered;
+function buildQuiz(){
+ score=0;answered=0;var box=document.getElementById('qs');box.innerHTML='';document.getElementById('score').textContent='';
+ Q.forEach(function(q,i){
+  var d=document.createElement('div');d.className='q';
+  var p=document.createElement('p');p.textContent=(i+1)+'. '+q[0];d.appendChild(p);
+  var o=document.createElement('div');o.className='opts';
+  q[1].forEach(function(t,j){var b=document.createElement('button');b.className='opt';b.textContent=t;
+   b.onclick=function(){ if(d.classList.contains('done'))return; d.classList.add('done');
+    [].forEach.call(o.children,function(x,k){if(k===q[2])x.classList.add('ok')});
+    if(j===q[2])score++;else b.classList.add('bad');
+    answered++; if(answered===Q.length)document.getElementById('score').textContent='Результат: '+score+' из '+Q.length;};
+   o.appendChild(b)});
+  d.appendChild(o);var e=document.createElement('div');e.className='exp';e.textContent=q[3]+' (приказ № 903н)';d.appendChild(e);box.appendChild(d)});
+}
+document.getElementById('reset').onclick=buildQuiz;
+buildQuiz();
+</script>
+</body>
+</html>
