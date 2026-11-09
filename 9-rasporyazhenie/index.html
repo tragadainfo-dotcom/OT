@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Распоряжение и журнал учёта работ</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#1a5fb4;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#6aa7f5;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 20px}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+button,select,input,textarea{font:inherit;color:var(--fg)}
+button{cursor:pointer}
+.tab{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 14px}
+.tab[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.grid .card{margin:0}
+.muted{color:var(--muted)}
+.src{font-size:.8rem;color:var(--muted)}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 8px;font-size:.8rem;margin:2px 4px 2px 0}
+.note{font-size:.85rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+.paper.mini{margin:8px 0;padding:14px 14px;font-size:14px;box-shadow:none}
+.paper.mini .side{margin:0 0 8px}
+.paper .ln>.val{flex:1;min-width:120px;border-bottom:1px solid #444;padding:0 4px;white-space:normal}
+.hl{background:#fff1a0;border-radius:3px;padding:0 3px;position:relative}
+.hl sup{font:700 .65rem system-ui,sans-serif;color:#fff;background:#c4262e;border-radius:999px;padding:0 5px;margin-left:2px}
+.sgn{font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic;color:#1a3a8a}
+.exh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 4px}
+ol.legend{margin:6px 0 0;padding-left:0;list-style:none;font-size:.9rem}
+ol.legend li{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
+ol.legend li b{flex:none;background:#c4262e;color:#fff;border-radius:999px;font-size:.7rem;min-width:20px;height:20px;line-height:20px;text-align:center;margin-top:2px}
+.nofill{background:var(--chip);border-radius:8px;padding:10px 12px;font-size:.9rem;color:var(--muted);margin-top:10px}
+ul.resp{margin:4px 0 8px;padding-left:20px}ul.resp li{margin:3px 0}
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+details .in{padding:0 14px 14px}
+details .in p{margin:6px 0}
+.num{display:inline-block;min-width:26px;height:26px;line-height:26px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;margin-right:8px}
+/* форма */
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+label{display:block;font-size:.88rem;color:var(--muted)}
+label.chk{display:flex;gap:8px;align-items:flex-start;color:var(--fg);font-size:.92rem}
+select,input[type=text],input[type=date],textarea{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px}
+.full{grid-column:1/-1}
+.row{display:grid;grid-template-columns:1fr 90px 40px;gap:8px;margin-bottom:6px}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:8px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.res{list-style:none;padding:0;margin:0}
+.res li{padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:.92rem}
+.res li.ok{background:var(--okbg)}
+.res li.bad{background:var(--badbg)}
+.res li.info{background:var(--chip)}
+.verdict{font-weight:700;margin:10px 0}
+.sh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px}
+/* порядок и тест */
+.ord{display:grid;gap:8px}
+.ord button{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.ord button.used{opacity:.45}
+.ordres{margin-top:10px}
+.pick li{padding:6px 10px;background:var(--okbg);border-radius:8px;margin-bottom:4px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q p{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
+.q.done .exp{display:block}
+.score{font-weight:700;font-size:1.1rem;margin:14px 0}
+
+/* бланк */
+.paper{background:#fff;color:#111;font-family:"Times New Roman",Times,serif;font-size:15px;line-height:1.5;border:1px solid #888;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:22px 20px;margin:12px 0;border-radius:2px}
+.paper h3{text-align:center;margin:6px 0;font-size:1.15rem;letter-spacing:.03em}
+.paper h4{text-align:center;margin:18px 0 6px;font-size:1rem}
+.paper .side{text-align:center;font-style:italic;color:#555;margin:0 0 10px}
+.paper hr{border:0;border-top:2px dashed #999;margin:26px 0}
+.paper input.u,.paper select.u,.paper textarea.u{border:0;border-bottom:1px solid #444;border-radius:0;background:#f3f7ff;color:#111;padding:2px 4px;font:inherit;width:100%}
+.paper input.u:focus,.paper select.u:focus,.paper textarea.u:focus{outline:2px solid #1a5fb4;background:#e6efff}
+.paper .ln{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:6px 0}
+.paper .ln>span{white-space:nowrap}
+.paper .ln .u{flex:1;min-width:120px}
+.paper .ln .u.s{flex:0 0 100px;min-width:100px}
+.paper .ln .u.dt{flex:0 0 150px}
+.paper table{border-collapse:collapse;width:100%;font-size:.88rem;margin:6px 0}
+.paper th,.paper td{border:1px solid #333;padding:3px;vertical-align:top;background:#fff;color:#111}
+.paper th{background:#eee;font-weight:600;text-align:center}
+.paper td input.u,.paper td select.u{border-bottom:0;background:#f3f7ff;min-width:70px}
+.paper .rm{border:0;background:transparent;color:#c4262e;cursor:pointer;font-size:1.1rem;padding:0 4px}
+.paper .add{border:1px dashed #1a5fb4;background:transparent;color:#1a5fb4;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:.85rem;margin:2px 0}
+.paper .sig{border:1px dashed #888;background:#f3f7ff;color:#555;border-radius:6px;padding:2px 8px;cursor:pointer;font:inherit;font-size:.85rem;white-space:nowrap}
+.paper .sig.on{border:1px solid #1d7a46;background:#dff1e6;color:#1d7a46;font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic}
+.paper .tw{overflow-x:auto}
+.hint{position:sticky;bottom:8px;z-index:5;background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 14px;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.35);margin-top:10px}
+.hint b{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.cond{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+[hidden]{display:none!important}
+
+.opt input{margin-top:5px;flex:none}
+.opt.miss{border:2px dashed var(--ok)}
+.mrow{display:grid;grid-template-columns:1fr minmax(120px,40%);gap:8px;align-items:center;margin-bottom:8px}
+.mrow select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px;width:100%}
+.mrow.ok select{border-color:var(--ok);background:var(--okbg)}
+.mrow.bad select{border-color:var(--bad);background:var(--badbg)}
+.v-ok{color:var(--ok)}.v-bad{color:var(--bad)}
+.cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 14px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.bar select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px;min-width:0}
+.resf{font-size:1.1rem;font-weight:700;margin:14px 0}
+.opt.sel{background:var(--chip)}
+.kind{display:inline-block;border-radius:6px;padding:3px 10px;font-weight:700;font-size:.85rem;margin-bottom:6px}
+.k-o{background:var(--okbg);color:var(--ok)}.k-n{background:var(--badbg);color:var(--bad)}.k-l{background:#dbe8fb;color:#1a4f9c}.k-x{background:var(--chip);color:var(--muted)}
+@media (prefers-color-scheme:dark){.k-l{background:#1c2f4a;color:#8ab8f5}}
+.vbox{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px;background:var(--card)}
+.vbox ul{margin:6px 0 0;padding-left:20px}
+.row2{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.tw table th{font-size:.8rem}
+.paper td textarea.u,.paper td select.u,.paper td input.u{min-width:130px}
+.paper td .sig{min-width:90px}
+.paper label.pk{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Распоряжение и журнал учёта работ</h1>
+<p class="lead">Как работы в электроустановках выполняются по распоряжению: правила, когда оно допускается, как заполняется журнал учёта работ по нарядам-допускам и распоряжениям, этапы и тест. Основа — глава VII, п. 6.6 и приложение № 8 приказа № 903н.</p>
+<div class="note">Пособие сделано по редакции приказа Минтруда № 903н от 01.09.2022. В тексте приказа указан срок действия до 31.12.2025, поэтому перед применением на практике сверьте цифры с действующими Правилами.</div>
+<nav class="tabs" role="tablist" id="tabs"><button class="tab" role="tab" aria-selected="true" data-t="rules">Правила</button><button class="tab" role="tab" aria-selected="false" data-t="choose">Что чем оформлять</button><button class="tab" role="tab" aria-selected="false" data-t="journal">Журнал</button><button class="tab" role="tab" aria-selected="false" data-t="steps">Этапы</button><button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button></nav>
+<section id="rules">
+<div class="grid">
+<div class="card"><h2>Что такое распоряжение</h2>
+<p>Письменное задание на производство работы (п. 7.1). Определяет:</p>
+<ul class="resp"><li>содержание работы;</li><li>место;</li><li>время;</li><li>меры безопасности (если они требуются);</li><li>работников, которым поручена работа, с указанием их групп по электробезопасности.</li></ul>
+<p>Распоряжение имеет разовый характер. Срок действия — рабочий день или смена исполнителей.</p><div class="src">п. 7.1</div></div>
+<div class="card"><h2>Кому отдаётся</h2>
+<ul class="resp"><li>производителю работ и допускающему;</li><li>в электроустановках без местного оперативного персонала, если допуск на рабочем месте не требуется, — непосредственно работнику, выполняющему работу.</li></ul>
+<p>Право отдавать распоряжения — как у выдающего наряд-допуск: V группа выше 1000 В, не ниже IV до 1000 В; при авариях — оперативный персонал с IV группой по ОРД.</p><div class="src">пп. 7.2, 5.4</div></div>
+<div class="card"><h2>Передача по телефону или радио</h2>
+<ul class="resp"><li>распоряжение фиксируется в двух журналах учёта работ по нарядам-допускам и распоряжениям;</li><li>в журнале работника, отдавшего распоряжение;</li><li>в журнале работников, получивших распоряжение;</li><li>с подтверждающими подписями в обоих журналах.</li></ul><div class="src">п. 7.1</div></div>
+<div class="card"><h2>Когда распоряжение отдаётся заново</h2>
+<ul class="resp"><li>при необходимости продолжения работы;</li><li>при изменении условий работы;</li><li>при изменении состава бригады.</li></ul>
+<p>При перерывах в течение одного дня повторный допуск выполняет производитель работ.</p><div class="src">п. 7.1</div></div>
+<div class="card"><h2>Допуск и журнал</h2>
+<ul class="resp"><li>допуск к работам по распоряжению оформляется в журнале учёта работ по нарядам-допускам и распоряжениям;</li><li>допуск осуществляется после выполнения технических мероприятий по подготовке рабочего места, которые определяет выдающий распоряжение;</li><li>целевые инструктажи оформляются подписями проводивших и получивших в журнале (образец — приложение № 8).</li></ul><div class="src">пп. 7.5, 7.7, 10.10</div></div>
+<div class="card"><h2>Распоряжения внутри смены</h2>
+<p>Если распоряжение отдаёт оперативный персонал подчинённому оперативному персоналу в смене, записи о начале и окончании работ, мероприятиях по подготовке рабочего места, характере работы и составе бригады делаются только в оперативных журналах.</p><div class="src">п. 7.16</div></div>
+<div class="card"><h2>Неотложные работы</h2>
+<p>Работы, которые выполняются безотлагательно, чтобы предотвратить травму или внезапное ухудшение здоровья человека либо устранить неисправность, угрожающую нарушением нормальной работы оборудования, сооружений, устройств ТАИ, СДТУ, электро- и теплоснабжения потребителей.</p>
+<ul class="resp"><li>не более 1 часа без учёта времени на подготовку рабочего места;</li><li>не более трёх работников, включая оперативного, который осуществляет надзор;</li><li>иначе — наряд-допуск.</li></ul><div class="src">п. 7.6</div></div>
+<div class="card"><h2>Группы при неотложных работах</h2>
+<ul class="resp"><li>производитель или наблюдающий из оперативного персонала выше 1000 В — IV группа;</li><li>до 1000 В — III группа;</li><li>члены бригады в электроустановках до и выше 1000 В — III группа.</li></ul>
+<p>В остальных случаях производитель по распоряжению — III группа.</p><div class="src">пп. 7.7, 5.9</div></div>
+</div>
+<div class="card"><h2>Какие работы допускаются по распоряжению (кратко)</h2>
+<div class="scroll"><table>
+<tr><th>Пункт</th><th>Что допускается</th></tr>
+<tr><td>7.8</td><td>Выше 1000 В: на электродвигателе с отсоединённым, замкнутым накоротко и заземлённым кабелем; на генераторе с отсоединёнными шинами и кабелями; в РУ на выкаченных тележках КРУ при запертых на замок шторках; на нетоковедущих частях без снятия напряжения и установки временных ограждений.</td></tr>
+<tr><td>7.9</td><td>До 1000 В — кроме работ на сборных шинах РУ, на присоединениях, по которым не исключена подача напряжения на сборные шины, и на ВЛ до 1000 В с подъёмными сооружениями и механизмами. Наружное освещение с механизмами — при условиях п. 38.78.</td></tr>
+<tr><td>7.10</td><td>До 1000 В в помещениях, кроме особо опасных и особо неблагоприятных: единолично — работник с III группой и правом производителя работ.</td></tr>
+<tr><td>7.11</td><td>Вторичные системы и устройства связи: производитель вправе отключать и включать устройства и опробовать защиту и электроавтоматику с разрешения оперативного персонала.</td></tr>
+<tr><td>7.12</td><td>Выше 1000 В один работник с III группой: уборка и благоустройство ОРУ, скашивание травы, снег, гербициды, дератизация, дезинсекция; связь, осветительная проводка и арматура вне камер РУ на высоте не более 2,5 м; надписи вне камер; сушка трансформаторов; маслоочистка; электродвигатели и механическая часть вентиляторов и маслонасосов; снятие данных со счётчиков переносным компьютером.</td></tr>
+<tr><td>7.13</td><td>Уборка коридоров ЗРУ и электропомещений (токоведущие части ограждены) — II группа; уборка в ОРУ — один работник с III группой.</td></tr>
+<tr><td>7.14</td><td>ВЛ, открытые проводящие части без снятия напряжения: подъём до 3 м, без разборки опоры, откапывание стоек до 0,5 м, расчистка трассы при соблюдении расстояний.</td></tr>
+<tr><td>7.15</td><td>ВЛ, один работник со II группой: осмотр в светлое время суток при благоприятных метеоусловиях, восстановление обозначений, замер габаритов, противопожарная очистка площадок, окраска бандажей.</td></tr>
+<tr><td>7.17</td><td>Один работник с IV группой и правом производителя работ с переносным компьютером: скачивание осциллограмм и логов, параметрирование терминалов РЗА, коммутаторов, контроллеров, снятие показаний микропроцессорных счётчиков.</td></tr>
+<tr><td>7.18</td><td>Два работника (производитель с IV группой и член бригады не ниже III): подключение регистраторов качества электроэнергии, осциллографов во вторичные цепи РЗА, снятие векторных диаграмм в цепях учёта.</td></tr>
+</table></div></div>
+</section>
+<section id="choose" hidden>
+<div class="card"><h2>Наряд, распоряжение или порядок текущей эксплуатации?</h2>
+<p class="muted">Выберите работу и напряжение. Подсказка покажет, чем оформляется работа, какая группа нужна и по какому пункту. Это ориентир по тексту Правил: окончательное решение принимает выдающий наряд или распоряжение.</p>
+<div class="row2">
+<label>Работа<select id="work"></select></label>
+<label>Напряжение<select id="wv"><option value="lo">До 1000 В</option><option value="hi">Выше 1000 В</option></select></label>
+</div>
+<div class="row2" id="urgBox" style="margin-top:10px" hidden>
+<label>Длительность без подготовки рабочего места, ч<input type="number" id="uh" step="0.25" min="0" value="0.5"></label>
+<label>Число работников (с оперативным, ведущим надзор)<input type="number" id="up" step="1" min="1" value="2"></label>
+</div>
+<div id="verdictBox" class="vbox"></div></div>
+</section>
+<section id="journal" hidden>
+<div class="card"><h2>Журнал учёта работ по нарядам-допускам и распоряжениям</h2>
+<p class="muted">Бланк по рекомендуемому образцу (приложение № 8): 10 граф. Заполняйте клетки прямо в таблице. Когда курсор в клетке, внизу появляется подсказка, что в ней писать. Подпись ставится нажатием на кнопку. Группы пишите после фамилии через запятую, членов бригады разделяйте точкой с запятой. Потом нажмите «Проверить».</p>
+<div class="btns"><button class="btn" id="exGood">Образец: распоряжение и наряд</button><button class="btn" id="exUrg">Образец: неотложная работа по телефону</button><button class="btn" id="exBad">Заполнить с ошибками</button><button class="btn" id="exClear">Очистить</button></div>
+<div class="sh">Условия работы (в журнал не вписываются, нужны для проверки)</div>
+<div class="cond">
+<label>Напряжение электроустановки<select id="volt"><option value="lo">До 1000 В</option><option value="hi">Выше 1000 В</option></select></label>
+<label class="chk"><input type="checkbox" id="urg"> Неотложная работа (пп. 7.6–7.7)</label>
+<label class="chk"><input type="checkbox" id="nadz"> Надзор за ремонтным персоналом ведёт оперативный работник</label>
+<label class="chk"><input type="checkbox" id="phone"> Распоряжение передано по телефону или радио</label>
+<label class="chk"><input type="checkbox" id="dup"> Запись продублирована в журнале получателя с подтверждающими подписями</label>
+<label class="chk"><input type="checkbox" id="opsub"> Распоряжение отдаёт оперативный работник подчинённому оперативному в смене</label>
+</div>
+<div id="paper" class="paper"></div>
+<div class="btns"><button class="btn pri" id="check">Проверить</button></div>
+<div id="out"></div>
+<div class="hint" id="hint" hidden></div>
+</div></section>
+<section id="steps" hidden>
+<p class="muted">Откройте этап: кто что делает и как это записывается в журнале. На примере заполненные клетки выделены жёлтым с номерами и поясняются ниже.</p>
+<div id="stepList"></div></section>
+<section id="quiz" hidden>
+<div class="bar">
+<select id="topic"><option value="0">Все темы</option></select>
+<select id="kind"><option value="all">Все типы вопросов</option><option value="s">Один верный ответ</option><option value="m">Несколько верных ответов</option><option value="x">Сопоставление</option></select>
+<label class="cntl">Вопросов: <input type="number" id="cnt" min="1" step="1" inputmode="numeric" placeholder="все"></label>
+<button class="btn pri" id="start">Начать</button>
+</div>
+<div class="bar" id="chips"><span class="muted">Быстрый выбор:</span><button class="chip" data-c="5">5</button><button class="chip" data-c="10">10</button><button class="chip" data-c="20">20</button><button class="chip" data-c="30">30</button><button class="chip" data-c="">Все</button><span class="muted" id="avail"></span></div>
+<p class="lead">Варианты ответов похожи и отличаются деталями. В вопросах «выберите все верные» засчитывается только точный выбор. Варианты перемешиваются при каждом запуске.</p>
+<div class="score" id="score" hidden></div>
+<div id="qs"></div>
+<div class="resf" id="final"></div>
+</section>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+ document.querySelectorAll('main>section').forEach(function(s){s.hidden=s.id!==t.dataset.t})}});
+var GN={2:'II',3:'III',4:'IV',5:'V'};
+function esc2(x){return String(x).replace(/'/g,'&#39;').replace(/</g,'&lt;')}
+function I(k,h,p,c){return '<input type="text" class="u '+(c||'')+'" data-k="'+k+'" data-h="'+esc2(h)+'" placeholder="'+(p||'')+'">'}
+function DT(k,h){return '<input type="date" class="u" data-k="'+k+'d" data-h="'+esc2(h)+'"><input type="time" class="u s" data-k="'+k+'t" data-h="'+esc2(h)+'">'}
+function GS(k,h){return '<select class="u s" data-k="'+k+'" data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>'}
+function SG(k,h){return '<button type="button" class="sig" data-k="'+k+'" data-h="'+esc2(h)+'">подпись</button>'}
+function SEL(k,opts,h){return '<select class="u" data-k="'+k+'" data-h="'+esc2(h)+'">'+opts.map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>'}
+function cell(c,h){var t=c[0];
+ if(t==='t')return '<textarea class="u" rows="2" data-c data-h="'+esc2(h)+'"></textarea>';
+ if(t==='n')return '<input type="number" step="0.1" min="0" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='g')return '<select class="u" data-c data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>';
+ if(t==='dt')return '<input type="datetime-local" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='s')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">подпись</button>';
+ if(t==='ss')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">провёл</button><br><button type="button" class="sig" data-c data-h="'+esc2(h)+'" style="margin-top:4px">получил</button>';
+ if(t==='sel')return '<select class="u" data-c data-h="'+esc2(h)+'">'+c[1].map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>';
+ return ''}
+function TBL(n,head,cols,hint,hh){
+ var th='<tr>'+head.map(function(x){return '<th>'+x+'</th>'}).join('')+'<th></th></tr>';
+ return '<div class="tw"><table data-n="'+n+'" data-cols=\''+esc2(JSON.stringify(cols))+'\' data-h="'+esc2(hint)+'"'+(hh?' data-hh=\''+esc2(JSON.stringify(hh))+'\'':'')+'><thead>'+th+'</thead><tbody></tbody></table></div><button type="button" class="add" data-add="'+n+'">+ строка</button>'}
+var P=$('paper');
+function setEl(e,v){if(!e)return;
+ if(e.classList.contains('sig')){if(!e.dataset.o)e.dataset.o=e.textContent;e.classList.toggle('on',!!v);e.textContent=v?'подписано':e.dataset.o}
+ else if(e.type==='checkbox')e.checked=!!v;else e.value=v==null?'':v}
+function addRow(t,vals){var cols=JSON.parse(t.dataset.cols.replace(/&#39;/g,"'")),h=t.dataset.h,hh=t.dataset.hh?JSON.parse(t.dataset.hh):null,tr=document.createElement('tr');
+ tr.innerHTML=cols.map(function(c,j){return '<td>'+cell(c,(hh&&hh[j])||h)+'</td>'}).join('')+'<td><button type="button" class="rm" title="Удалить строку">×</button></td>';
+ t.querySelector('tbody').appendChild(tr);
+ tr.querySelectorAll('.sig').forEach(function(b){b.dataset.o=b.textContent});
+ if(vals){var cs=tr.querySelectorAll('[data-c]');vals.forEach(function(v,i){setEl(cs[i],v)})}}
+function tbl(n){return P.querySelector('table[data-n="'+n+'"]')}
+function setTable(n,rows){var t=tbl(n);t.querySelector('tbody').innerHTML='';(rows&&rows.length?rows:[null]).forEach(function(r){addRow(t,r)})}
+P.addEventListener('click',function(e){var t=e.target;
+ if(t.dataset&&t.dataset.add){addRow(tbl(t.dataset.add));return}
+ if(t.classList.contains('rm')){var tb=t.closest('tbody');if(tb.children.length>1)t.closest('tr').remove();else t.closest('tr').querySelectorAll('[data-c]').forEach(function(x){setEl(x,'')});return}
+ if(t.classList.contains('sig')){var on=!t.classList.contains('on');if(!t.dataset.o)t.dataset.o=t.textContent;t.classList.toggle('on',on);t.textContent=on?'подписано':t.dataset.o}});
+var hint=$('hint');
+P.addEventListener('focusin',function(e){var h=e.target.dataset&&e.target.dataset.h;if(!h)return;var a=h.split('|');hint.hidden=false;hint.innerHTML='<b>Что писать'+(a[1]?' · '+a[1]:'')+'</b>'+a[0]});
+function K(k){return P.querySelector('[data-k="'+k+'"]')}
+function v(k){var e=K(k);return e?e.value.trim():''}
+function ck(k){var e=K(k);return !!(e&&e.checked)}
+function sg(k){var e=K(k);return !!(e&&e.classList.contains('on'))}
+function rows(n){return [].map.call(tbl(n).querySelectorAll('tbody tr'),function(tr){return [].map.call(tr.querySelectorAll('[data-c]'),function(e){return e.classList.contains('sig')?e.classList.contains('on'):e.value.trim()})})}
+function setK(k,x){var e=K(k);if(e)setEl(e,x)}
+function dstr(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function dts(n,t){return dstr(n)+'T'+t}
+function PG(x){var m=(x||'').match(/(?:^|[\s,.])(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/);return {g:m?{II:2,III:3,IV:4,V:5}[m[1]]:0,n:(x||'').replace(/[,\s]*(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/,'').trim()}}
+function MEM(x){return (x||'').split(';').map(function(s){return s.trim()}).filter(Boolean).map(PG)}
+function Hl(n,t){return '<span class="hl">'+t+'<sup>'+n+'</sup></span>'}
+function Sg(t){return '<span class="sgn">'+t+'</span>'}
+function Ln(l,v){return '<div class="ln"><span>'+l+'</span><span class="val">'+v+'</span></div>'}
+function Tb(head,rows){return '<div class="tw"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>'}
+function exBlock(e){if(!e)return '';
+ if(e.none)return '<div class="exh">Как это выглядит в бланке</div><div class="nofill">'+e.none+'</div>';
+ var h='<div class="exh">Как это заполняется (пример)</div><div class="paper mini"><p class="side">'+e.side+'</p>'+e.html+'</div><ol class="legend">'+e.legend.map(function(t,k){return '<li><b>'+(k+1)+'</b><span>'+t+'</span></li>'}).join('')+'</ol>';
+ if(e.note)h+='<div class="nofill">'+e.note+'</div>';return h}
+function renderSteps(S,EX,box){var sl=$(box);S.forEach(function(s,i){var d=document.createElement('details');
+ d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div>'+exBlock(EX[i])+'<button class="closeb" type="button">▲ Свернуть</button></div>';sl.appendChild(d)})}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'})}});
+function showResult(R,note,out){var bad=R.filter(function(r){return r.ok===false}).length;
+ var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Замечаний: '+bad+'.':'Замечаний нет. Оформлено верно по проверяемым требованиям.')+'</div><ul class="res">';
+ R.forEach(function(r){if(r.h){h+='</ul><div class="sh">'+r.h+'</div><ul class="res">';return}
+  h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
+ h+='</ul><div class="note">'+note+'</div>';var o=$(out||'out');o.innerHTML=h;o.scrollIntoView({behavior:'smooth',block:'start'})}
+/* ===== тест ===== */
+var KIND={s:'Один верный ответ',m:'Несколько верных ответов',x:'Сопоставление'};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var total,done,right;
+function qupd(){$('score').textContent='Отвечено: '+done+' из '+total+'. Верно: '+right;if(done===total)$('final').textContent='Итог: '+right+' из '+total+' ('+Math.round(100*right/total)+' %)'}
+function qfinish(box,ok,q){box.classList.add('done');done++;if(ok)right++;
+ var e=box.querySelector('.exp');e.innerHTML='<div class="verdict '+(ok?'v-ok':'v-bad')+'">'+(ok?'Верно.':'Неверно.')+'</div>'+q.e;qupd()}
+function filt(){var tp=+$('topic').value,kd=$('kind').value;return Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)})}
+function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='Доступно по выбранным условиям: '+n;var vv=c.value;document.querySelectorAll('#chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.c===vv)})}
+function buildQuiz(){
+ var cn=Math.max(0,Math.floor(+$('cnt').value)||0);var L=filt();L=cn&&cn<L.length?shuf(L).slice(0,cn):shuf(L);
+ var box=$('qs');box.innerHTML='';$('final').textContent='';total=L.length;done=0;right=0;$('score').hidden=false;
+ if(!L.length){$('score').textContent='По выбранным условиям вопросов нет.';return}
+ L.forEach(function(q,i){var d=document.createElement('div');d.className='q';
+  d.innerHTML='<div class="meta">Вопрос '+(i+1)+' · '+KIND[q.t]+'</div><p class="t"></p>';d.querySelector('.t').textContent=q.q;
+  var o=document.createElement('div');o.className='opts';d.appendChild(o);var ex=document.createElement('div');ex.className='exp';
+  if(q.t==='s'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var b=document.createElement('button');b.className='opt';b.textContent=q.o[k];b.dataset.k=k;
+    b.onclick=function(){if(d.classList.contains('done'))return;[].forEach.call(o.children,function(x){if(+x.dataset.k===q.a)x.classList.add('ok')});if(k!==q.a)b.classList.add('bad');qfinish(d,k===q.a,q)};o.appendChild(b)});d.appendChild(ex)}
+  if(q.t==='m'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var l=document.createElement('label');l.className='opt';l.dataset.k=k;l.innerHTML='<input type="checkbox"><span></span>';l.querySelector('span').textContent=q.o[k];o.appendChild(l)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(l){var k=+l.dataset.k,on=l.querySelector('input').checked,should=q.a.indexOf(k)>=0;l.querySelector('input').disabled=true;
+     if(should&&on)l.classList.add('ok');else if(should&&!on){l.classList.add('miss');ok=false}else if(!should&&on){l.classList.add('bad');ok=false}});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  if(q.t==='x'){var ro=shuf(q.r.map(function(t,k){return k}));q.l.forEach(function(lt){var r=document.createElement('div');r.className='mrow';r.innerHTML='<span></span><select><option value="">выберите</option></select>';r.firstChild.textContent=lt;var s=r.lastChild;ro.forEach(function(k){var op=document.createElement('option');op.value=k;op.textContent=q.r[k];s.appendChild(op)});o.appendChild(r)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(r,li){var s=r.querySelector('select'),good=s.value!==''&&q.r[+s.value]===q.r[q.a[li]];r.classList.add(good?'ok':'bad');if(!good){ok=false;r.querySelector('span').textContent=q.l[li]+' → верно: '+q.r[q.a[li]]}s.disabled=true});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  box.appendChild(d)});qupd();$('score').scrollIntoView({block:'start'})}
+function initQuiz(TOPICS){var sel=$('topic');TOPICS.forEach(function(t){var o=document.createElement('option');o.value=t[0];o.textContent=t[0]+'. '+t[1];sel.appendChild(o)});
+ document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
+ ['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();$('start').onclick=buildQuiz}
+
+/* ===== подбор ===== */
+var WORKS=[
+['Неотложная работа (угроза травмы или нарушения работы оборудования, устройств, энергоснабжения)','u'],
+['Работа на электродвигателе: кабель отсоединён, концы замкнуты накоротко и заземлены','o','До 1000 В по распоряжению допускаются все работы, кроме сборных шин и присоединений, по которым не исключена подача напряжения на сборные шины.','o','Прямо названа среди работ по распоряжению выше 1000 В.','7.8, 7.9'],
+['Работа на генераторе: от выводов отсоединены шины и кабели','o','Общее правило до 1000 В — п. 7.9 (кроме сборных шин и присоединений с подачей напряжения на шины).','o','Прямо названа среди работ по распоряжению выше 1000 В.','7.8, 7.9'],
+['Работа в РУ на выкаченных тележках КРУ, шторки отсеков заперты на замок','o','До 1000 В — по общему правилу п. 7.9, если подача напряжения на сборные шины исключена.','o','Прямо названа среди работ по распоряжению выше 1000 В.','7.8, 7.9'],
+['Работа на нетоковедущих частях без снятия напряжения и без установки временных ограждений','o','Допускается по распоряжению.','o','Прямо названа среди работ по распоряжению выше 1000 В.','7.8, 7.9'],
+['Работа на сборных шинах РУ или на присоединении, по которому не исключена подача напряжения на шины','n','По распоряжению до 1000 В такие работы не допускаются.','n','Выше 1000 В по распоряжению допускаются только работы, перечисленные в п. 7.8; остальное — по наряду-допуску.','7.8, 7.9'],
+['Работа на ВЛ до 1000 В с использованием подъёмных сооружений и механизмов','n','Прямо исключена из работ по распоряжению до 1000 В.','n','Выше 1000 В по распоряжению допускаются только работы, перечисленные в п. 7.8 и п. 7.14; остальное — по наряду-допуску.','7.8, 7.9, 7.14'],
+['Обслуживание сети наружного освещения с применением механизмов','o','По распоряжению — при выполнении условий п. 38.78.','x','В разделе VII для напряжения выше 1000 В такой случай не назван.','7.9, 38.78'],
+['Монтаж, наладка, ремонт, ТО вторичных систем и устройств связи','o','По распоряжению. Производитель вправе отключать и включать устройства, опробовать защиту и электроавтоматику на отключение и включение выключателей — с разрешения оперативного персонала.','o','По распоряжению. Производитель вправе отключать и включать устройства, опробовать защиту и электроавтоматику на отключение и включение выключателей — с разрешения оперативного персонала.','7.11'],
+['Благоустройство и уборка территории ОРУ, скашивание травы, чистка снега, гербициды, дератизация, дезинсекция','l','По распоряжению или в порядке текущей эксплуатации, если работа включена в перечень (чистка снега, уборка территорий ОРУ названы в п. 8.6).','o','По распоряжению: один работник с III группой.','7.12, 8.6'],
+['Ремонт осветительной проводки и арматуры, связи вне камер РУ на высоте не более 2,5 м','l','По распоряжению или в порядке текущей эксплуатации (п. 8.6: высота не более 2,5 м).','o','По распоряжению: один работник с III группой, вне камер РУ, высота не более 2,5 м.','7.12, 8.6'],
+['Ремонт или замена светильников и ламп на высоте более 2,5 м','x','В п. 7.12 и п. 8.6 названа высота не более 2,5 м, поэтому такая работа в эти перечни не входит. Способ оформления определяет выдающий; работы на высоте регулируются отдельными Правилами (приказ № 782н).','x','В п. 7.12 названа высота не более 2,5 м, поэтому такая работа в этот перечень не входит. Способ оформления определяет выдающий; работы на высоте регулируются отдельными Правилами (приказ № 782н).','7.12, 8.6'],
+['Уборка коридоров ЗРУ и электропомещений, токоведущие части ограждены','o','По распоряжению: один работник со II группой. Уборка может быть и в порядке текущей эксплуатации (п. 8.6).','o','По распоряжению: один работник со II группой.','7.13, 8.6'],
+['Уборка в ОРУ','o','По распоряжению: один работник с III группой. Уборка территорий ОРУ может быть и в порядке текущей эксплуатации (п. 8.6).','o','По распоряжению: один работник с III группой.','7.13, 8.6'],
+['Снятие данных и программирование электросчётчиков переносным компьютером','l','По распоряжению или в порядке текущей эксплуатации (снятие и установка счётчиков названы в п. 8.6).','o','По распоряжению: один работник с III группой.','7.12, 8.6'],
+['Скачивание осциллограмм и логов, параметрирование терминалов РЗА, коммутаторов, снятие показаний микропроцессорных счётчиков (переносной компьютер)','o','По распоряжению: один работник с IV группой и правом быть производителем работ.','o','По распоряжению: один работник с IV группой и правом быть производителем работ.','7.17'],
+['Подключение регистраторов качества электроэнергии, осциллографов во вторичные цепи РЗА, снятие векторных диаграмм в цепях учёта','o','По распоряжению: два работника — производитель с IV группой и член бригады не ниже III группы.','o','По распоряжению: два работника — производитель с IV группой и член бригады не ниже III группы.','7.18'],
+['Осмотр ВЛ одним работником со II группой','o','По распоряжению: светлое время суток, благоприятные метеоусловия.','o','По распоряжению: светлое время суток, благоприятные метеоусловия.','7.15'],
+['Работа на ВЛ без снятия напряжения на открытых проводящих частях: подъём до 3 м, без разборки опоры, откапывание стоек до 0,5 м','o','По распоряжению.','o','По распоряжению.','7.14'],
+['Единоличная работа в помещении (не особо опасном и не в особо неблагоприятных условиях)','o','По распоряжению: единолично — работник с III группой и правом производителя работ.','x','Единоличная работа по п. 7.10 относится к электроустановкам до 1000 В.','7.10'],
+['Измерения мегаомметром','l','По распоряжению или по перечню работ в порядке текущей эксплуатации.','n','По наряду-допуску, кроме работ по пп. 7.6, 7.8. Допускается по распоряжению двум работникам из оперативного персонала с группами IV и III при выполнении технических мероприятий со снятием напряжения.','39.28'],
+['Работа под напряжением на токоведущих частях','n','В разделе VII не названа. Выполняется по наряду-допуску на срок не более 1 календарного дня (смены).','n','В разделе VII не названа. Выполняется по наряду-допуску на срок не более 1 календарного дня (смены).','6.3']
+];
+(function(){var s=$('work');WORKS.forEach(function(w,i){var o=document.createElement('option');o.value=i;o.textContent=w[0];s.appendChild(o)});
+ var KN={o:['k-o','По распоряжению'],n:['k-n','По наряду-допуску'],l:['k-l','По распоряжению или в порядке текущей эксплуатации (если включена в перечень)'],x:['k-x','Не названа в перечнях п. 7.12 и п. 8.6']};
+ function show(){var w=WORKS[+s.value],hi=$('wv').value==='hi';$('urgBox').hidden=w[1]!=='u';var k,t,pt;
+  if(w[1]==='u'){var h=+$('uh').value||0,p=+$('up').value||0;
+   if(h>1||p>3){k='n';t='Неотложная работа длительностью более 1 часа без учёта подготовки рабочего места или с участием более трёх работников (включая оперативного, ведущего надзор) выполняется по наряду-допуску.'}
+   else{k='o';t='По распоряжению оперативным или оперативно-ремонтным персоналом либо ремонтным под надзором оперативного. Производитель или наблюдающий из оперативного персонала: '+(hi?'выше 1000 В — IV группа':'до 1000 В — III группа')+'; члены бригады — III группа. Допуск после выполнения технических мероприятий, определяемых выдающим распоряжение.'}
+   pt='7.6, 7.7'}
+  else{k=hi?w[3]:w[1];t=hi?w[4]:w[2];pt=w[5]}
+  $('verdictBox').innerHTML='<span class="kind '+KN[k][0]+'">'+KN[k][1]+'</span><p style="margin:6px 0">'+t+'</p><div class="src">Приказ № 903н, '+pt+'</div>'}
+ s.onchange=show;$('wv').onchange=show;$('uh').oninput=show;$('up').oninput=show;show()})();
+/* ===== журнал ===== */
+var HH=['Номер распоряжения. Номера присваивает организация. При работе по наряду не заполняется.|п. 6.6','Номер наряда-допуска. Заполняется только при допуске по наряду. При работе по распоряжению номер наряда не указывается.|п. 6.6','Место и наименование работы: электроустановка, присоединение, что делается.|приложение № 8','Производитель работ (наблюдающий): фамилия, инициалы, группа. По распоряжению — III группа; при неотложных работах выше 1000 В — IV.|пп. 5.9, 7.7','Члены бригады: фамилия, инициалы, группа. Разделяйте членов бригады точкой с запятой. При неотложных работах — III группа.|пп. 7.7, 5.15','Работник, отдавший распоряжение: фамилия, инициалы, группа. Право отдавать распоряжения — как у выдающего наряд: V группа выше 1000 В, не ниже IV до 1000 В.|пп. 5.4, 7.1','Технические мероприятия по обеспечению безопасности с указанием необходимых отключений и мест установки заземлений. Допуск — только после их выполнения. Если не требуются, напишите «не требуются».|п. 7.7','Подписи работников, проводивших и получивших целевые инструктажи: нажмите «провёл» и «получил».|пп. 7.1, 10.10','К работе приступили: дата и время допуска. Допуск оформляется в журнале (и в оперативном журнале).|пп. 7.5, 6.6, 10.11','Работа закончена: дата и время. Распоряжение действует рабочий день или смену.|п. 7.1'];
+var PAPER='<h3>ЖУРНАЛ</h3><p style="text-align:center;margin:0 0 8px">учёта работ по нарядам-допускам и распоряжениям для работ в электроустановках</p>';
+PAPER+='<div class="ln"><span>Организация</span>'+I('org','Наименование организации.|п. 6.6')+'</div><div class="ln"><span>Подразделение</span>'+I('sub','Структурное подразделение.|п. 6.6')+'</div>';
+PAPER+=TBL('j',['1. Номер распоряжения','2. Номер наряда','3. Место и наименование работы','4. Производитель (наблюдающий)','5. Члены бригады','6. Отдавший распоряжение','7. Технические мероприятия','8. Подписи: инструктаж','9. К работе приступили','10. Работа закончена'],[['t'],['t'],['t'],['t'],['t'],['t'],['t'],['ss'],['dt'],['dt']],'Заполните строку журнала.|приложение № 8',HH);
+PAPER+='<p style="font-size:.8rem;color:#555">Срок хранения журнала — один месяц со дня регистрации полного окончания работы по последнему зарегистрированному в журнале наряду или распоряжению (п. 6.6).</p>';
+$('paper').innerHTML=PAPER;
+function clearAll(){P.querySelectorAll('[data-k]').forEach(function(e){setEl(e,'')});setTable('j');$('volt').value='lo';['urg','nadz','phone','dup','opsub'].forEach(function(i){$(i).checked=false});$('out').innerHTML='';hint.hidden=true}
+function fillGood(){clearAll();setK('org','ООО «Энергосервис»');setK('sub','Электроцех');
+ setTable('j',[['14','','ТП-15, РУ-0,4 кВ, ячейка 3: замена автомата Q3 (подача напряжения на сборные шины исключена)','Петров И. И., III','Сидоров А. А., III','Иванов С. П., IV','Отключить QF3, вывесить «Не включать! Работают люди», проверить отсутствие напряжения, заземлить ячейку 3',true,true,dts(0,'09:00'),dts(0,'11:30')],['','12','ТП-15, панель 2: замена автомата Q3','Петров И. И., III','Сидоров А. А., III; Кузнецов В. В., III; Орлов П. П., II','Иванов С. П., IV','Отключить QF1 и Q3, заземлить шины панели 2',true,true,dts(0,'08:30'),dts(4,'17:10')]])}
+function fillUrg(){clearAll();$('urg').checked=true;$('phone').checked=true;$('dup').checked=true;setK('org','ООО «Энергосервис»');setK('sub','Электроцех');
+ setTable('j',[['15','','Щит собственных нужд: замена предохранителя в цепи питания вентиляции (угроза остановки)','Петров И. И., III','Сидоров А. А., III','Иванов С. П., IV','Отключить автомат питания, проверить отсутствие напряжения, вывесить плакат «Не включать! Работают люди»',true,true,dts(0,'14:10'),dts(0,'14:50')]])}
+function fillBad(){clearAll();$('volt').value='hi';$('urg').checked=true;$('phone').checked=true;$('opsub').checked=true;setK('sub','Электроцех');
+ setTable('j',[['16','','','Петров И. И.','Орлов П. П., II; Зайцев Е. Е., II; Лисин К. К., III; Волков Д. Д., III','Сидоров, III','',false,false,dts(0,'09:00'),dts(2,'09:00')],['17','12','ТП-15: замена автомата','Петров И. И., III','Сидоров А. А., III','Иванов С. П., III','',true,false,dts(0,'09:00'),'']])}
+$('exGood').onclick=fillGood;$('exUrg').onclick=fillUrg;$('exBad').onclick=fillBad;$('exClear').onclick=clearAll;
+function check(){
+ var R=[],hi=$('volt').value==='hi',urg=$('urg').checked,ph=$('phone').checked;
+ function add(ok,t,ref){R.push({ok:ok,t:t,ref:ref})}
+ add(!!(v('org')&&v('sub')),(v('org')&&v('sub'))?'Заполнены организация и подразделение.':'Не заполнены организация или подразделение.','п. 6.6');
+ var rw=rows('j').map(function(r,i){return {i:i+1,r:r}}).filter(function(x){return x.r.some(Boolean)});
+ if(!rw.length){add(false,'В журнале нет записей: допуск к работам по распоряжению и наряду оформляется в журнале.','пп. 7.5, 6.6');return showResult(R,'',  'out')}
+ var anyOrder=false;
+ rw.forEach(function(x){var r=x.r,lab='Строка '+x.i+': ',od=r[0],nr=r[1];
+  R.push({h:'Строка '+x.i+(od?' — распоряжение':nr?' — наряд-допуск':'')});
+  if(!od&&!nr){add(false,'не указан ни номер распоряжения, ни номер наряда.','п. 6.6');return}
+  if(od&&nr){add(false,'указаны и номер распоряжения, и номер наряда. При работах по распоряжению номер наряда не указывается, по наряду — номер распоряжения.','п. 6.6');return}
+  add(!!r[2],r[2]?'указаны место и наименование работы.':'не указаны место и наименование работы.','п. 6.6');
+  add(!!r[9],r[9]?'указаны дата и время допуска («К работе приступили»).':'не указаны дата и время допуска («К работе приступили»).','пп. 7.5, 6.6');
+  var st=r[9],en=r[10],dur=(st&&en)?(new Date(en)-new Date(st))/36e5:null;
+  if(nr){
+   add(en?dur>=0:null,en?(dur>=0?'указаны дата и время полного окончания работы.':'окончание работы раньше допуска.'):'работа не закончена: дату и время полного окончания впишут при закрытии наряда.','п. 6.6');
+   R.push({ok:null,t:'По наряду-допуску в журнале оформляется только первичный допуск: номер наряда, место и наименование, дата и время начала и полного окончания работы. Остальные графы заполняются по порядку организации.',ref:'пп. 6.6, 10.11'});return}
+  anyOrder=true;
+  var pr=PG(r[3]);
+  add(!!r[3]&&pr.g>0,(r[3]&&pr.g>0)?'производитель работ (наблюдающий): '+pr.n+', группа '+GN[pr.g]+'.':'у производителя работ (наблюдающего) не указана фамилия или группа.','пп. 5.9, 7.1');
+  var need=(urg&&hi)?4:3;
+  if(pr.g)add(pr.g>=need,'группа производителя '+GN[pr.g]+'. Требуется не ниже '+GN[need]+(urg?(hi?' (неотложные работы выше 1000 В)':' (неотложные работы до 1000 В)'):' (по распоряжению)')+'.',urg?'п. 7.7':'п. 5.9');
+  var ms=MEM(r[4]);
+  add(ms.length>0&&ms.every(function(m){return m.g>0}),ms.length?(ms.every(function(m){return m.g>0})?'члены бригады указаны с группами: '+ms.length+'.':'у членов бригады должны быть указаны группы.'):'не указаны члены бригады (если работа выполняется единолично, запишите «единолично» и проверьте основание: п. 7.10, 7.12, 7.13, 7.15, 7.17).','пп. 7.1, 5.15');
+  if(urg&&ms.length){add(ms.every(function(m){return m.g>=3}),ms.every(function(m){return m.g>=3})?'члены бригады при неотложных работах — III группа и выше.':'при неотложных работах члены бригады должны иметь группу III.','п. 7.7');
+   var cnt=(pr.g?1:0)+ms.length+($('nadz').checked?1:0);add(cnt<=3,'работников: '+cnt+' (с производителем'+($('nadz').checked?' и оперативным, ведущим надзор':'')+'). Неотложная работа — не более трёх работников, иначе наряд-допуск.','п. 7.6')}
+  else if(ms.length){var g2=ms.filter(function(m){return m.g===2}).length,g3=ms.filter(function(m){return m.g>=3}).length;
+   add(g2<=3&&g2<=g3,'члены бригады: с группой не ниже III — '+g3+', с группой II — '+g2+'. Допускается не более одного II на каждого с группой не ниже III и не более трёх II.','п. 5.15')}
+  var is=PG(r[5]);
+  add(!!r[5]&&is.g>0,(r[5]&&is.g>0)?'отдавший распоряжение: '+is.n+', группа '+GN[is.g]+'.':'у отдавшего распоряжение не указана фамилия или группа.','п. 7.1');
+  if(is.g)add(is.g>=(hi?5:4),'группа отдавшего распоряжение '+GN[is.g]+'. Право выдачи: '+(hi?'V (выше 1000 В)':'не ниже IV (до 1000 В)')+'. При предотвращении и ликвидации аварий — оперативный персонал с IV группой по ОРД.','п. 5.4');
+  add(!!r[6],r[6]?'технические мероприятия записаны. Допуск только после их выполнения.':'не записаны технические мероприятия (если не требуются — «не требуются»). Допуск осуществляется после их выполнения.','п. 7.7');
+  add(!!(r[7]&&r[8]),(r[7]&&r[8])?'целевой инструктаж: есть подписи проводившего и получившего.':'целевой инструктаж: нужны подписи и проводившего, и получившего.','пп. 7.1, 10.10');
+  if(en){if(dur<0)add(false,'окончание работы раньше допуска.','п. 7.1');
+   else{add(dur<=24,'длительность '+(Math.round(dur*10)/10)+' ч. '+(dur<=24?'Распоряжение действует в пределах рабочего дня или смены.':'Распоряжение действует рабочий день или смену. Продолжение работы — новое распоряжение.'),'п. 7.1');
+    if(urg&&dur>1)R.push({ok:null,t:'неотложная работа: не более 1 часа без учёта времени подготовки рабочего места. Если сама работа заняла больше часа — нужен наряд-допуск.',ref:'п. 7.6'})}}
+  else R.push({ok:null,t:'работа не закончена: графу «Работа закончена» заполнят по окончании.',ref:'п. 7.1'})});
+ if(ph&&anyOrder)add($('dup').checked,$('dup').checked?'распоряжение, переданное по телефону или радио, записано в двух журналах с подтверждающими подписями.':'распоряжение, переданное по телефону или радио, должно быть записано в двух журналах: у отдавшего и у получивших, с подтверждающими подписями.','п. 7.1');
+ if($('opsub').checked&&anyOrder)add(false,'если распоряжение отдаёт оперативный работник подчинённому оперативному работнику в смене, записи делаются только в оперативных журналах, а не в этом журнале.','п. 7.16');
+ showResult(R,'Проверка охватывает основные требования главы VII и п. 6.6 к записям в журнале. Особые случаи (единоличные работы по пп. 7.10–7.18, разрешения оперативного персонала) оцениваются по тексту Правил.','out')}
+$('check').onclick=check;clearAll();
+/* ===== этапы ===== */
+var JH=['1. № распоряжения','2. № наряда','3. Место и наименование работы','4. Производитель (наблюдающий)','5. Члены бригады','6. Отдавший распоряжение','7. Технические мероприятия','8. Подписи: инструктаж','9. Приступили','10. Закончена'];
+var S=[
+['Решение: распоряжение, наряд или перечень','Работник, выдающий распоряжение','Определяет, можно ли выполнить работу по распоряжению (пп. 7.6–7.18) или нужен наряд-допуск. Если работа разрешена по распоряжению, он может по своему усмотрению оформить и наряд (п. 7.3).','5.1, 7.3'],
+['Отдача распоряжения и запись в журнале','Работник, выдающий распоряжение','Распоряжение — письменное разовое задание: содержание, место, время, меры безопасности, исполнители с группами. Отдаётся производителю работ и допускающему. Запись в журнале: графы 1 и 3–7.','7.1, 7.2'],
+['Целевой инструктаж','Отдающий распоряжение → производитель или наблюдающий; допускающий → производитель, члены бригады; производитель → члены бригады','Проводятся до допуска. Подписи проводивших и получивших ставятся в журнале (графа 8). Допускается проведение инструктажа отдающим распоряжение по телефону.','10.7, 10.10'],
+['Технические мероприятия и допуск','Допускающий','Допуск осуществляется после выполнения технических мероприятий, которые определяет выдающий распоряжение. Допуск оформляется в журнале (графа 9) и в оперативном журнале. Допуск проводится на рабочем месте; если подготовка рабочего места не нужна, на рабочем месте допускать необязательно.','7.5, 7.7, 10.5, 10.11'],
+['Перерывы в течение дня','Производитель работ','При перерывах в течение одного дня повторный допуск осуществляет производитель работ.','7.1, 13.1'],
+['Окончание работы','Производитель работ, допускающий','Дата и время окончания записываются в журнале (графа 10). Распоряжение действует рабочий день или смену.','7.1, 14.5'],
+['Передача по телефону или радио','Отдающий и получающий распоряжение','Распоряжение фиксируется в двух журналах: у отдавшего и у получивших, с подтверждающими подписями в обоих.','7.1'],
+['Распоряжение оперативному персоналу в смене','Оперативный работник → подчинённый оперативный','Записи о начале, окончании, мероприятиях, характере работы и составе бригады — только в оперативных журналах.','7.16'],
+['Продолжение, изменение условий, изменение состава','Выдающий распоряжение','Распоряжение отдаётся заново: новый номер и новая запись в журнале.','7.1'],
+['Хранение журнала','Организация','Журнал хранится один месяц со дня регистрации полного окончания работы по последнему зарегистрированному в журнале наряду или распоряжению.','6.6']];
+var EX=[
+{none:'Записей в журнале на этом этапе нет. Решение принимает выдающий. Если работа названа в п. 7.8–7.18 и выполняется по распоряжению, дальше идёт запись в журнале.'},
+{side:'Журнал: строка, заполняемая при отдаче распоряжения',html:Tb(JH,[[Hl(1,'14'),'',Hl(2,'ТП-15, РУ-0,4 кВ, ячейка 3: замена автомата Q3'),Hl(3,'Петров И. И., III'),Hl(4,'Сидоров А. А., III'),Hl(5,'Иванов С. П., IV'),Hl(6,'Отключить QF3, плакат «Не включать! Работают люди», проверить отсутствие напряжения, заземлить ячейку 3'),'','','']]),
+ legend:['Номер распоряжения (номер наряда в графе 2 при работах по распоряжению не указывается).','Место и наименование работы.','Производитель работ: фамилия, инициалы и группа (по распоряжению — III).','Члены бригады с группами.','Работник, отдавший распоряжение: фамилия, инициалы и группа (до 1000 В — не ниже IV).','Технические мероприятия, определённые выдающим: отключения, места заземлений.']},
+{side:'Журнал: целевой инструктаж',html:Tb(JH,[['14','','ТП-15, ячейка 3: замена автомата Q3','','','','',Hl(1,Sg('Иванов')+' (провёл)<br>'+Sg('Петров')+' (получил)'),'','']]),
+ legend:['Подписи проводившего и получившего целевой инструктаж. Каждый инструктаж фиксируется подписями обоих.']},
+{side:'Журнал: допуск',html:Tb(JH,[['14','','ТП-15, ячейка 3: замена автомата Q3','','','','',Sg('Иванов')+' / '+Sg('Петров'),Hl(1,'10.11.2026, 09:00'),'']]),
+ legend:['Дата и время допуска («К работе приступили»). Допускается после выполнения технических мероприятий.'],note:'Допуск записывается также в оперативном журнале.'},
+{none:'Записей в журнале не делается. Бригаду удаляют с рабочего места на время перерыва, повторный допуск после перерыва в течение одного дня выполняет производитель работ.'},
+{side:'Журнал: окончание работы',html:Tb(JH,[['14','','ТП-15, ячейка 3: замена автомата Q3','','','','',Sg('Иванов')+' / '+Sg('Петров'),'10.11.2026, 09:00',Hl(1,'10.11.2026, 11:30')]]),
+ legend:['Дата и время окончания работы. После осмотра места работы окончание отражается в журнале и в оперативном журнале.']},
+{side:'Два журнала: распоряжение по телефону',html:'<p class="side" style="margin:0">Журнал работника, отдавшего распоряжение</p>'+Tb(JH,[[Hl(1,'15'),'','Щит СН: замена предохранителя','Петров И. И., III','Сидоров А. А., III','Иванов С. П., IV','Отключить автомат питания',Hl(2,Sg('Иванов')),'14:10','14:50']])+'<p class="side" style="margin:8px 0 0">Журнал работников, получивших распоряжение</p>'+Tb(JH,[[Hl(1,'15'),'','Щит СН: замена предохранителя','Петров И. И., III','Сидоров А. А., III','Иванов С. П., IV','Отключить автомат питания',Hl(2,Sg('Петров')),'14:10','14:50']]),
+ legend:['Одно и то же распоряжение записано в обоих журналах.','В каждом журнале — подтверждающая подпись.']},
+{none:'В журнал учёта работ по нарядам и распоряжениям такие записи не вносятся. Начало, окончание, мероприятия, характер работы и состав бригады записываются только в оперативных журналах.'},
+{side:'Журнал: две записи подряд',html:Tb(JH,[['14','','ТП-15, ячейка 3: замена автомата Q3','Петров И. И., III','Сидоров А. А., III','Иванов С. П., IV','…','✓','10.11.2026, 09:00','10.11.2026, 11:30'],[Hl(1,'16'),'',Hl(2,'ТП-15, ячейка 3: продолжение работы'),Hl(3,'Петров И. И., III'),Hl(4,'Сидоров А. А., III; Новиков Р. Р., III'),'Иванов С. П., IV','…','','',''] ]),
+ legend:['Новый номер: продолжение работы — новое распоряжение.','Условия работы изменились — снова записываются место и содержание.','Производитель работ.','Состав бригады изменён — тоже новое распоряжение.']},
+{none:'Журнал хранится один месяц со дня регистрации полного окончания работы по последнему зарегистрированному в нём наряду или распоряжению. Допускается вести учёт в электронной форме с подписью или иным способом при сохранении состава сведений.'}];
+renderSteps(S,EX,'stepList');
+
+var Q=[
+{t:'s',n:1,q:'Что такое распоряжение по п. 7.1?',o:['Письменное разовое задание на производство работы: содержание, место, время, меры безопасности, исполнители с группами','Письменное задание на срок до 15 календарных дней','Устное указание начальника смены без записи','Документ, разрешающий работы без допуска бригады'],a:0,e:'Распоряжение имеет разовый характер, срок действия — рабочий день или смена исполнителей (п. 7.1).'},
+{t:'s',n:1,q:'Каков срок действия распоряжения (п. 7.1)?',o:['Определяется продолжительностью рабочего дня или смены исполнителей','15 календарных дней','Не более 3 суток','До окончания работы'],a:0,e:'При необходимости продолжения работы распоряжение отдаётся заново.'},
+{t:'m',n:1,q:'В каких случаях распоряжение должно отдаваться заново (п. 7.1)? Выберите все верные варианты.',o:['При необходимости продолжения работы','При изменении условий работы','При изменении состава бригады','При перерыве на обед в течение дня','При переходе бригады к следующей смене без изменений'],a:[0,1,2],e:'При перерывах в течение одного дня повторный допуск осуществляется производителем работ.'},
+{t:'s',n:1,q:'Кому отдаётся распоряжение (п. 7.2)?',o:['Производителю работ и допускающему','Только допускающему','Только производителю работ','Всем членам бригады'],a:0,e:'В электроустановках без местного оперативного персонала, если допуск на рабочем месте не требуется, — непосредственно работнику, выполняющему работу.'},
+{t:'s',n:1,q:'Как фиксируется распоряжение, переданное по телефону или радио (п. 7.1)?',o:['В двух журналах: у отдавшего и у получивших, с подтверждающими подписями в обоих','В одном журнале отдавшего','В оперативном журнале без подписей','В наряде-допуске'],a:0,e:'Журнал учёта работ по нарядам-допускам и распоряжениям, образец — приложение № 8.'},
+{t:'s',n:1,q:'Может ли выдающий оформить наряд-допуск на работу, разрешённую по распоряжению (п. 7.3)?',o:['Да, по своему усмотрению','Нет, работа должна выполняться только по распоряжению','Только с разрешения Ростехнадзора','Только при работах под напряжением'],a:0,e:'П. 7.3.'},
+{t:'s',n:1,q:'Допускается ли выдавать одно распоряжение для работы поочерёдно на нескольких электроустановках (п. 7.4)?',o:['Допускается','Не допускается','Только на одной подстанции','Только при работах выше 1000 В'],a:0,e:'Распоряжение допускается выдавать на несколько электроустановок (присоединений) поочерёдно.'},
+{t:'s',n:1,q:'Где оформляется допуск к работам по распоряжению (п. 7.5)?',o:['В журнале учёта работ по нарядам-допускам и распоряжениям','Только в оперативном журнале','В акте приёмки','В журнале дефектов'],a:0,e:'Запись о допуске делается также в оперативном журнале (п. 10.11).'},
+{t:'s',n:1,q:'Куда записываются начало, окончание, мероприятия и состав бригады, если оперативный работник отдаёт распоряжение подчинённому оперативному работнику в смене (п. 7.16)?',o:['Только в оперативные журналы','В журнал учёта работ по нарядам и распоряжениям','В наряд-допуск','В журнал инструктажей'],a:0,e:'П. 7.16.'},
+{t:'s',n:2,q:'Какие неотложные работы можно выполнять по распоряжению (п. 7.6)?',o:['Работы не более 1 часа без учёта подготовки рабочего места, не более трёх работников','Работы не более 2 часов без учёта подготовки, не более трёх работников','Работы не более 1 часа с учётом подготовки, не более пяти работников','Любые работы, если они срочные'],a:0,e:'Если требуется более 1 часа или участие более трёх работников — наряд-допуск.'},
+{t:'m',n:2,q:'Что относится к неотложным работам (п. 7.6)? Выберите все верные варианты.',o:['Работы, выполняемые безотлагательно для предотвращения воздействия на человека опасного производственного фактора, который приведёт к травме или внезапному ухудшению здоровья','Работы по устранению неисправностей и повреждений, угрожающих нарушением нормальной работы оборудования, сооружений, устройств ТАИ, СДТУ, электро- и теплоснабжения потребителей','Плановый ремонт оборудования','Запланированная замена светильников'],a:[0,1],e:'Продолжительность не более 1 часа без учёта времени на подготовку рабочего места.'},
+{t:'s',n:2,q:'Какую группу должен иметь производитель или наблюдающий из оперативного персонала при неотложных работах выше 1000 В и до 1000 В (п. 7.7)?',o:['Выше 1000 В — IV, до 1000 В — III','Выше 1000 В — V, до 1000 В — IV','Выше 1000 В — III, до 1000 В — II','III в обоих случаях'],a:0,e:'Члены бригады при неотложных работах — III группа.'},
+{t:'s',n:2,q:'Когда осуществляется допуск при неотложных работах (п. 7.7)?',o:['После выполнения технических мероприятий по подготовке рабочего места, определяемых выдающим распоряжение','До выполнения технических мероприятий','Без допуска','После окончания работы'],a:0,e:'П. 7.7.'},
+{t:'s',n:2,q:'Неотложная работа заняла 1,5 часа без учёта подготовки рабочего места. Чем она оформляется (п. 7.6)?',o:['Нарядом-допуском','Распоряжением','Перечнем текущей эксплуатации','Без оформления'],a:0,e:'Более 1 часа или более трёх работников — наряд-допуск.'},
+{t:'s',n:2,q:'В неотложной работе участвуют производитель, два члена бригады и оперативный работник, ведущий надзор. Как оформляется работа (п. 7.6)?',o:['Нарядом-допуском: работников четверо, больше трёх','Распоряжением: надзор не считается','Распоряжением: работников трое без производителя','Перечнем текущей эксплуатации'],a:0,e:'В число работников включается оперативный работник, осуществляющий надзор.'},
+{t:'m',n:3,q:'Какие работы допускаются по распоряжению в электроустановках выше 1000 В (п. 7.8)? Выберите все верные варианты.',o:['На электродвигателе с отсоединённым, замкнутым накоротко и заземлённым кабелем','На генераторе с отсоединёнными шинами и кабелями','В РУ на выкаченных тележках КРУ при запертых на замок шторках','На нетоковедущих частях без снятия напряжения и установки временных ограждений','На сборных шинах РУ при снятом напряжении','На электродвигателе с отсоединённым кабелем без закорачивания'],a:[0,1,2,3],e:'Остальные работы выше 1000 В — по наряду-допуску.'},
+{t:'s',n:3,q:'Что не допускается выполнять по распоряжению в электроустановках до 1000 В (п. 7.9)?',o:['Работы на сборных шинах РУ и на присоединениях, по которым не исключена подача напряжения на сборные шины, и на ВЛ до 1000 В с подъёмными сооружениями и механизмами','Любые работы на присоединениях','Работы на электродвигателях','Работы на нетоковедущих частях'],a:0,e:'Работы по обслуживанию наружного освещения с механизмами — по распоряжению при условиях п. 38.78.'},
+{t:'s',n:3,q:'Кто вправе работать единолично по распоряжению в электроустановках до 1000 В в помещениях, кроме особо опасных и особо неблагоприятных (п. 7.10)?',o:['Работник с III группой и правом быть производителем работ','Любой работник со II группой','Только работник с IV группой','Любой работник с правом единоличного осмотра'],a:0,e:'П. 7.10.'},
+{t:'s',n:3,q:'Что разрешает п. 7.11 производителю работ при монтаже, наладке, ремонте и ТО вторичных систем и устройств связи по распоряжению?',o:['Отключать и включать устройства и опробовать защиту и электроавтоматику на отключение и включение выключателей с разрешения оперативного персонала','Опробовать защиту без разрешения оперативного персонала','Оперировать любыми коммутационными аппаратами','Работать без оформления распоряжения'],a:0,e:'П. 7.11.'},
+{t:'m',n:3,q:'Что допускается одному работнику с III группой по распоряжению выше 1000 В (п. 7.12)? Выберите все верные варианты.',o:['Уборка и благоустройство территории ОРУ, скашивание травы, чистка снега, гербициды, дератизация, дезинсекция','Ремонт осветительной проводки и арматуры вне камер РУ на высоте не более 2,5 м','Наблюдение за сушкой трансформаторов и маслоочистка','Работы на электродвигателях и механической части вентиляторов и маслонасосов','Ремонт осветительной проводки в камерах РУ','Замена изоляторов в камере РУ'],a:[0,1,2,3],e:'Также программирование и снятие данных со счётчиков переносным компьютером.'},
+{t:'s',n:3,q:'Какая группа нужна для единоличной уборки коридоров ЗРУ с ограждёнными токоведущими частями и для уборки в ОРУ (п. 7.13)?',o:['ЗРУ — II группа, ОРУ — III группа','ЗРУ — III группа, ОРУ — IV группа','ЗРУ и ОРУ — II группа','ЗРУ и ОРУ — III группа'],a:0,e:'П. 7.13.'},
+{t:'m',n:3,q:'Какие ограничения установлены для работ на ВЛ по распоряжению на открытых проводящих частях без снятия напряжения (п. 7.14)? Выберите все верные варианты.',o:['Подъём до 3 м от уровня земли до ног работающего','Без разборки конструктивных частей опоры','Откапывание стоек опоры на глубину до 0,5 м','Расчистка трассы при исключении падения деревьев на провода и приближения менее расстояний таблицы № 1','Подъём до 5 м','Откапывание стоек на глубину до 1,5 м'],a:[0,1,2,3],e:'П. 7.14.'},
+{t:'m',n:3,q:'Какие работы на ВЛ может выполнять по распоряжению один работник со II группой (п. 7.15)? Выберите все верные варианты.',o:['Осмотр ВЛ в светлое время суток при благоприятных метеоусловиях','Восстановление постоянных обозначений на опоре','Замер габаритов угломерными приборами','Противопожарную очистку площадок и окраску бандажей','Замену проводов','Работы на высоте выше 3 м'],a:[0,1,2,3],e:'П. 7.15.'},
+{t:'s',n:3,q:'Какие работы разрешены одному работнику с IV группой и правом производителя работ с переносным компьютером (п. 7.17)?',o:['Скачивание осциллограмм и логов, параметрирование терминалов РЗА, коммутаторов, снятие показаний микропроцессорных счётчиков','Подключение регистраторов качества электроэнергии','Работы на сборных шинах','Замена трансформаторов тока'],a:0,e:'Подключение регистраторов и осциллографов — п. 7.18, двумя работниками.'},
+{t:'s',n:3,q:'Кто выполняет подключение регистраторов качества электроэнергии, осциллографов во вторичные цепи РЗА и снятие векторных диаграмм по распоряжению (п. 7.18)?',o:['Два работника: производитель с IV группой и член бригады не ниже III','Один работник с IV группой','Два работника с III группой','Три работника с III группой'],a:0,e:'П. 7.18.'},
+{t:'x',n:3,q:'Сопоставьте работу и группу работника (по распоряжению).',l:['Уборка коридоров ЗРУ с ограждёнными токоведущими частями','Уборка в ОРУ','Осмотр ВЛ одним работником','Скачивание осциллограмм с терминалов РЗА'],r:['II','III','IV','V'],a:[0,1,0,2],e:'Пп. 7.13, 7.15, 7.17.'},
+{t:'s',n:4,q:'Сколько граф в рекомендуемом образце журнала учёта работ по нарядам-допускам и распоряжениям (приложение № 8)?',o:['10','8','12','6'],a:0,e:'Номер распоряжения, номер наряда, место и наименование, производитель, члены бригады, отдавший распоряжение, технические мероприятия, подписи инструктажей, приступили, закончена.'},
+{t:'x',n:4,q:'Сопоставьте графу журнала и её содержание.',l:['Графа 1','Графа 2','Графа 6','Графа 7','Графа 8','Графа 9'],r:['Номер распоряжения','Номер наряда','Работник, отдавший распоряжение','Технические мероприятия, отключения, места заземлений','Подписи проводивших и получивших целевые инструктажи','К работе приступили (дата, время)','Работа закончена (дата, время)'],a:[0,1,2,3,4,5],e:'Графа 3 — место и наименование работы, 4 — производитель (наблюдающий), 5 — члены бригады, 10 — работа закончена.'},
+{t:'s',n:4,q:'Что указывается в журнале при допуске по наряду-допуску (п. 6.6)?',o:['Номер наряда-допуска, место и наименование работы, дата и время начала и полного окончания работы; оформляется только первичный допуск','Номер распоряжения и все ежедневные допуски','Только дата полного окончания','Только номер наряда'],a:0,e:'При работах по распоряжению номер наряда-допуска не указывается.'},
+{t:'s',n:4,q:'Чем оформляются целевые инструктажи по распоряжению (п. 10.10)?',o:['Подписями проводивших и получивших в журнале учёта работ по нарядам-допускам и распоряжениям','Подписями в наряде-допуске','Записью в оперативном журнале без подписей','Отдельным протоколом'],a:0,e:'При передаче по телефону — в двух журналах с подтверждающими подписями.'},
+{t:'s',n:4,q:'Как долго хранится журнал учёта работ (п. 6.6)?',o:['Один месяц со дня регистрации полного окончания работы по последнему зарегистрированному в журнале наряду или распоряжению','Один год','Три месяца','Постоянно'],a:0,e:'Допускается вести журнал в электронной форме с применением электронной подписи или иным способом при сохранении состава сведений.'},
+{t:'s',n:4,q:'Что должно быть зарегистрировано записью в оперативном журнале независимо от порядка учёта (п. 6.6)?',o:['Факт допуска к работе (по нарядам — первичные и ежедневные допуски)','Только окончание работ','Только перерывы в работе','Только технические мероприятия'],a:0,e:'При работах по нарядам-допускам в журнале учёта оформляется только первичный допуск.'}
+];
+initQuiz([[1,'Общие правила распоряжения (пп. 7.1–7.5, 7.16)'],[2,'Неотложные работы (пп. 7.6–7.7)'],[3,'Что допускается по распоряжению (пп. 7.8–7.18)'],[4,'Журнал учёта работ (приложение № 8, п. 6.6)']]);
+</script>
+<style>
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line,#ccc);background:var(--chip,var(--surface2,#eee));color:var(--fg,var(--ink,#111));border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#floatClose{position:fixed;right:14px;bottom:14px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:#1a5fb4;color:#fff;font:600 15px/1 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+#floatClose[hidden]{display:none}
+</style>
+<div id="pageVersion" style="text-align:center;font:12px system-ui,sans-serif;color:#888;padding:18px 0 70px">Версия страницы: 09.11.2026, со сворачиванием</div>
+<button id="floatClose" type="button" hidden>▲ Свернуть открытое</button>
+<script>
+(function(){
+ var fb=document.getElementById('floatClose');
+ function opened(){return [].slice.call(document.querySelectorAll('details[open]'))}
+ function upd(){fb.hidden=!opened().length}
+ document.querySelectorAll('details').forEach(function(d){
+  if(!d.querySelector(':scope>.closeb,:scope>.in>.closeb')){var b=document.createElement('button');b.type='button';b.className='closeb';b.textContent='▲ Свернуть';d.appendChild(b)}
+  d.addEventListener('toggle',upd)});
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'});upd()}});
+ fb.addEventListener('click',function(){var h=window.innerHeight,list=opened(),vis=list.filter(function(d){var r=d.getBoundingClientRect();return r.bottom>0&&r.top<h});
+  if(!vis.length)vis=list.slice(-1);
+  vis.forEach(function(d){d.open=false});
+  if(vis[0])vis[0].scrollIntoView({block:'nearest'});upd()});
+ upd();
+})();
+</script>
+</body>
+</html>

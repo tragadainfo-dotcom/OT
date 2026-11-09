@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Работы в порядке текущей эксплуатации</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#1a5fb4;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#6aa7f5;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 20px}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+button,select,input,textarea{font:inherit;color:var(--fg)}
+button{cursor:pointer}
+.tab{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 14px}
+.tab[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.grid .card{margin:0}
+.muted{color:var(--muted)}
+.src{font-size:.8rem;color:var(--muted)}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 8px;font-size:.8rem;margin:2px 4px 2px 0}
+.note{font-size:.85rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+.paper.mini{margin:8px 0;padding:14px 14px;font-size:14px;box-shadow:none}
+.paper.mini .side{margin:0 0 8px}
+.paper .ln>.val{flex:1;min-width:120px;border-bottom:1px solid #444;padding:0 4px;white-space:normal}
+.hl{background:#fff1a0;border-radius:3px;padding:0 3px;position:relative}
+.hl sup{font:700 .65rem system-ui,sans-serif;color:#fff;background:#c4262e;border-radius:999px;padding:0 5px;margin-left:2px}
+.sgn{font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic;color:#1a3a8a}
+.exh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 4px}
+ol.legend{margin:6px 0 0;padding-left:0;list-style:none;font-size:.9rem}
+ol.legend li{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
+ol.legend li b{flex:none;background:#c4262e;color:#fff;border-radius:999px;font-size:.7rem;min-width:20px;height:20px;line-height:20px;text-align:center;margin-top:2px}
+.nofill{background:var(--chip);border-radius:8px;padding:10px 12px;font-size:.9rem;color:var(--muted);margin-top:10px}
+ul.resp{margin:4px 0 8px;padding-left:20px}ul.resp li{margin:3px 0}
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+details .in{padding:0 14px 14px}
+details .in p{margin:6px 0}
+.num{display:inline-block;min-width:26px;height:26px;line-height:26px;border-radius:50%;background:var(--accent);color:#fff;text-align:center;font-size:.85rem;margin-right:8px}
+/* форма */
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+label{display:block;font-size:.88rem;color:var(--muted)}
+label.chk{display:flex;gap:8px;align-items:flex-start;color:var(--fg);font-size:.92rem}
+select,input[type=text],input[type=date],textarea{width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px}
+.full{grid-column:1/-1}
+.row{display:grid;grid-template-columns:1fr 90px 40px;gap:8px;margin-bottom:6px}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:8px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.res{list-style:none;padding:0;margin:0}
+.res li{padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:.92rem}
+.res li.ok{background:var(--okbg)}
+.res li.bad{background:var(--badbg)}
+.res li.info{background:var(--chip)}
+.verdict{font-weight:700;margin:10px 0}
+.sh{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px}
+/* порядок и тест */
+.ord{display:grid;gap:8px}
+.ord button{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.ord button.used{opacity:.45}
+.ordres{margin-top:10px}
+.pick li{padding:6px 10px;background:var(--okbg);border-radius:8px;margin-bottom:4px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q p{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.exp{margin-top:10px;font-size:.9rem;color:var(--muted);display:none}
+.q.done .exp{display:block}
+.score{font-weight:700;font-size:1.1rem;margin:14px 0}
+
+/* бланк */
+.paper{background:#fff;color:#111;font-family:"Times New Roman",Times,serif;font-size:15px;line-height:1.5;border:1px solid #888;box-shadow:0 2px 10px rgba(0,0,0,.2);padding:22px 20px;margin:12px 0;border-radius:2px}
+.paper h3{text-align:center;margin:6px 0;font-size:1.15rem;letter-spacing:.03em}
+.paper h4{text-align:center;margin:18px 0 6px;font-size:1rem}
+.paper .side{text-align:center;font-style:italic;color:#555;margin:0 0 10px}
+.paper hr{border:0;border-top:2px dashed #999;margin:26px 0}
+.paper input.u,.paper select.u,.paper textarea.u{border:0;border-bottom:1px solid #444;border-radius:0;background:#f3f7ff;color:#111;padding:2px 4px;font:inherit;width:100%}
+.paper input.u:focus,.paper select.u:focus,.paper textarea.u:focus{outline:2px solid #1a5fb4;background:#e6efff}
+.paper .ln{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:6px 0}
+.paper .ln>span{white-space:nowrap}
+.paper .ln .u{flex:1;min-width:120px}
+.paper .ln .u.s{flex:0 0 100px;min-width:100px}
+.paper .ln .u.dt{flex:0 0 150px}
+.paper table{border-collapse:collapse;width:100%;font-size:.88rem;margin:6px 0}
+.paper th,.paper td{border:1px solid #333;padding:3px;vertical-align:top;background:#fff;color:#111}
+.paper th{background:#eee;font-weight:600;text-align:center}
+.paper td input.u,.paper td select.u{border-bottom:0;background:#f3f7ff;min-width:70px}
+.paper .rm{border:0;background:transparent;color:#c4262e;cursor:pointer;font-size:1.1rem;padding:0 4px}
+.paper .add{border:1px dashed #1a5fb4;background:transparent;color:#1a5fb4;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:.85rem;margin:2px 0}
+.paper .sig{border:1px dashed #888;background:#f3f7ff;color:#555;border-radius:6px;padding:2px 8px;cursor:pointer;font:inherit;font-size:.85rem;white-space:nowrap}
+.paper .sig.on{border:1px solid #1d7a46;background:#dff1e6;color:#1d7a46;font-family:"Segoe Script","Brush Script MT",cursive;font-style:italic}
+.paper .tw{overflow-x:auto}
+.hint{position:sticky;bottom:8px;z-index:5;background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 14px;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.35);margin-top:10px}
+.hint b{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.cond{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+[hidden]{display:none!important}
+
+.opt input{margin-top:5px;flex:none}
+.opt.miss{border:2px dashed var(--ok)}
+.mrow{display:grid;grid-template-columns:1fr minmax(120px,40%);gap:8px;align-items:center;margin-bottom:8px}
+.mrow select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px;width:100%}
+.mrow.ok select{border-color:var(--ok);background:var(--okbg)}
+.mrow.bad select{border-color:var(--bad);background:var(--badbg)}
+.v-ok{color:var(--ok)}.v-bad{color:var(--bad)}
+.cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 14px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center}
+.bar select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px;min-width:0}
+.resf{font-size:1.1rem;font-weight:700;margin:14px 0}
+.opt.sel{background:var(--chip)}
+.kind{display:inline-block;border-radius:6px;padding:3px 10px;font-weight:700;font-size:.85rem;margin-bottom:6px}
+.k-o{background:var(--okbg);color:var(--ok)}.k-n{background:var(--badbg);color:var(--bad)}.k-l{background:#dbe8fb;color:#1a4f9c}.k-x{background:var(--chip);color:var(--muted)}
+@media (prefers-color-scheme:dark){.k-l{background:#1c2f4a;color:#8ab8f5}}
+.vbox{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px;background:var(--card)}
+.vbox ul{margin:6px 0 0;padding-left:20px}
+.row2{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.tw table th{font-size:.8rem}
+.paper td textarea.u,.paper td select.u,.paper td input.u{min-width:130px}
+.paper td .sig{min-width:90px}
+.paper label.pk{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Работы в порядке текущей эксплуатации</h1>
+<p class="lead">Что такое работы по перечню, кто его подписывает и утверждает, какие работы в него входят, как оформить перечень и вести учёт. Основа — глава VIII и пп. 3.13, 42.8–42.12 приказа № 903н.</p>
+<div class="note">Пособие сделано по редакции приказа Минтруда № 903н от 01.09.2022. В тексте приказа указан срок действия до 31.12.2025, поэтому перед применением на практике сверьте цифры с действующими Правилами.</div>
+<nav class="tabs" role="tablist" id="tabs"><button class="tab" role="tab" aria-selected="true" data-t="rules">Правила</button><button class="tab" role="tab" aria-selected="false" data-t="pick">Можно ли по перечню</button><button class="tab" role="tab" aria-selected="false" data-t="list">Перечень</button><button class="tab" role="tab" aria-selected="false" data-t="steps">Этапы</button><button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button></nav>
+<section id="rules">
+<div class="grid">
+<div class="card"><h2>Что это такое</h2>
+<p>Небольшие по объёму ремонтные работы и работы по техническому обслуживанию, которые выполняются в течение рабочей смены и разрешены к производству в порядке текущей эксплуатации. Они содержатся в перечне работ.</p><div class="src">п. 8.1</div></div>
+<div class="card"><h2>Кто подписывает и утверждает перечень</h2>
+<ul class="resp"><li><b>Подписывает:</b> технический руководитель или работник из административно-технического персонала, на которого возложена организация безопасного проведения всех видов работ в электроустановках (ответственный за электрохозяйство);</li><li><b>утверждает:</b> руководитель организации или руководитель обособленного подразделения.</li></ul><div class="src">п. 8.1</div></div>
+<div class="card"><h2>Кто и где выполняет</h2>
+<ul class="resp"><li>оперативный или оперативно-ремонтный персонал;</li><li>электроустановки напряжением до 1000 В;</li><li>только на закреплённом за этим персоналом оборудовании (участке);</li><li>либо в электроустановке потребителя до 1000 В по п. 42.8.</li></ul><div class="src">п. 8.1</div></div>
+<div class="card"><h2>Что не требуется</h2>
+<p>Работа из перечня является постоянно разрешённой. Не требуется оформление каких-либо дополнительных указаний, распоряжений, проведения целевого инструктажа.</p><div class="src">п. 8.2</div></div>
+<div class="card"><h2>Что учитывают при составлении перечня</h2>
+<ul class="resp"><li>условия обеспечения безопасности;</li><li>возможность единоличного выполнения конкретных работ;</li><li>квалификацию персонала;</li><li>степень важности электроустановки в целом или её отдельных элементов в технологическом процессе.</li></ul><div class="src">п. 8.3</div></div>
+<div class="card"><h2>Что должно быть в перечне</h2>
+<ul class="resp"><li>виды работ, разрешённые к выполнению единолично и бригадой (п. 8.4);</li><li>порядок учёта работ: уведомление вышестоящего оперативного персонала о месте и характере работы, её начале и окончании (п. 8.5);</li><li>оформление работы записью в оперативном журнале (п. 8.5).</li></ul>
+<p>В инструкциях по охране труда изложены требования охраны труда и порядок выполнения таких работ.</p><div class="src">пп. 8.4, 8.5, 8.6</div></div>
+<div class="card"><h2>Примеры работ до 1000 В (п. 8.6)</h2>
+<ul class="resp"><li>работы в электроустановках с односторонним питанием;</li><li>отсоединение и присоединение кабеля, проводов электродвигателя и отдельных электроприёмников инженерного оборудования зданий и сооружений;</li><li>ремонт автоматов, магнитных пускателей, рубильников, переключателей, УЗО, контакторов, пусковых кнопок — при установке вне щитов и сборок;</li><li>ремонт отдельных электроприёмников инженерного оборудования (электродвигатели, электрокалориферы, вентиляторы, насосы, кондиционеры);</li><li>ремонт отдельных магнитных станций и блоков управления, уход за щёточным аппаратом, смазка подшипников;</li><li>снятие и установка электросчётчиков, других приборов и средств измерений;</li><li>замена предохранителей, ремонт осветительной проводки и арматуры, замена ламп и чистка светильников на высоте не более 2,5 м;</li><li>измерения мегаомметром;</li><li>нанесение маркировки, чистка снега, уборка территорий ОРУ, коридоров ЗРУ и электропомещений (токоведущие части ограждены или недосягаемы с учётом таблицы № 1);</li><li>другие работы на территории организации, в служебных и жилых помещениях, складах, мастерских.</li></ul>
+<p>Перечень не исчерпывающий и дополняется по решению руководителя организации (обособленного подразделения).</p><div class="src">п. 8.6</div></div>
+<div class="card"><h2>Электроустановки потребителей</h2>
+<ul class="resp"><li>п. 42.8: приборы учёта у потребителей до 1000 В с персоналом по совместительству или гражданско-правовому договору — подготовку рабочего места и допуск вправе проводить оперативный персонал энергоснабжающих, энергосбытовых, территориальных электросетевых организаций по утверждённому перечню бригадой из двух работников с группами III и IV в присутствии представителя потребителя;</li><li>п. 42.10: с однофазными счётчиками — единолично оперативный (оперативно-ремонтный) персонал с III группой при снятом напряжении по утверждённому перечню;</li><li>п. 42.11: за работниками закрепляется территориальный участок; в бланках заданий отмечается выполнение технических мероприятий;</li><li>п. 42.12: инструкции или технологические карты по каждому виду работ.</li></ul><div class="src">пп. 42.8–42.12</div></div>
+<div class="card"><h2>Ключи</h2>
+<p>Оперативному или оперативно-ремонтному персоналу при работах в порядке текущей эксплуатации ключи выдаются от помещений, вводных устройств, щитов, щитков, в которых предстоит работать. Выдача и возврат фиксируются в журнале.</p><div class="src">п. 3.13</div></div>
+</div>
+<div class="card"><h2>Чем отличается от наряда и распоряжения</h2>
+<div class="scroll"><table>
+<tr><th></th><th>Наряд-допуск</th><th>Распоряжение</th><th>Перечень текущей эксплуатации</th></tr>
+<tr><td>Срок</td><td>до 15 календарных дней, одно продление до 15</td><td>рабочий день или смена</td><td>постоянно разрешённая работа в течение смены</td></tr>
+<tr><td>Документ</td><td>наряд в 2 экземплярах</td><td>письменное задание, запись в журнале</td><td>перечень, подписан и утверждён</td></tr>
+<tr><td>Целевой инструктаж</td><td>обязателен</td><td>обязателен</td><td>не требуется (п. 8.2)</td></tr>
+<tr><td>Учёт</td><td>журнал и оперативный журнал</td><td>журнал учёта работ</td><td>уведомление вышестоящего оперативного персонала и запись в оперативном журнале (п. 8.5)</td></tr>
+<tr><td>Исполнители</td><td>бригада с ответственными</td><td>производитель и допускающий</td><td>оперативный и оперативно-ремонтный персонал, до 1000 В, закреплённое оборудование</td></tr>
+</table></div></div>
+</section>
+<section id="pick" hidden>
+<div class="card"><h2>Можно ли выполнять эту работу в порядке текущей эксплуатации?</h2>
+<p class="muted">Выберите работу. Подсказка покажет, называется ли она в п. 8.6 и при каких условиях. Решение о включении работы в перечень принимает руководитель, это ориентир по тексту Правил.</p>
+<label>Работа<select id="work"></select></label>
+<div id="verdictBox" class="vbox"></div></div></section>
+<section id="list" hidden>
+<div class="card"><h2>Перечень работ, выполняемых в порядке текущей эксплуатации</h2>
+<p class="muted">Единой формы в Правилах нет: пп. 8.1–8.6 задают, что должен содержать перечень. Здесь он оформлен как документ с подписями. Заполняйте клетки, затем нажмите «Проверить». Когда курсор в клетке, внизу появляется подсказка.</p>
+<div class="btns"><button class="btn" id="exGood">Заполнить образцом</button><button class="btn" id="exBad">Заполнить с ошибками</button><button class="btn" id="exClear">Очистить</button></div>
+<div id="paper" class="paper"></div>
+<div class="btns"><button class="btn pri" id="check">Проверить</button></div>
+<div id="out"></div>
+<div class="hint" id="hint" hidden></div>
+</div></section>
+<section id="steps" hidden>
+<p class="muted">Откройте этап: кто что делает и как это записывается. Примеры записей условные: форма перечня и журналов определяется организацией, в Правилах заданы требования к содержанию.</p>
+<div id="stepList"></div></section>
+<section id="quiz" hidden>
+<div class="bar">
+<select id="topic"><option value="0">Все темы</option></select>
+<select id="kind"><option value="all">Все типы вопросов</option><option value="s">Один верный ответ</option><option value="m">Несколько верных ответов</option><option value="x">Сопоставление</option></select>
+<label class="cntl">Вопросов: <input type="number" id="cnt" min="1" step="1" inputmode="numeric" placeholder="все"></label>
+<button class="btn pri" id="start">Начать</button>
+</div>
+<div class="bar" id="chips"><span class="muted">Быстрый выбор:</span><button class="chip" data-c="5">5</button><button class="chip" data-c="10">10</button><button class="chip" data-c="20">20</button><button class="chip" data-c="30">30</button><button class="chip" data-c="">Все</button><span class="muted" id="avail"></span></div>
+<p class="lead">Варианты ответов похожи и отличаются деталями. В вопросах «выберите все верные» засчитывается только точный выбор. Варианты перемешиваются при каждом запуске.</p>
+<div class="score" id="score" hidden></div>
+<div id="qs"></div>
+<div class="resf" id="final"></div>
+</section>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+ document.querySelectorAll('main>section').forEach(function(s){s.hidden=s.id!==t.dataset.t})}});
+var GN={2:'II',3:'III',4:'IV',5:'V'};
+function esc2(x){return String(x).replace(/'/g,'&#39;').replace(/</g,'&lt;')}
+function I(k,h,p,c){return '<input type="text" class="u '+(c||'')+'" data-k="'+k+'" data-h="'+esc2(h)+'" placeholder="'+(p||'')+'">'}
+function DT(k,h){return '<input type="date" class="u" data-k="'+k+'d" data-h="'+esc2(h)+'"><input type="time" class="u s" data-k="'+k+'t" data-h="'+esc2(h)+'">'}
+function GS(k,h){return '<select class="u s" data-k="'+k+'" data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>'}
+function SG(k,h){return '<button type="button" class="sig" data-k="'+k+'" data-h="'+esc2(h)+'">подпись</button>'}
+function SEL(k,opts,h){return '<select class="u" data-k="'+k+'" data-h="'+esc2(h)+'">'+opts.map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>'}
+function cell(c,h){var t=c[0];
+ if(t==='t')return '<textarea class="u" rows="2" data-c data-h="'+esc2(h)+'"></textarea>';
+ if(t==='n')return '<input type="number" step="0.1" min="0" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='g')return '<select class="u" data-c data-h="'+esc2(h)+'"><option value="">гр.</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option><option value="5">V</option></select>';
+ if(t==='dt')return '<input type="datetime-local" class="u" data-c data-h="'+esc2(h)+'">';
+ if(t==='s')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">подпись</button>';
+ if(t==='ss')return '<button type="button" class="sig" data-c data-h="'+esc2(h)+'">провёл</button><br><button type="button" class="sig" data-c data-h="'+esc2(h)+'" style="margin-top:4px">получил</button>';
+ if(t==='sel')return '<select class="u" data-c data-h="'+esc2(h)+'">'+c[1].map(function(o,i){return '<option value="'+(i?o:'')+'">'+o+'</option>'}).join('')+'</select>';
+ return ''}
+function TBL(n,head,cols,hint,hh){
+ var th='<tr>'+head.map(function(x){return '<th>'+x+'</th>'}).join('')+'<th></th></tr>';
+ return '<div class="tw"><table data-n="'+n+'" data-cols=\''+esc2(JSON.stringify(cols))+'\' data-h="'+esc2(hint)+'"'+(hh?' data-hh=\''+esc2(JSON.stringify(hh))+'\'':'')+'><thead>'+th+'</thead><tbody></tbody></table></div><button type="button" class="add" data-add="'+n+'">+ строка</button>'}
+var P=$('paper');
+function setEl(e,v){if(!e)return;
+ if(e.classList.contains('sig')){if(!e.dataset.o)e.dataset.o=e.textContent;e.classList.toggle('on',!!v);e.textContent=v?'подписано':e.dataset.o}
+ else if(e.type==='checkbox')e.checked=!!v;else e.value=v==null?'':v}
+function addRow(t,vals){var cols=JSON.parse(t.dataset.cols.replace(/&#39;/g,"'")),h=t.dataset.h,hh=t.dataset.hh?JSON.parse(t.dataset.hh):null,tr=document.createElement('tr');
+ tr.innerHTML=cols.map(function(c,j){return '<td>'+cell(c,(hh&&hh[j])||h)+'</td>'}).join('')+'<td><button type="button" class="rm" title="Удалить строку">×</button></td>';
+ t.querySelector('tbody').appendChild(tr);
+ tr.querySelectorAll('.sig').forEach(function(b){b.dataset.o=b.textContent});
+ if(vals){var cs=tr.querySelectorAll('[data-c]');vals.forEach(function(v,i){setEl(cs[i],v)})}}
+function tbl(n){return P.querySelector('table[data-n="'+n+'"]')}
+function setTable(n,rows){var t=tbl(n);t.querySelector('tbody').innerHTML='';(rows&&rows.length?rows:[null]).forEach(function(r){addRow(t,r)})}
+P.addEventListener('click',function(e){var t=e.target;
+ if(t.dataset&&t.dataset.add){addRow(tbl(t.dataset.add));return}
+ if(t.classList.contains('rm')){var tb=t.closest('tbody');if(tb.children.length>1)t.closest('tr').remove();else t.closest('tr').querySelectorAll('[data-c]').forEach(function(x){setEl(x,'')});return}
+ if(t.classList.contains('sig')){var on=!t.classList.contains('on');if(!t.dataset.o)t.dataset.o=t.textContent;t.classList.toggle('on',on);t.textContent=on?'подписано':t.dataset.o}});
+var hint=$('hint');
+P.addEventListener('focusin',function(e){var h=e.target.dataset&&e.target.dataset.h;if(!h)return;var a=h.split('|');hint.hidden=false;hint.innerHTML='<b>Что писать'+(a[1]?' · '+a[1]:'')+'</b>'+a[0]});
+function K(k){return P.querySelector('[data-k="'+k+'"]')}
+function v(k){var e=K(k);return e?e.value.trim():''}
+function ck(k){var e=K(k);return !!(e&&e.checked)}
+function sg(k){var e=K(k);return !!(e&&e.classList.contains('on'))}
+function rows(n){return [].map.call(tbl(n).querySelectorAll('tbody tr'),function(tr){return [].map.call(tr.querySelectorAll('[data-c]'),function(e){return e.classList.contains('sig')?e.classList.contains('on'):e.value.trim()})})}
+function setK(k,x){var e=K(k);if(e)setEl(e,x)}
+function dstr(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function dts(n,t){return dstr(n)+'T'+t}
+function PG(x){var m=(x||'').match(/(?:^|[\s,.])(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/);return {g:m?{II:2,III:3,IV:4,V:5}[m[1]]:0,n:(x||'').replace(/[,\s]*(II|III|IV|V)\s*(?:гр\.?|группа)?\s*$/,'').trim()}}
+function MEM(x){return (x||'').split(';').map(function(s){return s.trim()}).filter(Boolean).map(PG)}
+function Hl(n,t){return '<span class="hl">'+t+'<sup>'+n+'</sup></span>'}
+function Sg(t){return '<span class="sgn">'+t+'</span>'}
+function Ln(l,v){return '<div class="ln"><span>'+l+'</span><span class="val">'+v+'</span></div>'}
+function Tb(head,rows){return '<div class="tw"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>'}
+function exBlock(e){if(!e)return '';
+ if(e.none)return '<div class="exh">Как это выглядит в бланке</div><div class="nofill">'+e.none+'</div>';
+ var h='<div class="exh">Как это заполняется (пример)</div><div class="paper mini"><p class="side">'+e.side+'</p>'+e.html+'</div><ol class="legend">'+e.legend.map(function(t,k){return '<li><b>'+(k+1)+'</b><span>'+t+'</span></li>'}).join('')+'</ol>';
+ if(e.note)h+='<div class="nofill">'+e.note+'</div>';return h}
+function renderSteps(S,EX,box){var sl=$(box);S.forEach(function(s,i){var d=document.createElement('details');
+ d.innerHTML='<summary><span class="num">'+(i+1)+'</span>'+s[0]+'</summary><div class="in"><p><b>Кто:</b> '+s[1]+'</p><p>'+s[2]+'</p><div class="src">Приказ № 903н, '+s[3]+'</div>'+exBlock(EX[i])+'<button class="closeb" type="button">▲ Свернуть</button></div>';sl.appendChild(d)})}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'})}});
+function showResult(R,note,out){var bad=R.filter(function(r){return r.ok===false}).length;
+ var h='<div class="verdict" style="color:'+(bad?'var(--bad)':'var(--ok)')+'">'+(bad?'Замечаний: '+bad+'.':'Замечаний нет. Оформлено верно по проверяемым требованиям.')+'</div><ul class="res">';
+ R.forEach(function(r){if(r.h){h+='</ul><div class="sh">'+r.h+'</div><ul class="res">';return}
+  h+='<li class="'+(r.ok===true?'ok':r.ok===false?'bad':'info')+'">'+(r.ok===true?'✓ ':r.ok===false?'✗ ':'ℹ ')+r.t+' <span class="src">('+r.ref+')</span></li>'});
+ h+='</ul><div class="note">'+note+'</div>';var o=$(out||'out');o.innerHTML=h;o.scrollIntoView({behavior:'smooth',block:'start'})}
+/* ===== тест ===== */
+var KIND={s:'Один верный ответ',m:'Несколько верных ответов',x:'Сопоставление'};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var total,done,right;
+function qupd(){$('score').textContent='Отвечено: '+done+' из '+total+'. Верно: '+right;if(done===total)$('final').textContent='Итог: '+right+' из '+total+' ('+Math.round(100*right/total)+' %)'}
+function qfinish(box,ok,q){box.classList.add('done');done++;if(ok)right++;
+ var e=box.querySelector('.exp');e.innerHTML='<div class="verdict '+(ok?'v-ok':'v-bad')+'">'+(ok?'Верно.':'Неверно.')+'</div>'+q.e;qupd()}
+function filt(){var tp=+$('topic').value,kd=$('kind').value;return Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)})}
+function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='Доступно по выбранным условиям: '+n;var vv=c.value;document.querySelectorAll('#chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.c===vv)})}
+function buildQuiz(){
+ var cn=Math.max(0,Math.floor(+$('cnt').value)||0);var L=filt();L=cn&&cn<L.length?shuf(L).slice(0,cn):shuf(L);
+ var box=$('qs');box.innerHTML='';$('final').textContent='';total=L.length;done=0;right=0;$('score').hidden=false;
+ if(!L.length){$('score').textContent='По выбранным условиям вопросов нет.';return}
+ L.forEach(function(q,i){var d=document.createElement('div');d.className='q';
+  d.innerHTML='<div class="meta">Вопрос '+(i+1)+' · '+KIND[q.t]+'</div><p class="t"></p>';d.querySelector('.t').textContent=q.q;
+  var o=document.createElement('div');o.className='opts';d.appendChild(o);var ex=document.createElement('div');ex.className='exp';
+  if(q.t==='s'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var b=document.createElement('button');b.className='opt';b.textContent=q.o[k];b.dataset.k=k;
+    b.onclick=function(){if(d.classList.contains('done'))return;[].forEach.call(o.children,function(x){if(+x.dataset.k===q.a)x.classList.add('ok')});if(k!==q.a)b.classList.add('bad');qfinish(d,k===q.a,q)};o.appendChild(b)});d.appendChild(ex)}
+  if(q.t==='m'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var l=document.createElement('label');l.className='opt';l.dataset.k=k;l.innerHTML='<input type="checkbox"><span></span>';l.querySelector('span').textContent=q.o[k];o.appendChild(l)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(l){var k=+l.dataset.k,on=l.querySelector('input').checked,should=q.a.indexOf(k)>=0;l.querySelector('input').disabled=true;
+     if(should&&on)l.classList.add('ok');else if(should&&!on){l.classList.add('miss');ok=false}else if(!should&&on){l.classList.add('bad');ok=false}});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  if(q.t==='x'){var ro=shuf(q.r.map(function(t,k){return k}));q.l.forEach(function(lt){var r=document.createElement('div');r.className='mrow';r.innerHTML='<span></span><select><option value="">выберите</option></select>';r.firstChild.textContent=lt;var s=r.lastChild;ro.forEach(function(k){var op=document.createElement('option');op.value=k;op.textContent=q.r[k];s.appendChild(op)});o.appendChild(r)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(r,li){var s=r.querySelector('select'),good=s.value!==''&&q.r[+s.value]===q.r[q.a[li]];r.classList.add(good?'ok':'bad');if(!good){ok=false;r.querySelector('span').textContent=q.l[li]+' → верно: '+q.r[q.a[li]]}s.disabled=true});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  box.appendChild(d)});qupd();$('score').scrollIntoView({block:'start'})}
+function initQuiz(TOPICS){var sel=$('topic');TOPICS.forEach(function(t){var o=document.createElement('option');o.value=t[0];o.textContent=t[0]+'. '+t[1];sel.appendChild(o)});
+ document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
+ ['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();$('start').onclick=buildQuiz}
+
+/* ===== подбор ===== */
+var ITEMS=[
+['Подключение и отключение кабеля, проводов электродвигателя и отдельных электроприёмников инженерного оборудования зданий и сооружений','y','Названа среди примеров работ до 1000 В.','8.6'],
+['Ремонт автоматического выключателя, рубильника, магнитного пускателя, УЗО, контактора, пусковой кнопки, установленных вне щитов и сборок','y','Названа при условии установки аппаратуры вне щитов и сборок.','8.6'],
+['Ремонт тех же аппаратов, установленных внутри щита или сборки','n','В п. 8.6 такие работы названы только при установке аппаратуры вне щитов и сборок, поэтому по этому пункту в перечень они не входят. Оформление — распоряжением или нарядом (по п. 7.9 на сборных шинах и присоединениях с подачей напряжения на шины — наряд-допуск).','8.6, 7.9'],
+['Ремонт отдельных электроприёмников инженерного оборудования зданий (электродвигатели, электрокалориферы, вентиляторы, насосы, кондиционеры)','y','Названа среди примеров работ до 1000 В.','8.6'],
+['Ремонт отдельно расположенных магнитных станций и блоков управления, уход за щёточным аппаратом электрических машин, смазка подшипников','y','Названа среди примеров работ до 1000 В.','8.6'],
+['Снятие и установка электросчётчиков, других приборов и средств измерений','c','Названа в п. 8.6. Установка и замена приборов учёта — со снятым напряжением (п. 42.9); у потребителей — по пп. 42.8, 42.10.','8.6, 42.9'],
+['Замена предохранителей, ремонт осветительной электропроводки и арматуры, замена ламп и чистка светильников на высоте не более 2,5 м','c','Названа только для высоты не более 2,5 м.','8.6'],
+['Замена ламп и ремонт светильников на высоте более 2,5 м','n','В п. 8.6 названа высота не более 2,5 м. Работы на высоте регулируются отдельными Правилами (приказ № 782н).','8.6'],
+['Измерения мегаомметром (до 1000 В и во вторичных цепях)','y','По распоряжению или по перечню работ в порядке текущей эксплуатации.','8.6, 39.28'],
+['Нанесение маркировки, чистка снега, уборка территорий ОРУ, коридоров ЗРУ и электропомещений с оборудованием до 1000 В','c','Только если токоведущие части ограждены или находятся на высоте, недостижимой для случайного прикосновения, с учётом таблицы № 1.','8.6'],
+['Работы в электроустановках с односторонним питанием','y','Названы среди примеров работ до 1000 В.','8.6'],
+['Другие работы на территории организации, в служебных и жилых помещениях, складах, мастерских','y','Перечень примеров не исчерпывающий и дополняется по решению руководителя организации (обособленного подразделения). В перечне указывается, какие работы выполняются единолично.','8.6'],
+['Работа в электроустановке выше 1000 В','n','Подготовка рабочего места и работа оперативным и оперативно-ремонтным персоналом в порядке текущей эксплуатации распространяется на электроустановки до 1000 В.','8.1'],
+['Работа на сборных шинах РУ','n','В п. 8.6 не названа. По распоряжению до 1000 В на сборных шинах РУ работы не допускаются (п. 7.9): оформляется нарядом-допуском.','8.6, 7.9'],
+['Работа под напряжением на токоведущих частях','n','В п. 8.6 не названа. Выполняется по наряду-допуску на срок не более 1 календарного дня (смены).','8.6, 6.3'],
+['Работа с приборами учёта в электроустановке потребителя до 1000 В (обслуживающий персонал по совместительству или гражданско-правовому договору)','c','Подготовку рабочего места и допуск вправе проводить оперативный персонал энергоснабжающих, энергосбытовых, территориальных электросетевых организаций по утверждённому перечню бригадой из двух работников с группами III и IV в присутствии представителя потребителя.','42.8'],
+['Работа с однофазными электросчётчиками (оперативный персонал энергоснабжающей организации)','c','Единолично оперативный (оперативно-ремонтный) персонал с III группой при снятом напряжении по утверждённому перечню. Без коммутационного аппарата до счётчика в деревянных домах и помещениях без повышенной опасности — без снятия напряжения при снятой нагрузке.','42.10']];
+(function(){var s=$('work');ITEMS.forEach(function(w,i){var o=document.createElement('option');o.value=i;o.textContent=w[0];s.appendChild(o)});
+ var KN={y:['k-o','Может входить в перечень'],c:['k-l','Только при условии'],n:['k-n','Не в порядке текущей эксплуатации']};
+ function show(){var w=ITEMS[+s.value];$('verdictBox').innerHTML='<span class="kind '+KN[w[1]][0]+'">'+KN[w[1]][1]+'</span><p style="margin:6px 0">'+w[2]+'</p><div class="src">Приказ № 903н, '+w[3]+'</div>'}
+ s.onchange=show;show()})();
+/* ===== перечень ===== */
+var HH=['Вид работы: что именно выполняется. Работы должны быть небольшие по объёму и выполняться в течение рабочей смены.|пп. 8.1, 8.6','Напряжение электроустановки. Работа в порядке текущей эксплуатации оперативным и оперативно-ремонтным персоналом распространяется на электроустановки до 1000 В.|п. 8.1','Оборудование (участок), закреплённое за персоналом. Работа выполняется только на закреплённом оборудовании.|п. 8.1','Кто выполняет: оперативный или оперативно-ремонтный персонал.|п. 8.1','Единолично или бригадой: перечень должен указывать виды работ, разрешённые единолично и бригадой.|п. 8.4','Условие: ремонт автоматов, пускателей, рубильников, УЗО, контакторов, кнопок допускается при установке вне щитов и сборок.|п. 8.6','Высота работы, м. Замена ламп и ремонт освещения — не более 2,5 м.|п. 8.6'];
+var PAPER='<div style="text-align:right;margin-bottom:6px"><b>УТВЕРЖДАЮ</b></div>';
+PAPER+='<div class="ln"><span>Утверждает</span>'+SEL('apprRole',['','Руководитель организации','Руководитель обособленного подразделения','Технический руководитель','Другой работник'],'Перечень утверждает руководитель организации или руководитель обособленного подразделения.|п. 8.1')+'</div>';
+PAPER+='<div class="ln"><span>Подпись, фамилия</span>'+SG('apprS','Подпись утверждающего.|п. 8.1')+I('apprF','Фамилия, инициалы утверждающего.|п. 8.1')+'</div>';
+PAPER+='<h3>ПЕРЕЧЕНЬ</h3><p style="text-align:center;margin:0 0 8px">работ, выполняемых в порядке текущей эксплуатации</p>';
+PAPER+='<div class="ln"><span>Организация</span>'+I('org','Наименование организации.|п. 8.1')+'</div><div class="ln"><span>Подразделение</span>'+I('sub','Подразделение, персонал которого выполняет эти работы.|п. 8.1')+'</div>';
+PAPER+=TBL('L',['1. Вид работы','2. Напряжение','3. Закреплённое оборудование (участок)','4. Исполнитель','5. Выполняется','6. Условие','7. Высота, м'],[['t'],['sel',['','до 1000 В','выше 1000 В']],['t'],['sel',['','оперативный персонал','оперативно-ремонтный персонал','ремонтный персонал']],['sel',['','единолично','бригадой']],['sel',['','вне щитов и сборок','внутри щитов и сборок','не применимо']],['n']],'Заполните строку перечня.|п. 8.6',HH);
+PAPER+='<div class="sh" style="color:#555">Порядок учёта (п. 8.5)</div>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="acc1" data-h="В перечне должен быть указан порядок учёта: уведомление вышестоящего оперативного персонала о месте и характере работы, её начале и окончании.|п. 8.5"><span>Уведомление вышестоящего оперативного персонала о месте и характере работы, её начале и окончании</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="acc2" data-h="Работа оформляется записью в оперативном журнале.|п. 8.5"><span>Оформление работы записью в оперативном журнале</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="cons" data-h="При составлении перечня учитывают условия безопасности, возможность единоличного выполнения, квалификацию персонала, значимость электроустановки.|п. 8.3"><span>Учтены условия безопасности, возможность единоличного выполнения, квалификация персонала, значимость электроустановки (п. 8.3)</span></label>';
+PAPER+='<label class="pk"><input type="checkbox" data-k="instr" data-h="В инструкциях по охране труда изложены требования и порядок выполнения этих работ.|п. 8.6"><span>В инструкциях по охране труда изложены требования и порядок выполнения этих работ (п. 8.6)</span></label>';
+PAPER+='<div class="sh" style="color:#555">Подписано</div><div class="ln"><span>Подписывает</span>'+SEL('signRole',['','Технический руководитель','Ответственный за электрохозяйство (административно-технический персонал)','Другой работник'],'Перечень подписывает технический руководитель или ответственный за электрохозяйство из административно-технического персонала.|п. 8.1')+'</div>';
+PAPER+='<div class="ln"><span>Подпись, фамилия</span>'+SG('signS','Подпись подписавшего.|п. 8.1')+I('signF','Фамилия, инициалы подписавшего.|п. 8.1')+'</div>';
+$('paper').innerHTML=PAPER;
+function clearAll(){P.querySelectorAll('[data-k]').forEach(function(e){setEl(e,'')});setTable('L');$('out').innerHTML='';hint.hidden=true}
+function fillGood(){clearAll();setK('apprRole','Руководитель организации');setK('apprS',true);setK('apprF','Сидоров В. В.');setK('org','ООО «Энергосервис»');setK('sub','Электроцех');
+ setK('acc1',true);setK('acc2',true);setK('cons',true);setK('instr',true);setK('signRole','Ответственный за электрохозяйство (административно-технический персонал)');setK('signS',true);setK('signF','Иванов С. П.');
+ setTable('L',[['Отсоединение и присоединение кабеля электродвигателей вентиляторов','до 1000 В','Вентиляторные установки цеха № 2, щиты ЩР-4, ЩР-5','оперативно-ремонтный персонал','бригадой','не применимо',''],['Ремонт автоматических выключателей, магнитных пускателей, рубильников','до 1000 В','Распределительные шкафы цеха № 2','оперативно-ремонтный персонал','единолично','вне щитов и сборок',''],['Замена ламп и чистка светильников','до 1000 В','Освещение цеха № 2','оперативный персонал','единолично','не применимо','2.2'],['Измерения мегаомметром','до 1000 В','Силовые сети цеха № 2','оперативно-ремонтный персонал','бригадой','не применимо',''],['Снятие и установка электросчётчиков','до 1000 В','Учёт цеха № 2','оперативный персонал','бригадой','не применимо','']])}
+function fillBad(){clearAll();setK('apprRole','Технический руководитель');setK('signRole','Другой работник');setK('apprS',true);setK('apprF','Сидоров В. В.');setK('sub','Электроцех');
+ setTable('L',[['Ремонт автоматического выключателя в силовом щите','до 1000 В','Щит ЩР-4','оперативно-ремонтный персонал','единолично','внутри щитов и сборок',''],['Замена ламп и чистка светильников','до 1000 В','Освещение цеха № 2','оперативный персонал','единолично','не применимо','4'],['Работы на сборных шинах РУ-6 кВ','выше 1000 В','','оперативный персонал','','',''],['Ремонт кабельной линии','до 1000 В','КЛ цеха № 2','ремонтный персонал','бригадой','не применимо','']])}
+$('exGood').onclick=fillGood;$('exBad').onclick=fillBad;$('exClear').onclick=clearAll;
+function check(){var R=[];function add(ok,t,ref){R.push({ok:ok,t:t,ref:ref})}
+ add(!!(v('org')&&v('sub')),(v('org')&&v('sub'))?'Заполнены организация и подразделение.':'Не заполнены организация или подразделение.','п. 8.1');
+ R.push({h:'Утверждение и подпись'});
+ var ar=v('apprRole');add(ar==='Руководитель организации'||ar==='Руководитель обособленного подразделения',ar?(ar==='Руководитель организации'||ar==='Руководитель обособленного подразделения'?'Утверждает: '+ar+'.':'Утверждает «'+ar+'». Перечень утверждает руководитель организации или руководитель обособленного подразделения.'):'Не указано, кто утверждает перечень.','п. 8.1');
+ add(sg('apprS')&&!!v('apprF'),(sg('apprS')&&v('apprF'))?'Утверждающий расписался и указана фамилия.':'Утверждающий должен поставить подпись и указать фамилию.','п. 8.1');
+ var sr=v('signRole'),sok=sr==='Технический руководитель'||sr.indexOf('Ответственный за электрохозяйство')===0;
+ add(sok,sr?(sok?'Подписывает: '+sr+'.':'Подписывает «'+sr+'». Перечень подписывает технический руководитель или ответственный за электрохозяйство из административно-технического персонала.'):'Не указано, кто подписывает перечень.','п. 8.1');
+ add(sg('signS')&&!!v('signF'),(sg('signS')&&v('signF'))?'Подписавший расписался и указана фамилия.':'Подписавший должен поставить подпись и указать фамилию.','п. 8.1');
+ var rw=rows('L').map(function(r,i){return {i:i+1,r:r}}).filter(function(x){return x.r.some(Boolean)});
+ R.push({h:'Работы в перечне'});
+ add(rw.length>0,rw.length?'В перечне работ: '+rw.length+'.':'В перечне нет работ.','п. 8.1');
+ rw.forEach(function(x){var r=x.r,lab='Строка '+x.i+': ',txt=r[0]||'';
+  add(!!txt,txt?lab+'«'+txt.slice(0,60)+(txt.length>60?'…':'')+'».':lab+'не указан вид работы.','п. 8.6');
+  add(r[1]==='до 1000 В',r[1]?(r[1]==='до 1000 В'?lab+'электроустановка до 1000 В.':lab+'выше 1000 В. Работа в порядке текущей эксплуатации распространяется на электроустановки до 1000 В.'):lab+'не указано напряжение.','п. 8.1');
+  add(!!r[2],r[2]?lab+'закреплённое оборудование указано.':lab+'не указано закреплённое оборудование (участок): работа выполняется только на закреплённом оборудовании.','п. 8.1');
+  add(!!r[3],r[3]?(r[3]==='ремонтный персонал'?lab+'исполнитель — ремонтный персонал: п. 8.1 говорит об оперативном и оперативно-ремонтном персонале, проверьте основание.':lab+'исполнитель: '+r[3]+'.'):lab+'не указан исполнитель.','п. 8.1');
+  if(r[3]==='ремонтный персонал'){R[R.length-1].ok=null}
+  add(!!r[4],r[4]?lab+'выполняется '+r[4]+'.':lab+'не указано, единолично или бригадой: перечень должен определять виды работ, разрешённые единолично и бригадой.','п. 8.4');
+  if(/автомат|рубильник|пускател|УЗО|контактор|кнопк|переключател/i.test(txt))add(r[5]==='вне щитов и сборок',r[5]==='вне щитов и сборок'?lab+'аппаратура установлена вне щитов и сборок.':lab+'ремонт такой аппаратуры допускается в порядке текущей эксплуатации при установке вне щитов и сборок.','п. 8.6');
+  if(/ламп|светильник|освещен|арматур|предохранител/i.test(txt)){var h=parseFloat(r[6]);
+   if(isNaN(h))R.push({ok:null,t:lab+'укажите высоту работы: допускается не более 2,5 м.',ref:'п. 8.6'});else add(h<=2.5,h<=2.5?lab+'высота '+h+' м, не более 2,5 м.':lab+'высота '+h+' м. В п. 8.6 названа высота не более 2,5 м.','п. 8.6')}
+  if(/сборн\w*\s+шин|под напряжением/i.test(txt))add(false,lab+'такие работы не названы в п. 8.6: сборные шины — по наряду-допуску (п. 7.9), работы под напряжением — по наряду-допуску.','пп. 8.6, 7.9, 6.3')});
+ R.push({h:'Порядок учёта и прочее'});
+ add(ck('acc1'),ck('acc1')?'Указано уведомление вышестоящего оперативного персонала.':'В перечне должно быть указано уведомление вышестоящего оперативного персонала о месте и характере работы, её начале и окончании.','п. 8.5');
+ add(ck('acc2'),ck('acc2')?'Указана запись в оперативном журнале.':'В перечне должно быть указано оформление работы записью в оперативном журнале.','п. 8.5');
+ R.push({ok:ck('cons')?true:null,t:ck('cons')?'При составлении учтены условия безопасности, единоличное выполнение, квалификация и значимость электроустановки.':'Не отмечено, что при составлении перечня учтены условия безопасности, единоличное выполнение, квалификация и значимость электроустановки.',ref:'п. 8.3'});
+ R.push({ok:ck('instr')?true:null,t:ck('instr')?'Требования и порядок выполнения изложены в инструкциях по охране труда.':'Не отмечено, что требования и порядок выполнения изложены в инструкциях по охране труда.',ref:'п. 8.6'});
+ showResult(R,'Проверка охватывает требования пп. 8.1–8.6. Решение о включении конкретной работы в перечень принимает руководитель организации.','out')}
+$('check').onclick=check;clearAll();
+/* ===== этапы ===== */
+var LH=['1. Вид работы','2. Напряжение','3. Закреплённое оборудование','4. Исполнитель','5. Выполняется','6. Условие','7. Высота, м'];
+var S=[
+['Включение работы в перечень','Технический руководитель или ответственный за электрохозяйство','Составляет перечень: виды работ, исполнителей и закреплённое оборудование, указывает, какие работы выполняются единолично, а какие бригадой. Учитывает условия безопасности, квалификацию персонала, значимость электроустановки.','8.1, 8.3, 8.4'],
+['Подпись и утверждение','Подписывает технический руководитель или ответственный за электрохозяйство, утверждает руководитель организации или обособленного подразделения','Без подписи и утверждения перечень не действует.','8.1'],
+['Закрепление оборудования и исполнителей','Руководитель организации (обособленного подразделения)','Оборудование (участок) закрепляется за оперативным или оперативно-ремонтным персоналом. Для работ с приборами учёта у потребителей ОРД закрепляется территориальный участок (район, квартал, округ).','8.1, 42.11'],
+['Получение ключей','Оперативный или оперативно-ремонтный персонал','Ключи выдаются от помещений, вводных устройств, щитов, щитков, в которых предстоит работать. Выдача и возврат фиксируются в журнале.','3.13'],
+['Уведомление вышестоящего оперативного персонала','Исполнитель работы','Сообщает о месте и характере работы и о её начале.','8.5'],
+['Выполнение работы','Исполнитель работы','Выполняет работу, включённую в перечень. Дополнительные указания, распоряжение и целевой инструктаж не требуются.','8.2'],
+['Окончание работы и запись в оперативном журнале','Исполнитель работы','Сообщает вышестоящему оперативному персоналу об окончании работы. Работа оформляется записью в оперативном журнале.','8.5'],
+['Возврат ключей','Исполнитель работы','Ключи возвращаются с записью в журнале.','3.13'],
+['Если работы нет в перечне','Выдающий наряд или распоряжение','Работа оформляется распоряжением или нарядом-допуском. Расширять рабочие места и объём задания самовольно нельзя.','4.2, 7.1, 6.1']];
+var EX=[
+{side:'Перечень: строка перечня',html:Tb(LH,[[Hl(1,'Ремонт автоматических выключателей, магнитных пускателей, рубильников'),Hl(2,'до 1000 В'),Hl(3,'Распределительные шкафы цеха № 2'),Hl(4,'оперативно-ремонтный персонал'),Hl(5,'единолично'),Hl(6,'вне щитов и сборок'),'']]),
+ legend:['Вид работы из п. 8.6 или иная небольшая работа.','Электроустановки до 1000 В.','Только закреплённое оборудование (участок).','Оперативный или оперативно-ремонтный персонал.','Единолично или бригадой: должно быть указано в перечне.','Аппаратура установлена вне щитов и сборок.']},
+{side:'Перечень: утверждение и подпись',html:Ln('Утверждает',Hl(1,'Руководитель организации · '+Sg('Сидоров')+' · Сидоров В. В.'))+Ln('Подписал',Hl(2,'Ответственный за электрохозяйство · '+Sg('Иванов')+' · Иванов С. П.')),
+ legend:['Утверждает руководитель организации или руководитель обособленного подразделения.','Подписывает технический руководитель или ответственный за электрохозяйство.']},
+{none:'Записей в перечне нет: оборудование закрепляется распорядительным документом организации. Для работ с приборами учёта у потребителей закрепляется территориальный участок.'},
+{side:'Журнал выдачи и возврата ключей (форма произвольная, состав сведений — по п. 3.13)',html:Tb(['Дата','Время выдачи','Номер или наименование ключа','Помещение','Подпись выдавшего','Подпись получившего','Время возврата'],[[Hl(1,'10.11.2026'),Hl(2,'09:00'),Hl(3,'№ 5'),Hl(4,'ЩР-4, цех № 2'),Hl(5,Sg('Соколов')),Hl(6,Sg('Петров')),'']]),
+ legend:['Дата выдачи.','Время выдачи.','Номер или наименование ключа.','Наименование помещения.','Подпись работника, выдавшего ключ.','Подпись работника, получившего ключ. Время возврата запишут при возврате.']},
+{side:'Оперативный журнал: условная запись',html:Tb(['Дата, время','Запись','Подпись'],[[Hl(1,'10.11.2026, 09:05'),Hl(2,'Петров И. И. уведомил старшего по смене Соколова А. А. о начале работы по перечню: ремонт автоматического выключателя на ЩР-4 (вне щита), цех № 2'),Sg('Петров')]]),
+ legend:['Дата и время уведомления.','Место и характер работы и её начало.'],note:'Форма оперативного журнала определяется организацией. Пример показывает состав сведений.'},
+{none:'Записей по этому этапу нет: работа из перечня является постоянно разрешённой.'},
+{side:'Оперативный журнал: условная запись',html:Tb(['Дата, время','Запись','Подпись'],[['10.11.2026, 09:05','Петров И. И. уведомил Соколова А. А. о начале работы по перечню: ремонт автоматического выключателя на ЩР-4',Sg('Петров')],[Hl(1,'10.11.2026, 10:20'),Hl(2,'Работа окончена, оборудование принято, об окончании сообщено Соколову А. А.'),Hl(3,Sg('Петров'))]]),
+ legend:['Дата и время окончания.','Окончание работы и сообщение вышестоящему оперативному персоналу.','Подпись исполнителя.']},
+{side:'Журнал ключей: возврат',html:Tb(['Дата','Время выдачи','Номер или наименование ключа','Помещение','Подпись выдавшего','Подпись получившего','Время возврата'],[['10.11.2026','09:00','№ 5','ЩР-4, цех № 2',Sg('Соколов'),Sg('Петров'),Hl(1,'10:25')]]),
+ legend:['Время возврата ключа.']},
+{none:'Оформляется распоряжение или наряд-допуск. Самовольное проведение работ и расширение рабочих мест и объёма задания, определённых нарядом, распоряжением или перечнем, не допускается.'}];
+renderSteps(S,EX,'stepList');
+var Q=[
+{t:'s',n:1,q:'Что выполняется в порядке текущей эксплуатации (п. 8.1)?',o:['Небольшие по объёму ремонтные работы и работы по ТО в течение рабочей смены, включённые в перечень','Любые ремонтные работы в электроустановках до 1000 В','Работы продолжительностью до 15 суток','Неотложные работы по предотвращению травм'],a:0,e:'П. 8.1.'},
+{t:'s',n:1,q:'Кто подписывает и кто утверждает перечень работ в порядке текущей эксплуатации (п. 8.1)?',o:['Подписывает технический руководитель или ответственный за электрохозяйство, утверждает руководитель организации или обособленного подразделения','Подписывает руководитель организации, утверждает технический руководитель','Подписывает и утверждает технический руководитель','Подписывает ответственный за электрохозяйство, утверждает Ростехнадзор'],a:0,e:'П. 8.1.'},
+{t:'m',n:1,q:'Что учитывают при оформлении перечня (п. 8.3)? Выберите все верные варианты.',o:['Условия обеспечения безопасности','Возможность единоличного выполнения конкретных работ','Квалификацию персонала','Степень важности электроустановки или её элементов в технологическом процессе','Стоимость работ','Наличие подрядчика'],a:[0,1,2,3],e:'П. 8.3.'},
+{t:'s',n:1,q:'Что требуется для работы, включённой в перечень (п. 8.2)?',o:['Оформление дополнительных указаний, распоряжений и целевого инструктажа не требуется','Требуется только целевой инструктаж','Требуется распоряжение','Требуется наряд-допуск'],a:0,e:'Работа из перечня является постоянно разрешённой.'},
+{t:'s',n:1,q:'Что должен указывать перечень в отношении исполнителей (п. 8.4)?',o:['Виды работ, разрешённые к выполнению единолично и бригадой','Только работы, выполняемые бригадой','Только работы, выполняемые единолично','Только фамилии исполнителей'],a:0,e:'П. 8.4.'},
+{t:'s',n:1,q:'Какой порядок учёта работ должен быть указан в перечне (п. 8.5)?',o:['Уведомление вышестоящего оперативного персонала о месте и характере работы, её начале и окончании и запись в оперативном журнале','Запись в журнале учёта работ по нарядам-допускам и распоряжениям','Наряд-допуск в двух экземплярах','Запись в журнале дефектов'],a:0,e:'П. 8.5.'},
+{t:'s',n:1,q:'На какие электроустановки распространяется работа оперативного и оперативно-ремонтного персонала в порядке текущей эксплуатации (п. 8.1)?',o:['До 1000 В, на закреплённом за этим персоналом оборудовании (участке)','Выше 1000 В, на любом оборудовании','До и выше 1000 В','До 1000 В, на любом оборудовании'],a:0,e:'Либо в электроустановке потребителя до 1000 В по п. 42.8.'},
+{t:'x',n:1,q:'Сопоставьте способ оформления работы и его характеристику.',l:['Наряд-допуск','Распоряжение','Работа по перечню текущей эксплуатации'],r:['Срок — не более 15 календарных дней со дня начала работы','Срок — рабочий день или смена исполнителей','Постоянно разрешённая работа, дополнительные указания не требуются','Срок — не более 1 часа'],a:[0,1,2],e:'Пп. 6.3, 7.1, 8.2.'},
+{t:'m',n:2,q:'Какие работы названы среди примеров работ в порядке текущей эксплуатации (п. 8.6)? Выберите все верные варианты.',o:['Измерения мегаомметром','Снятие и установка электросчётчиков','Замена предохранителей и ламп на высоте не более 2,5 м','Ремонт автоматов и рубильников, установленных вне щитов и сборок','Ремонт автоматов внутри щитов и сборок','Работы на сборных шинах РУ'],a:[0,1,2,3],e:'Ремонт аппаратуры названы при условии установки вне щитов и сборок.'},
+{t:'s',n:2,q:'При каком условии ремонт автоматических выключателей, пускателей, рубильников, УЗО, контакторов и кнопок допускается по перечню (п. 8.6)?',o:['При условии установки вне щитов и сборок','При условии установки внутри щитов и сборок','Только при снятом напряжении со всего РУ','Только в присутствии ответственного руководителя'],a:0,e:'П. 8.6.'},
+{t:'s',n:2,q:'На какой высоте допускается замена ламп и чистка светильников по перечню (п. 8.6)?',o:['Не более 2,5 м','Не более 4 м','Не более 5 м','Высота не ограничена'],a:0,e:'П. 8.6.'},
+{t:'s',n:2,q:'При каком условии допускается уборка территорий ОРУ, коридоров ЗРУ и электропомещений по перечню (п. 8.6)?',o:['Токоведущие части ограждены или находятся на высоте, недостижимой для случайного прикосновения, с учётом таблицы № 1','Токоведущие части отключены и заземлены','Присутствует ответственный руководитель','Работа выполняется бригадой из трёх человек'],a:0,e:'Электроустановки напряжением до 1000 В.'},
+{t:'s',n:2,q:'Является ли перечень примеров из п. 8.6 исчерпывающим?',o:['Нет: дополняется по решению руководителя организации (обособленного подразделения), указывается, какие работы выполняются единолично','Да, дополнять нельзя','Дополняется только по решению Ростехнадзора','Дополняется по решению производителя работ'],a:0,e:'П. 8.6.'},
+{t:'s',n:2,q:'Какие требования должны быть изложены в инструкциях по охране труда в отношении работ по перечню (п. 8.6)?',o:['Требования охраны труда и порядок выполнения работ в порядке текущей эксплуатации','Только перечень видов работ','Только порядок оформления наряда','Требования не нужны'],a:0,e:'П. 8.6.'},
+{t:'s',n:2,q:'Как проводятся установка и замена приборов учёта электроэнергии (п. 42.9)?',o:['Со снятием напряжения; в цепях электросчётчиков, подключённых к измерительным трансформаторам, при наличии испытательных коробок снимают напряжение со схемы счётчика в этих коробках','Под напряжением без ограничений','Только при снятой нагрузке','Только по наряду-допуску'],a:0,e:'П. 42.9.'},
+{t:'s',n:2,q:'Чем оформляются измерения мегаомметром в электроустановках до 1000 В и во вторичных цепях (п. 39.28)?',o:['По распоряжению или по перечню работ в порядке текущей эксплуатации','Только по наряду-допуску','Без оформления','Только по распоряжению'],a:0,e:'Выше 1000 В — по наряду-допуску, кроме работ по пп. 7.6, 7.8.'},
+{t:'s',n:3,q:'От каких помещений выдаются ключи оперативному или оперативно-ремонтному персоналу при работах в порядке текущей эксплуатации (п. 3.13)?',o:['От помещений, вводных устройств, щитов, щитков, в которых предстоит работать','От всех электроустановок организации','Только от помещений ЗРУ','Ключи не выдаются'],a:0,e:'Выдача и возврат фиксируются в журнале.'},
+{t:'s',n:3,q:'Как передаются ключи от электроустановок, оперативное обслуживание которых осуществляется круглосуточно (п. 3.13)?',o:['По смене с оформлением в оперативном журнале','Под роспись в журнале выдачи без оперативного журнала','Не передаются','Передаются по приказу'],a:0,e:'П. 3.13.'},
+{t:'s',n:3,q:'Кто вправе проводить подготовку рабочего места и допуск к работам с приборами учёта в электроустановках потребителя до 1000 В с персоналом по совместительству или по ГПД (п. 42.8)?',o:['Оперативный персонал энергоснабжающих, энергосбытовых или территориальных электросетевых организаций по утверждённому перечню бригадой из двух работников с группами III и IV в присутствии представителя потребителя','Один работник с II группой','Бригада из трёх работников с группой III','Любой работник потребителя'],a:0,e:'П. 42.8.'},
+{t:'s',n:3,q:'Кто и при каких условиях может проводить работу с однофазными электросчётчиками единолично (п. 42.10)?',o:['Оперативный (оперативно-ремонтный) персонал энергоснабжающих, энергосбытовых, электросетевых организаций с III группой — при снятом напряжении по утверждённому перечню','Любой работник со II группой под напряжением','Оперативный персонал с IV группой по наряду','Только бригада из двух работников'],a:0,e:'Без коммутационного аппарата до счётчика в деревянных домах, в помещениях без повышенной опасности — без снятия напряжения при снятой нагрузке.'},
+{t:'s',n:3,q:'Что требуется при работах по пп. 42.8 и 42.10 (п. 42.11)?',o:['За работниками ОРД закрепляется территориальный участок; в бланках заданий оперативный персонал отмечает выполнение технических мероприятий','Наряд-допуск на каждую работу','Ответственный руководитель на каждую работу','Ничего дополнительно'],a:0,e:'П. 42.12: инструкции или технологические карты по каждому виду работ.'},
+{t:'s',n:3,q:'Как проводят работы командированный персонал в действующих электроустановках (п. 46.10)?',o:['По нарядам-допускам и распоряжениям; если предоставлены права оперативно-ремонтного персонала — и в порядке текущей эксплуатации','Только в порядке текущей эксплуатации','Только по распоряжению','Командированный персонал не допускается'],a:0,e:'П. 46.10.'},
+{t:'s',n:3,q:'Что нельзя делать в отношении работ, определённых нарядом, распоряжением или перечнем (п. 4.2)?',o:['Самовольно проводить работы, расширять рабочие места и объём задания','Выполнять работу в течение смены','Выполнять работу единолично по перечню','Записывать работу в оперативный журнал'],a:0,e:'П. 4.2.'}
+];
+initQuiz([[1,'Перечень и порядок (пп. 8.1–8.5)'],[2,'Какие работы входят (п. 8.6)'],[3,'Ключи, потребители, учёт (пп. 3.13, 42.8–42.12)']]);
+</script>
+<style>
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line,#ccc);background:var(--chip,var(--surface2,#eee));color:var(--fg,var(--ink,#111));border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#floatClose{position:fixed;right:14px;bottom:14px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:#1a5fb4;color:#fff;font:600 15px/1 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+#floatClose[hidden]{display:none}
+</style>
+<div id="pageVersion" style="text-align:center;font:12px system-ui,sans-serif;color:#888;padding:18px 0 70px">Версия страницы: 09.11.2026, со сворачиванием</div>
+<button id="floatClose" type="button" hidden>▲ Свернуть открытое</button>
+<script>
+(function(){
+ var fb=document.getElementById('floatClose');
+ function opened(){return [].slice.call(document.querySelectorAll('details[open]'))}
+ function upd(){fb.hidden=!opened().length}
+ document.querySelectorAll('details').forEach(function(d){
+  if(!d.querySelector(':scope>.closeb,:scope>.in>.closeb')){var b=document.createElement('button');b.type='button';b.className='closeb';b.textContent='▲ Свернуть';d.appendChild(b)}
+  d.addEventListener('toggle',upd)});
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'});upd()}});
+ fb.addEventListener('click',function(){var h=window.innerHeight,list=opened(),vis=list.filter(function(d){var r=d.getBoundingClientRect();return r.bottom>0&&r.top<h});
+  if(!vis.length)vis=list.slice(-1);
+  vis.forEach(function(d){d.open=false});
+  if(vis[0])vis[0].scrollIntoView({block:'nearest'});upd()});
+ upd();
+})();
+</script>
+</body>
+</html>
