@@ -65,17 +65,86 @@ mark{background:#ffe27a;color:#111;border-radius:3px}
 .score{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;font-weight:700;border-bottom:1px solid var(--line);margin-bottom:12px}
 .cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 10px}.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 14px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}.muted{color:var(--muted);font-size:.88rem}.res{font-size:1.1rem;font-weight:700;margin:14px 0}
 </style>
+<style>
+.thintro{margin-bottom:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.chips .chip,.figbar .chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:999px;padding:7px 14px;cursor:pointer;font:inherit}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+article.th{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 18px}
+article.th h2{font-size:1.25rem;margin:0 0 8px}
+article.th h3{font-size:1.05rem;margin:20px 0 6px}
+article.th p{margin:8px 0}
+.lbl{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:5px;padding:1px 7px;margin-right:4px;vertical-align:1px}
+.lbl.n{background:#dbe8fb;color:#1a4f9c}.lbl.e{background:var(--warnbg,#fdf0cf);color:var(--warn,#8a5a00)}
+@media (prefers-color-scheme:dark){.lbl.n{background:#1c2f4a;color:#8ab8f5}}
+ul.pts{margin:6px 0;padding-left:20px}ul.pts li{margin:6px 0}
+.memo{border:2px solid var(--accent,#1a5fb4);border-radius:10px;padding:12px 14px;margin-top:18px;background:var(--bg)}
+.memo ol{margin:6px 0 8px;padding-left:20px}.memo li{margin:4px 0}
+table.tt{border-collapse:collapse;width:100%;font-size:.92rem;margin:8px 0}
+table.tt th,table.tt td{border:1px solid var(--line);padding:6px 8px;text-align:left}table.tt th{background:var(--chip)}
+.fig{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0;background:var(--bg)}
+.figbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pausebtn{margin-left:auto;border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}
+.figcap{font-size:.92rem;margin:8px 0 0}
+.cdesc{font-size:.95rem;margin:8px 0;padding:8px 10px;background:var(--card);border:1px solid var(--line);border-radius:8px}
+.legend3{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.sw{display:inline-block;width:18px;height:6px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.hotsw{background:#e5533d}.coldsw{background:#e0a020}.airsw{background:#4aa8d8}.watsw{background:#2f86e8}
+.svgb,.svgc{width:100%;height:auto;display:block;color:var(--fg)}
+.svgb .box,.svgc .tank{fill:var(--card);stroke:currentColor;stroke-width:2}
+.svgb .box.bat{fill:#e7f3e8}.svgb .box.load{fill:var(--card)}
+@media (prefers-color-scheme:dark){.svgb .box.bat{fill:#1c3326}}
+.svgb .lb,.svgc .lb{fill:currentColor;font:13px system-ui,sans-serif}
+.svgb .lb.red,.svgc .lb.red{fill:#d33}
+.svgc .oilbg{fill:rgba(224,160,32,.22)}
+.svgc .core{fill:#8a93a0}.svgc .coil{fill:#b87333}
+.svgc .rad{fill:var(--card);stroke:currentColor;stroke-width:2}.svgc .fin{stroke:currentColor;stroke-width:1.5;opacity:.4}
+.svgb .tube,.svgc .tube{fill:none;stroke:currentColor;stroke-width:13;opacity:.13;stroke-linejoin:round}
+.svgc .tube.wt{stroke:#2f86e8;opacity:.18}
+.svgb .gnd{stroke:currentColor;stroke-width:3}
+.svgb .cell{stroke:currentColor;stroke-width:3}
+.svgb .plate{stroke:currentColor;stroke-width:3}
+.svgb .coilr{fill:none;stroke:currentColor;stroke-width:3}
+.svgb .fault,.svgb .dash{fill:none;stroke-width:3}.svgb .fault{stroke:#d33}.svgb .dash{stroke:currentColor;stroke-dasharray:3 5;opacity:.5}
+.flow{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:1 17;animation:flow var(--spd,2s) linear infinite}
+.flow.thin{stroke-width:4}.flow.big{stroke-width:11}
+.flow.hot{stroke:#e5533d}.flow.cold{stroke:#e0a020}.flow.air{stroke:#4aa8d8;animation-duration:1.1s}.flow.water{stroke:#2f86e8;animation-duration:1.4s}
+.flow.green{stroke:#2ea66a}.flow.bat{stroke:#e0a020}.flow.ac{stroke:#7a7f89}.flow.red{stroke:#d33}
+.flow.capf{stroke:#2f86e8;stroke-width:6}.flow.indf{stroke:#e5833d}
+@keyframes flow{to{stroke-dashoffset:-18}}
+.spin{animation:spin var(--spin,1.2s) linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.svgc .fanbox,.svgc .pumpc{fill:var(--card);stroke:currentColor;stroke-width:2}
+.svgc .blade{fill:#4aa8d8;opacity:.75}.svgc .hub{fill:currentColor}.svgc .imp{stroke:currentColor;stroke-width:3;fill:none}
+.pulse{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}
+.fig.paused *{animation-play-state:paused!important}
+.rmnote{display:none;font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.fig *{animation:none!important}.rmnote{display:block}}
+/* состояния батареи */
+.svgb .only-float,.svgb .only-emerg,.svgb .only-peak{display:none}
+.st-float .only-float{display:inline}.st-emerg .only-emerg{display:inline}.st-peak .only-peak{display:inline}
+.st-emerg .chg{opacity:.35}.svgb .cross path{stroke:#d33;stroke-width:4}
+.st-emerg .chgflow{display:none}
+/* изоляция */
+.svgb .f1,.svgb .f2{display:none}
+.st1 .f1{display:inline}.st2 .f1,.st2 .f2{display:inline}
+.st2 .lamp{fill:#d33}.svgb .lamp{fill:#e0a020}.st1 .lamp,.st2 .lamp{animation:pulse 1s infinite}
+.st0 .leak{display:inline}.st1 .leak,.st2 .leak{display:none}
+.slidebox{margin-top:8px}.slidebox input{width:100%;display:block;margin-top:6px}
+.dgrout{font-size:.95rem;margin:8px 0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card)}
+.dgrout.good{border-color:var(--ok);background:var(--okbg)}.dgrout.bad{border-color:var(--bad);background:var(--badbg)}.dgrout.mid{border-color:var(--warn);background:var(--warnbg)}
+#dgrSvg .fault-on{display:none}#dgrSvg.on .fault-on{display:inline}
+</style>
 </head>
 <body>
 <main>
 <a class="back" href="../">← Все пособия</a>
 <h1>Вопросы и ответы по ПТЭ и ПОТ</h1>
-<p class="lead">21 вопрос по Правилам технической эксплуатации (ПТЭЭСС, приказ № 1070), Правилам по охране труда при эксплуатации электроустановок (приказ № 903н) и смежным документам. Вопросы раскрываются, внизу — тест.</p>
-<nav class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-t="ref">Вопросы и ответы</button><button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button></nav>
+<p class="lead">21 вопрос по Правилам технической эксплуатации (ПТЭЭСС, приказ № 1070), Правилам по охране труда при эксплуатации электроустановок (приказ № 903н) и смежным документам. Есть вкладка «Теория» с объяснениями и анимациями, вопросы раскрываются, внизу — тест.</p>
+<nav class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-t="ref">Вопросы и ответы</button><button class="tab" role="tab" aria-selected="false" data-t="theory">Теория</button><button class="tab" role="tab" aria-selected="false" data-t="quiz">Тест</button></nav>
 
 <section id="ref">
 <div class="bar"><input type="search" id="search" placeholder="Поиск по тексту ответов"><button class="btn" id="openAll">Раскрыть все</button><button class="btn" id="closeAll">Свернуть все</button></div>
-<div class="toc" id="toc"><a href="#q1" data-n="1"><b>1.</b><span>Что включает техническая эксплуатация (п. 4, разд. II)</span></a><a href="#q2" data-n="2"><b>2.</b><span>Техническое освидетельствование (п. 8, разд. II)</span></a><a href="#q3" data-n="3"><b>3.</b><span>Ввод в работу нового оборудования (разд. III, п. 13)</span></a><a href="#q4" data-n="4"><b>4.</b><span>Задачи оперативно-технологического управления (п. 57, разд. VIII)</span></a><a href="#q5" data-n="5"><b>5.</b><span>Требования к персоналу (разд. IV)</span></a><a href="#q6" data-n="6"><b>6.</b><span>Аккумуляторные установки (разд. XXXV, п. 514–527)</span></a><a href="#q7" data-n="7"><b>7.</b><span>Охлаждение трансформаторов и реакторов, температура масла (п. 472, разд. XXXIII)</span></a><a href="#q8" data-n="8"><b>8.</b><span>Параллельная работа трансформаторов (п. 485)</span></a><a href="#q9" data-n="9"><b>9.</b><span>Перекомпенсация и недокомпенсация (п. 623, разд. XLII)</span></a><a href="#q10" data-n="10"><b>10.</b><span>Когда нужна компенсация ёмкостного тока ДГР (п. 621)</span></a><a href="#q11" data-n="11"><b>11.</b><span>Чем отличается диспетчерский персонал от оперативного</span></a><a href="#q12" data-n="12"><b>12.</b><span>Чем отличается рабочая комиссия от приёмной (приёмочной)</span></a><a href="#q13" data-n="13"><b>13.</b><span>Какие системы должны быть проверены (введены) до ввода в работу</span></a><a href="#q14" data-n="14"><b>14.</b><span>Чем отличается бланк переключений от программы переключений</span></a><a href="#q15" data-n="15"><b>15.</b><span>Какие работы нельзя выполнять по распоряжению</span></a><a href="#q16" data-n="16"><b>16.</b><span>Какие работы можно проводить по распоряжению (в том числе по перечню – в порядке текущей эксплуатации)</span></a><a href="#q17" data-n="17"><b>17.</b><span>Перечень работ в порядке текущей эксплуатации. Кем утверждается</span></a><a href="#q18" data-n="18"><b>18.</b><span>На кого распространяется ПОТ ЭУ</span></a><a href="#q19" data-n="19"><b>19.</b><span>Специальные работы (в том числе работы под напряжением и под наведённым напряжением)</span></a><a href="#q20" data-n="20"><b>20.</b><span>Заземления: какие устанавливаются</span></a><a href="#q21" data-n="21"><b>21.</b><span>Перегрузочная способность силовых трансформаторов, как устанавливается (п. 474)</span></a></div>
 <div id="list"><details id="q1"><summary><span>1.</span><span>Что включает техническая эксплуатация (п. 4, разд. II)</span></summary><div class="in"><p class="src">Нормативный документ: ПТЭЭСС (Правила технической эксплуатации
 электрических станций и сетей РФ, приказ Минэнерго России от 04.10.2022
 № 1070), раздел II, пункты 4, 4(1), 6, 7, 9, 26.</p><p><b>Пункт 4.</b> Техническая эксплуатация (далее – эксплуатация) объектов
@@ -619,6 +688,207 @@ VIII, см. вопрос 17) и отдельного распоряжения н
 <div class="empty hide" id="none">Ничего не найдено.</div>
 </section>
 
+
+<section id="theory" hidden>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="6" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker></defs></svg>
+<div class="thintro"><p class="muted">Здесь Правила объяснены связным текстом: зачем нужно каждое требование и как работает оборудование. Числа из Правил помечены номерами пунктов. Пояснения, которых нет в тексте Правил, помечены ярлыком «Пояснение». Анимации можно поставить на паузу.</p></div>
+<div class="chips" id="thChips"><button class="chip" data-p="acc" aria-pressed="true">Аккумуляторные батареи</button><button class="chip" data-p="cool" aria-pressed="false">Охлаждение трансформаторов</button><button class="chip" data-p="dgr" aria-pressed="false">Дугогасящие реакторы</button></div>
+
+<!-- ======== АККУМУЛЯТОРЫ ======== -->
+<article class="th" id="th-acc">
+<h2>Аккумуляторные установки (разд. XXXV, пп. 514–527)</h2>
+<p><span class="lbl e">Пояснение</span> Защиты, управление выключателями, сигнализация и аварийное освещение подстанции питаются постоянным током. При аварии переменное напряжение может пропасть именно тогда, когда защиты должны сработать. Поэтому постоянный ток держат от батареи: она всегда заряжена и готова взять нагрузку. Все требования пп. 514–527 об одном: батарея должна быть заряжена, исправна и давать нужное напряжение в нужный момент.</p>
+<p><span class="lbl n">Правила</span> Аккумуляторная установка обеспечивает надёжность работы и необходимый уровень напряжения (п. 514).</p>
+
+<h3>1. Режим постоянного подзаряда (пп. 515–516)</h3>
+<div class="fig" id="figBatt">
+<div class="figbar"><button class="chip bst" data-s="st-float" aria-pressed="true">Нормальный режим</button><button class="chip bst" data-s="st-emerg" aria-pressed="false">Пропало переменное напряжение</button><button class="chip bst" data-s="st-peak" aria-pressed="false">Толчок: включение привода</button><button class="pausebtn" type="button">⏸ Пауза</button></div>
+<svg class="svgb st-float" id="battSvg" viewBox="0 0 540 290" role="img" aria-label="Схема постоянного оперативного тока с батареей" style="--spd:1.6s">
+<rect class="box" x="4" y="88" width="88" height="54" rx="6"/><text class="lb" x="48" y="112" text-anchor="middle">Сеть</text><text class="lb" x="48" y="127" text-anchor="middle">перем. тока</text>
+<g class="chg"><rect class="box" x="118" y="88" width="104" height="54" rx="6"/><text class="lb" x="170" y="112" text-anchor="middle">Зарядное</text><text class="lb" x="170" y="127" text-anchor="middle">устройство</text></g>
+<path class="tube" d="M90 115 L118 115"/><path marker-end="url(#ar)" class="flow ac chgflow" d="M90 115 L118 115"/>
+<path class="tube" d="M222 115 L432 115"/>
+<text class="lb" x="330" y="104" text-anchor="middle">шины постоянного тока</text>
+<rect class="box load" x="432" y="88" width="100" height="54" rx="6"/><text class="lb" x="482" y="107" text-anchor="middle">Нагрузка:</text><text class="lb" x="482" y="121" text-anchor="middle">защиты и</text><text class="lb" x="482" y="135" text-anchor="middle">управление</text>
+<path class="tube" d="M300 115 L300 190"/>
+<g><rect class="box bat" x="258" y="190" width="84" height="64" rx="6"/><line class="cell" x1="279" y1="198" x2="279" y2="246"/><line class="cell" x1="300" y1="198" x2="300" y2="246"/><line class="cell" x1="321" y1="198" x2="321" y2="246"/><text class="lb" x="300" y="272" text-anchor="middle">аккумуляторная батарея</text></g>
+<g class="only-peak"><path class="tube" d="M392 115 L392 212 L432 212"/><rect class="box" x="432" y="192" width="100" height="40" rx="6"/><text class="lb" x="482" y="209" text-anchor="middle">Привод</text><text class="lb" x="482" y="223" text-anchor="middle">выключателя</text></g>
+<g class="only-float"><path marker-end="url(#ar)" class="flow green" d="M222 115 L432 115"/><path marker-end="url(#ar)" class="flow green thin" d="M300 115 L300 190"/><text class="lb" x="318" y="160">малый ток подзаряда</text></g>
+<g class="only-emerg"><path marker-end="url(#ar)" class="flow bat" d="M300 190 L300 115 L432 115"/><text class="lb" x="318" y="160">батарея питает нагрузку</text><g class="cross"><path d="M97 100 L113 130 M113 100 L97 130"/></g><text class="lb red" x="48" y="160" text-anchor="middle">напряжения нет</text></g>
+<g class="only-peak"><path marker-end="url(#ar)" class="flow green" d="M222 115 L432 115"/><path marker-end="url(#ar)" class="flow bat big" d="M300 190 L300 115 L392 115 L392 212 L432 212"/><text class="lb" x="318" y="160">толчок: батарея держит</text></g>
+</svg>
+<p class="figcap" id="battCap"></p><p class="rmnote">В настройках устройства включено уменьшение движения: анимация отключена, схема показана без движения.</p>
+</div>
+<p><span class="lbl n">Правила</span> Аккумуляторные батареи работают в режиме постоянного подзаряда (п. 515). Напряжение подзаряда на элемент: тип СК — 2,2 ± 0,05 В, тип СН — 2,18 ± 0,04 В (п. 516).</p>
+<p><span class="lbl e">Пояснение</span> Зарядное устройство и батарея включены параллельно на шины. В норме зарядное питает нагрузку и подпитывает батарею малым током, который компенсирует саморазряд. Если переменное напряжение исчезло, батарея без паузы берёт нагрузку на себя. Допуск по напряжению узкий не случайно: при слишком низком напряжении батарея постепенно теряет ёмкость, при слишком высоком идёт перезаряд, электролит кипит, пластины разрушаются. Для запоминания: у типа СН напряжение чуть ниже и допуск уже.</p>
+
+<h3>2. Что делают с батареей и чего не делают (пп. 517–519)</h3>
+<ul class="pts">
+<li><b>Тренировочные разряды и периодические уравнительные перезаряды не проводятся</b> (п. 517). <span class="lbl e">Пояснение</span> При постоянном подзаряде они не нужны, а лишний разряд изнашивает батарею.</li>
+<li><b>Уравнительный заряд</b> выполняется, когда у элементов разное напряжение или плотность электролита. Его цель — выровнять элементы. Продолжительность определяется состоянием элементов и может быть несколько суток (п. 517).</li>
+<li><b>Контроль работоспособности</b> (п. 518): на ТЭС проводится контрольный разряд; на подстанциях и ГЭС не реже 1 раза в год проверяется падение напряжения при толчковых токах. Ток заряда и разряда не должен превышать максимального.</li>
+<li><b>После аварийного разряда</b> заряд до 90 % ёмкости занимает не более 8 ч (п. 519). <span class="lbl e">Пояснение</span> Батарея должна быстро вернуться в готовность к следующей аварии.</li>
+</ul>
+
+<h3>3. Зарядные устройства (пп. 520–521)</h3>
+<p><span class="lbl n">Правила</span> Выпрямительные устройства подключаются через разделительный трансформатор. Предусматривается сигнализация об отключении и ограничение пульсаций (п. 520). На шинах постоянного тока допускается повышение напряжения до +5 % номинального (п. 521).</p>
+<p><span class="lbl e">Пояснение</span> Сигнализация об отключении нужна, чтобы заметить: батарея осталась без подпитки и разряжается. Пульсации выпрямленного тока вредят и батарее, и потребителям.</p>
+
+<h3>4. Изоляция сети постоянного тока (пп. 522–523)</h3>
+<div class="fig" id="figIso">
+<div class="figbar"><button class="chip ist" data-s="st0" aria-pressed="true">Изоляция в норме</button><button class="chip ist" data-s="st1" aria-pressed="false">Первое замыкание на землю</button><button class="chip ist" data-s="st2" aria-pressed="false">Второе замыкание (другой полюс)</button><button class="pausebtn" type="button">⏸ Пауза</button></div>
+<svg class="svgb st0" id="isoSvg" viewBox="0 0 540 230" role="img" aria-label="Замыкания на землю в сети постоянного тока" style="--spd:1.2s">
+<text class="lb" x="12" y="54">плюс</text><text class="lb" x="12" y="134">минус</text>
+<path class="tube" d="M50 60 L430 60"/><path class="tube" d="M50 130 L430 130"/>
+<rect class="box" x="430" y="76" width="90" height="38" rx="6"/><text class="lb" x="475" y="100" text-anchor="middle">реле, защита</text>
+<path class="tube" d="M475 60 L475 76"/><path class="tube" d="M475 114 L475 130"/><path class="tube" d="M430 60 L475 60"/><path class="tube" d="M430 130 L475 130"/>
+<line class="gnd" x1="40" y1="200" x2="440" y2="200"/><text class="lb" x="240" y="222" text-anchor="middle">земля</text>
+<g class="leak"><path class="dash" d="M110 60 L110 200"/><path class="dash" d="M370 130 L370 200"/><text class="lb" x="118" y="165">Rиз (изоляция)</text></g>
+<g class="f1"><path class="fault" d="M150 60 L150 200"/><text class="lb red" x="158" y="100">замыкание 1</text><circle class="lamp" cx="40" cy="28" r="8"/><text class="lb" x="54" y="32">сигнал снижения изоляции</text></g>
+<g class="f2"><path class="fault" d="M330 130 L330 200"/><text class="lb red" x="338" y="170">замыкание 2</text><path marker-end="url(#ar)" class="flow red" d="M150 62 L150 200 L330 200 L330 132"/><text class="lb red" x="240" y="190" text-anchor="middle">ток через землю</text></g>
+</svg>
+<p class="figcap" id="isoCap"></p>
+</div>
+<div class="scroll"><table class="tt"><tr><th>Напряжение батареи</th><th>Минимальное сопротивление изоляции</th><th>Сигнал при снижении до</th></tr>
+<tr><td>220 В</td><td>100 кОм</td><td>20 кОм</td></tr>
+<tr><td>110 В</td><td>50 кОм</td><td>10 кОм</td></tr>
+<tr><td>60 В</td><td>30 кОм</td><td>6 кОм</td></tr>
+<tr><td>48 В</td><td>25 кОм</td><td>5 кОм</td></tr>
+<tr><td>24 В</td><td>15 кОм</td><td>3 кОм</td></tr></table></div>
+<p><span class="lbl n">Правила</span> Сопротивление изоляции сети не ниже двукратной уставки (п. 522). При сигнале о снижении изоляции устраняют неисправности; работы без снятия напряжения запрещены, кроме поиска повреждения изоляции (п. 523).</p>
+<p><span class="lbl e">Пояснение</span> Сети оперативного постоянного тока работают с изолированными полюсами. Одно замыкание на землю тока не создаёт, сеть продолжает работать, но подаётся сигнал. Второе замыкание на другом полюсе создаёт путь тока через землю, из-за которого может сработать или, наоборот, не сработать защита. Поэтому при первом сигнале повреждение ищут и устраняют сразу. Чем ниже напряжение батареи, тем ниже и нормы изоляции.</p>
+
+<h3>5. Электролит и помещение (пп. 524–525)</h3>
+<ul class="pts">
+<li>Анализ электролита проводится ежегодно, по контрольным элементам — не менее 10 % (п. 524).</li>
+<li>Доливка — дистиллированной водой без хлора и железа (п. 524). <span class="lbl e">Пояснение</span> Хлор и железо вызывают саморазряд и коррозию.</li>
+<li>Баки типов С и СК накрываются стеклом или иным изоляционным материалом; масло запрещено (п. 524).</li>
+<li>Температура в помещении не ниже 10 °C. До 5 °C допускается на подстанциях без постоянного дежурства или при расчёте ёмкости с учётом понижения температуры. Помещение защищено от солнечных лучей (п. 525). <span class="lbl e">Пояснение</span> При низкой температуре ёмкость батареи падает.</li>
+</ul>
+
+<h3>6. Обслуживание (пп. 526–527)</h3>
+<p><span class="lbl n">Правила</span> Осмотр проводится по графику технического руководителя. Измерение напряжения, плотности и температуры электролита каждого элемента — не реже 1 раза в месяц; персонал обеспечивается приборами (п. 526). Объём технического обслуживания и ремонта определяет владелец; на каждую батарею ведётся журнал осмотров и работ (п. 527).</p>
+
+<div class="memo"><b>Что запомнить</b><ol>
+<li>Режим — постоянный подзаряд; тренировочных разрядов и периодических уравнительных перезарядов нет.</li>
+<li>Подзаряд на элемент: СК 2,2 ± 0,05 В; СН 2,18 ± 0,04 В.</li>
+<li>После аварийного разряда: до 90 % ёмкости не более чем за 8 ч.</li>
+<li>Изоляция сети: 220 В — 100 кОм (сигнал 20), 110 В — 50 (10), 60 В — 30 (6), 48 В — 25 (5), 24 В — 15 (3 кОм); изоляция сети не ниже двукратной уставки.</li>
+<li>Электролит: анализ ежегодно, контрольные элементы не менее 10 %; измерения по каждому элементу не реже 1 раза в месяц.</li>
+<li>Помещение: не ниже 10 °C (до 5 °C на подстанциях без постоянного дежурства).</li></ol>
+<button class="linkb" type="button" data-q="6">Открыть вопрос 6 в «Вопросах и ответах»</button></div>
+</article>
+
+<!-- ======== ОХЛАЖДЕНИЕ ======== -->
+<article class="th" id="th-cool" hidden>
+<h2>Охлаждение силовых трансформаторов (разд. XXXIII, пп. 469, 471, 472, 478)</h2>
+<p><span class="lbl e">Пояснение</span> Трансформатор нагревается от потерь в обмотках и сердечнике. Масло выполняет две задачи: изолирует и уносит тепло. От температуры масла зависит срок службы изоляции, поэтому Правила ограничивают температуру верхних слоёв масла (п. 472). Системы охлаждения различаются только тем, что именно движется принудительно: масло, воздух, вода.</p>
+<p><span class="lbl n">Правила</span> Виды охлаждения: М — естественная циркуляция масла; Д — принудительная циркуляция воздуха и естественная циркуляция масла; ДЦ — принудительная циркуляция воздуха и масла; Ц — принудительная циркуляция воды и масла (пп. 469, 472).</p>
+
+<div class="fig" id="figCool">
+<div class="figbar"><button class="chip cv" data-k="M" aria-pressed="true">М</button><button class="chip cv" data-k="D" aria-pressed="false">Д</button><button class="chip cv" data-k="DC" aria-pressed="false">ДЦ</button><button class="chip cv" data-k="C" aria-pressed="false">Ц</button><button class="pausebtn" type="button">⏸ Пауза</button></div>
+<div class="cvsvg" data-k="M"><svg class="svgc" viewBox="0 0 540 310" role="img" aria-label="Схема охлаждения M" style="--spd:3.4s;--spin:1.0s"><rect class="tank" x="30" y="50" width="200" height="220" rx="10"/><rect class="oilbg" x="33" y="72" width="194" height="195" rx="6"/><text class="lb" x="130" y="42" text-anchor="middle">бак с маслом</text><rect class="core" x="95" y="100" width="14" height="125"/><rect class="core" x="150" y="100" width="14" height="125"/><rect class="core" x="95" y="100" width="69" height="12"/><rect class="core" x="95" y="213" width="69" height="12"/><rect class="coil" x="84" y="122" width="36" height="80" rx="4"/><rect class="coil" x="139" y="122" width="36" height="80" rx="4"/><text class="lb" x="130" y="258" text-anchor="middle">обмотки и сердечник</text><path class="tube" d="M130 98 L373 98 L373 228 L130 228"/><path class="tube" d="M130 98 L130 228"/><rect class="rad" x="350" y="76" width="46" height="170" rx="6"/><line class="fin" x1="360" y1="84" x2="360" y2="238"/><line class="fin" x1="373" y1="84" x2="373" y2="238"/><line class="fin" x1="386" y1="84" x2="386" y2="238"/><text class="lb" x="373" y="266" text-anchor="middle">радиатор</text><path marker-end="url(#ar)" class="flow hot" d="M130 220 L130 98 L373 98 L373 160"/><path marker-end="url(#ar)" class="flow cold" d="M373 160 L373 228 L130 228 L130 220"/><text class="lb hotl" x="250" y="90" text-anchor="middle">горячее масло</text><text class="lb coldl" x="305" y="250" text-anchor="middle">остывшее масло</text></svg></div><div class="cvsvg" data-k="D" hidden><svg class="svgc" viewBox="0 0 540 310" role="img" aria-label="Схема охлаждения D" style="--spd:3.4s;--spin:1.0s"><rect class="tank" x="30" y="50" width="200" height="220" rx="10"/><rect class="oilbg" x="33" y="72" width="194" height="195" rx="6"/><text class="lb" x="130" y="42" text-anchor="middle">бак с маслом</text><rect class="core" x="95" y="100" width="14" height="125"/><rect class="core" x="150" y="100" width="14" height="125"/><rect class="core" x="95" y="100" width="69" height="12"/><rect class="core" x="95" y="213" width="69" height="12"/><rect class="coil" x="84" y="122" width="36" height="80" rx="4"/><rect class="coil" x="139" y="122" width="36" height="80" rx="4"/><text class="lb" x="130" y="258" text-anchor="middle">обмотки и сердечник</text><path class="tube" d="M130 98 L373 98 L373 228 L130 228"/><path class="tube" d="M130 98 L130 228"/><rect class="rad" x="350" y="76" width="46" height="170" rx="6"/><line class="fin" x1="360" y1="84" x2="360" y2="238"/><line class="fin" x1="373" y1="84" x2="373" y2="238"/><line class="fin" x1="386" y1="84" x2="386" y2="238"/><text class="lb" x="373" y="266" text-anchor="middle">радиатор</text><path marker-end="url(#ar)" class="flow hot" d="M130 220 L130 98 L373 98 L373 160"/><path marker-end="url(#ar)" class="flow cold" d="M373 160 L373 228 L130 228 L130 220"/><text class="lb hotl" x="250" y="90" text-anchor="middle">горячее масло</text><text class="lb coldl" x="305" y="250" text-anchor="middle">остывшее масло</text><g><circle class="fanbox" cx="468" cy="161" r="38"/><g class="spin" style="--cx:468px"><ellipse class="blade" cx="468" cy="140" rx="9" ry="19"/><ellipse class="blade" cx="468" cy="182" rx="9" ry="19"/><ellipse class="blade" cx="447" cy="161" rx="19" ry="9"/><ellipse class="blade" cx="489" cy="161" rx="19" ry="9"/></g><circle class="hub" cx="468" cy="161" r="5"/></g><path marker-end="url(#ar)" class="flow air" d="M525 110 L405 110"/><path marker-end="url(#ar)" class="flow air" d="M525 161 L405 161"/><path marker-end="url(#ar)" class="flow air" d="M525 212 L405 212"/><text class="lb al" x="468" y="106" text-anchor="middle">вентилятор</text><text class="lb al" x="470" y="262" text-anchor="middle">воздух</text></svg></div><div class="cvsvg" data-k="DC" hidden><svg class="svgc" viewBox="0 0 540 310" role="img" aria-label="Схема охлаждения DC" style="--spd:1.1s;--spin:1.0s"><rect class="tank" x="30" y="50" width="200" height="220" rx="10"/><rect class="oilbg" x="33" y="72" width="194" height="195" rx="6"/><text class="lb" x="130" y="42" text-anchor="middle">бак с маслом</text><rect class="core" x="95" y="100" width="14" height="125"/><rect class="core" x="150" y="100" width="14" height="125"/><rect class="core" x="95" y="100" width="69" height="12"/><rect class="core" x="95" y="213" width="69" height="12"/><rect class="coil" x="84" y="122" width="36" height="80" rx="4"/><rect class="coil" x="139" y="122" width="36" height="80" rx="4"/><text class="lb" x="130" y="258" text-anchor="middle">обмотки и сердечник</text><path class="tube" d="M130 98 L373 98 L373 228 L130 228"/><path class="tube" d="M130 98 L130 228"/><rect class="rad" x="350" y="76" width="46" height="170" rx="6"/><line class="fin" x1="360" y1="84" x2="360" y2="238"/><line class="fin" x1="373" y1="84" x2="373" y2="238"/><line class="fin" x1="386" y1="84" x2="386" y2="238"/><text class="lb" x="373" y="266" text-anchor="middle">радиатор</text><path marker-end="url(#ar)" class="flow hot" d="M130 220 L130 98 L373 98 L373 160"/><path marker-end="url(#ar)" class="flow cold" d="M373 160 L373 228 L130 228 L130 220"/><text class="lb hotl" x="250" y="90" text-anchor="middle">горячее масло</text><text class="lb coldl" x="305" y="250" text-anchor="middle">остывшее масло</text><g><circle class="fanbox" cx="468" cy="161" r="38"/><g class="spin" style="--cx:468px"><ellipse class="blade" cx="468" cy="140" rx="9" ry="19"/><ellipse class="blade" cx="468" cy="182" rx="9" ry="19"/><ellipse class="blade" cx="447" cy="161" rx="19" ry="9"/><ellipse class="blade" cx="489" cy="161" rx="19" ry="9"/></g><circle class="hub" cx="468" cy="161" r="5"/></g><path marker-end="url(#ar)" class="flow air" d="M525 110 L405 110"/><path marker-end="url(#ar)" class="flow air" d="M525 161 L405 161"/><path marker-end="url(#ar)" class="flow air" d="M525 212 L405 212"/><text class="lb al" x="468" y="106" text-anchor="middle">вентилятор</text><text class="lb al" x="470" y="262" text-anchor="middle">воздух</text><g><circle class="pumpc" cx="255" cy="228" r="17"/><g class="spin" ><path class="imp" d="M255 214 L255 242 M241 228 L269 228"/></g></g><text class="lb" x="262" y="278" text-anchor="middle">масляный насос</text></svg></div><div class="cvsvg" data-k="C" hidden><svg class="svgc" viewBox="0 0 540 310" role="img" aria-label="Схема охлаждения C" style="--spd:1.1s;--spin:1.0s"><rect class="tank" x="30" y="50" width="200" height="220" rx="10"/><rect class="oilbg" x="33" y="72" width="194" height="195" rx="6"/><text class="lb" x="130" y="42" text-anchor="middle">бак с маслом</text><rect class="core" x="95" y="100" width="14" height="125"/><rect class="core" x="150" y="100" width="14" height="125"/><rect class="core" x="95" y="100" width="69" height="12"/><rect class="core" x="95" y="213" width="69" height="12"/><rect class="coil" x="84" y="122" width="36" height="80" rx="4"/><rect class="coil" x="139" y="122" width="36" height="80" rx="4"/><text class="lb" x="130" y="258" text-anchor="middle">обмотки и сердечник</text><path class="tube" d="M130 98 L350 98 L350 228 L130 228"/><path class="tube" d="M130 98 L130 228"/><rect class="rad" x="320" y="70" width="120" height="180" rx="8"/><text class="lb" x="380" y="266" text-anchor="middle">масловодяной охладитель</text><path marker-end="url(#ar)" class="flow hot" d="M130 220 L130 98 L350 98 L350 160"/><path marker-end="url(#ar)" class="flow cold" d="M350 160 L350 228 L130 228 L130 220"/><text class="lb hotl" x="235" y="90" text-anchor="middle">горячее масло</text><path class="tube wt" d="M420 250 L420 96 L420 60 L520 60"/><path class="tube wt" d="M520 280 L420 280 L420 250"/><path marker-end="url(#ar)" class="flow water" d="M520 282 L420 282 L420 62 L520 62"/><text class="lb wl" x="470" y="52" text-anchor="middle">вода выход</text><text class="lb wl" x="380" y="300" text-anchor="middle">вода вход</text><circle class="pump" cx="470" cy="282" r="0"/><g><circle class="pumpc" cx="255" cy="228" r="17"/><g class="spin" ><path class="imp" d="M255 214 L255 242 M241 228 L269 228"/></g></g><text class="lb" x="262" y="278" text-anchor="middle">масляный насос</text><g><circle class="pumpc" cx="470" cy="282" r="14"/><g class="spin"><path class="imp" d="M470 270 L470 294 M458 282 L482 282"/></g></g></svg></div>
+<div class="cdesc" id="coolDesc"></div>
+<div class="legend3"><span><i class="sw hotsw"></i>горячее масло</span><span><i class="sw coldsw"></i>остывшее масло</span><span><i class="sw airsw"></i>воздух</span><span><i class="sw watsw"></i>вода</span></div>
+<p class="rmnote">В настройках устройства включено уменьшение движения: анимация отключена, схема показана без движения.</p>
+</div>
+
+<h3>Как движется масло</h3>
+<p><span class="lbl e">Пояснение</span> Горячее масло возле обмоток легче холодного, поэтому поднимается вверх, по трубе уходит в радиатор, там отдаёт тепло воздуху, становится плотнее, опускается и возвращается к обмоткам. Это естественная циркуляция (М и Д): масло движется само. В схемах ДЦ и Ц масло подгоняет насос, поэтому охлаждается интенсивнее.</p>
+
+<h3>Предельная температура верхних слоёв масла (п. 472)</h3>
+<div class="scroll"><table class="tt"><tr><th>Система</th><th>Что принудительно</th><th>Предел</th></tr>
+<tr><td>М</td><td>ничего: масло и воздух естественно</td><td>95 °C</td></tr>
+<tr><td>Д</td><td>воздух (вентиляторы)</td><td>95 °C</td></tr>
+<tr><td>ДЦ</td><td>воздух и масло</td><td>75 °C</td></tr>
+<tr><td>Ц</td><td>вода и масло</td><td>на входе в маслоохладитель не выше 70 °C, если иное не определено документацией изготовителя</td></tr></table></div>
+<p><span class="lbl n">Правила</span> Температура обмоток и магнитопровода при комбинированных системах охлаждения М, Д, ДЦ, для сухих трансформаторов и трансформаторов с газовой изоляцией определяется документацией изготовителей (п. 472). Правила приводят числа без обоснования, запоминайте парой: ДЦ — 75, М и Д — 95, Ц — 70 на входе в охладитель.</p>
+
+<h3>Принудительное охлаждение (п. 469)</h3>
+<p><span class="lbl n">Правила</span> Устройства принудительного охлаждения автоматически включаются и отключаются вместе с трансформатором (исключение — п. 478). Эксплуатация с искусственным охлаждением без сигнализации о прекращении циркуляции масла или воды или об остановке вентиляторов не допускается.</p>
+<p><span class="lbl e">Пояснение</span> Если охлаждение отказало, нагрев идёт быстро, и дежурный должен узнать об этом сразу.</p>
+
+<h3>Масловодяное охлаждение (п. 471)</h3>
+<ul class="pts">
+<li>Давление масла в маслоохладителях выше давления воды не менее чем на 0,1 кгс/см² (10 кПа) при минимальном уровне масла.</li>
+<li>Воду включают после рабочих масляных насосов при температуре верхних слоёв масла не ниже 15 °C и отключают при 10 °C; принимаются меры против замерзания.</li></ul>
+<p><span class="lbl e">Пояснение</span> Разность давлений нужна, чтобы при микротечи в охладителе масло ушло в воду, а не вода в масло: вода в масле резко ухудшает изоляцию.</p>
+
+<h3>Включение на нагрузку в мороз (п. 478)</h3>
+<ul class="pts">
+<li>М и Д — на номинальную нагрузку при любой отрицательной температуре.</li>
+<li>ДЦ и Ц — при температуре верхних слоёв масла не ниже минус 25 °C. Иначе сначала прогрев нагрузкой около 0,5 номинальной без циркуляции масла до минус 25 °C.</li>
+<li>В аварийных условиях допускается включение на полную нагрузку.</li></ul>
+<p><span class="lbl e">Пояснение</span> Холодное масло густое и плохо прокачивается, поэтому сначала его прогревают при выключенной циркуляции.</p>
+
+<div class="memo"><b>Что запомнить</b><ol>
+<li>М — всё естественное; Д — добавлены вентиляторы; ДЦ — насосы масла и вентиляторы; Ц — насосы масла и воды.</li>
+<li>Пределы температуры верхних слоёв масла: ДЦ 75 °C; М и Д 95 °C; Ц — на входе в маслоохладитель 70 °C.</li>
+<li>Давление масла в охладителе выше давления воды не менее чем на 0,1 кгс/см² (10 кПа).</li>
+<li>Воду включают при масле не ниже 15 °C, отключают при 10 °C.</li>
+<li>Мороз: ДЦ и Ц — не ниже минус 25 °C, иначе прогрев нагрузкой около 0,5 номинальной.</li></ol>
+<button class="linkb" type="button" data-q="7">Открыть вопрос 7 в «Вопросах и ответах»</button></div>
+</article>
+
+<!-- ======== ДГР ======== -->
+<article class="th" id="th-dgr" hidden>
+<h2>Компенсация ёмкостного тока: дугогасящие реакторы (разд. XLII, пп. 621–625)</h2>
+<p><span class="lbl e">Пояснение</span> В сетях 6–35 кВ с изолированной нейтралью при замыкании одной фазы на землю ток идёт через ёмкости двух других фаз на землю. Это ёмкостный ток. Если он велик, дуга в месте замыкания не гаснет, растут перенапряжения, повреждение развивается. Чтобы погасить дугу, в нейтраль включают дугогасящий реактор (ДГР). Он создаёт индуктивный ток, направленный противоположно ёмкостному. Токи вычитаются, остаётся небольшой остаточный ток, и дуга гаснет сама.</p>
+
+<div class="fig" id="figDgr">
+<div class="figbar"><button class="chip" id="dgrFault" aria-pressed="false">Замыкание фазы A на землю</button><button class="pausebtn" type="button">⏸ Пауза</button></div>
+<svg class="svgb" id="dgrSvg" viewBox="0 0 540 310" role="img" aria-label="Компенсация ёмкостного тока дугогасящим реактором" style="--spd:2s">
+<circle class="box" cx="56" cy="112" r="40"/><text class="lb" x="56" y="108" text-anchor="middle">Тран-</text><text class="lb" x="56" y="123" text-anchor="middle">сформатор</text>
+<path class="tube" d="M94 80 L420 80"/><path class="tube" d="M94 112 L420 112"/><path class="tube" d="M94 144 L420 144"/>
+<text class="lb" x="428" y="84">A</text><text class="lb" x="428" y="116">B</text><text class="lb" x="428" y="148">C</text>
+<g class="cap"><path class="tube" d="M200 80 L200 200"/><line class="plate" x1="188" y1="200" x2="212" y2="200"/><line class="plate" x1="188" y1="208" x2="212" y2="208"/><path class="tube" d="M200 208 L200 262"/></g>
+<g class="cap"><path class="tube" d="M262 112 L262 200"/><line class="plate" x1="250" y1="200" x2="274" y2="200"/><line class="plate" x1="250" y1="208" x2="274" y2="208"/><path class="tube" d="M262 208 L262 262"/></g>
+<g class="cap"><path class="tube" d="M324 144 L324 200"/><line class="plate" x1="312" y1="200" x2="336" y2="200"/><line class="plate" x1="312" y1="208" x2="336" y2="208"/><path class="tube" d="M324 208 L324 262"/></g>
+<text class="lb" x="330" y="300" text-anchor="middle">ёмкости фаз на землю</text>
+<line class="gnd" x1="30" y1="262" x2="450" y2="262"/><text class="lb" x="130" y="300" text-anchor="middle">земля</text>
+<path class="tube" d="M60 144 L60 262"/>
+<path class="coilr" d="M60 168 q-12 7 0 14 q12 7 0 14 q-12 7 0 14 q12 7 0 14 q-12 7 0 14"/>
+<text class="lb" x="76" y="205">ДГР</text>
+<g class="fault-on"><path class="fault" d="M400 80 L400 262"/><text class="lb red" x="408" y="180">замыкание</text>
+<path marker-end="url(#ar)" class="flow capf" d="M262 112 L262 262 L400 262 L400 80 L94 80"/><path marker-end="url(#ar)" class="flow capf" d="M324 144 L324 262"/>
+<path id="indf" class="flow indf" d="M60 254 L60 150 L96 72 L408 72 L408 254 L60 254"/></g>
+</svg>
+<div class="slidebox"><label>Настройка реактора: индуктивный ток = <b id="dgrPct">100</b> % от ёмкостного<input type="range" id="dgrRange" min="50" max="150" value="100" step="1"></label>
+<div class="dgrout" id="dgrOut"></div></div>
+<p class="figcap muted">Условный пример: ёмкостный ток 20 А — порог для сети 10 кВ (п. 621). Синие стрелки — ёмкостный ток, оранжевые — индуктивный. На общих участках они идут навстречу друг другу.</p>
+</div>
+
+<h3>Когда компенсация нужна (п. 621)</h3>
+<div class="scroll"><table class="tt"><tr><th>Сеть</th><th>Компенсация при токе замыкания на землю более</th></tr>
+<tr><td>6 кВ</td><td>30 А</td></tr><tr><td>10 кВ</td><td>20 А</td></tr><tr><td>15–20 кВ</td><td>15 А</td></tr><tr><td>35 кВ и выше</td><td>10 А</td></tr></table></div>
+<p><span class="lbl n">Правила</span> Работа сетей 6–35 кВ без компенсации при токах выше указанных недопустима. В сетях собственных нужд 6 кВ блочных электростанций допускается заземление нейтрали через резистор. В цепях генераторного напряжения при обосновании расчётами допускается изолированная нейтраль. В сетях 6–35 кВ с ВЛ на железобетонных и металлических опорах ДГР применяются при ёмкостном токе более 10 А; допускается режим через низкоомный резистор с отключением присоединения (п. 621).</p>
+
+<h3>Настройка: перекомпенсация и недокомпенсация (п. 623)</h3>
+<ul class="pts">
+<li>Настройка — резонансная: ток реактора примерно равен ёмкостному току.</li>
+<li><b>Перекомпенсация</b> (ток реактора больше ёмкостного) допускается при расстройке не более 5 %.</li>
+<li><b>Недокомпенсация</b> (ток реактора меньше ёмкостного) не допускается (кроме ДГР, настраиваемых в резонанс при возникновении замыкания на землю). Временно, при отсутствии ДГР нужной мощности, допускается при условии, что смещение нейтрали не выше 70 % фазного.</li>
+<li>В сетях 6–20 кВ при большой разности токов смежных ответвлений реактивная составляющая тока замыкания на землю — не более 10 А; в сетях 35 кВ при ёмкостном токе менее 15 А расстройка — не более 10 %.</li></ul>
+<p><span class="lbl e">Пояснение</span> Определений этих терминов в Правилах нет. Недокомпенсацию запрещают, потому что при отключении линий ёмкостный ток уменьшается и может пройти через точку резонанса. При перекомпенсации отключение линий только увеличивает расстройку от резонанса.</p>
+
+<h3>Другие требования (пп. 621–625)</h3>
+<ul class="pts">
+<li>ДГР подключаются к нейтралям трансформаторов, генераторов или синхронных компенсаторов через разъединители; трансформаторы — со схемой «звезда—треугольник»; к трансформаторам с плавкими предохранителями подключение не допускается; ввод — через трансформатор тока на заземляющее устройство (п. 623).</li>
+<li>Мощность ДГР выбирается по ёмкостному току с учётом перспективы; устанавливаются на подстанциях, связанных с сетью не менее чем двумя линиями; на тупиковых подстанциях не допускаются (п. 622).</li>
+<li>Напряжение несимметрии не выше 0,75 % фазного; напряжение смещения нейтрали без замыкания на землю не выше 15 % длительно и не выше 30 % в течение 1 ч (п. 624).</li>
+<li>Ёмкостные токи измеряют при вводе ДГР и значительных изменениях режимов, но не реже 1 раза в 6 лет; для простой сети допускается расчёт (п. 621).</li>
+<li>В сетях 6–20 кВ применяются плавнорегулируемые ДГР с автоматическими регуляторами и ручным регулированием (п. 625).</li></ul>
+
+<div class="memo"><b>Что запомнить</b><ol>
+<li>ДГР создаёт индуктивный ток против ёмкостного.</li>
+<li>Пороги: 6 кВ — 30 А; 10 кВ — 20 А; 15–20 кВ — 15 А; 35 кВ и выше — 10 А.</li>
+<li>Перекомпенсация допускается при расстройке не более 5 %; недокомпенсация не допускается.</li>
+<li>Смещение нейтрали без замыкания: 15 % длительно, 30 % за 1 ч; несимметрия 0,75 %.</li>
+<li>Измерения ёмкостных токов — не реже 1 раза в 6 лет.</li></ol>
+<button class="linkb" type="button" data-q="9">Открыть вопрос 9 в «Вопросах и ответах»</button> <button class="linkb" type="button" data-q="10">Открыть вопрос 10</button></div>
+</article>
+</section>
+
 <section id="quiz" hidden>
 <div class="bar">
 <select id="topic"><option value="0">Все темы</option><option value="1">1. Что включает техническая эксплуатация (п. 4, разд. II)</option><option value="2">2. Техническое освидетельствование (п. 8, разд. II)</option><option value="3">3. Ввод в работу нового оборудования (разд. III, п. 13)</option><option value="4">4. Задачи оперативно-технологического управления (п. 57, разд. VIII)</option><option value="5">5. Требования к персоналу (разд. IV)</option><option value="6">6. Аккумуляторные установки (разд. XXXV, п. 514–527)</option><option value="7">7. Охлаждение трансформаторов и реакторов, температура масла (п. 472, …</option><option value="8">8. Параллельная работа трансформаторов (п. 485)</option><option value="9">9. Перекомпенсация и недокомпенсация (п. 623, разд. XLII)</option><option value="10">10. Когда нужна компенсация ёмкостного тока ДГР (п. 621)</option><option value="11">11. Чем отличается диспетчерский персонал от оперативного</option><option value="12">12. Чем отличается рабочая комиссия от приёмной (приёмочной)</option><option value="13">13. Какие системы должны быть проверены (введены) до ввода в работу</option><option value="14">14. Чем отличается бланк переключений от программы переключений</option><option value="15">15. Какие работы нельзя выполнять по распоряжению</option><option value="16">16. Какие работы можно проводить по распоряжению (в том числе по перечн…</option><option value="17">17. Перечень работ в порядке текущей эксплуатации. Кем утверждается</option><option value="18">18. На кого распространяется ПОТ ЭУ</option><option value="19">19. Специальные работы (в том числе работы под напряжением и под наведё…</option><option value="20">20. Заземления: какие устанавливаются</option><option value="21">21. Перегрузочная способность силовых трансформаторов, как устанавливае…</option></select>
@@ -991,6 +1261,39 @@ function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='
 document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
 ['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();
 $('start').onclick=build;
+</script>
+<script>
+(function(){
+ function $(i){return document.getElementById(i)}
+ window.showTab=function(t){document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t===t)});['ref','theory','quiz'].forEach(function(id){var e=$(id);if(e)e.hidden=id!==t})};
+ var chips=document.querySelectorAll('#thChips .chip');
+ chips.forEach(function(c){c.onclick=function(){chips.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['acc','cool','dgr'].forEach(function(p){$('th-'+p).hidden=p!==c.dataset.p});window.scrollTo({top:$('theory').offsetTop-10,behavior:'smooth'})}});
+ document.querySelectorAll('.pausebtn').forEach(function(b){b.onclick=function(){var f=b.closest('.fig');f.classList.toggle('paused');b.textContent=f.classList.contains('paused')?'▶ Запустить анимацию':'⏸ Пауза'}});
+ document.querySelectorAll('.linkb[data-q]').forEach(function(b){b.onclick=function(){if(window.openQ)window.openQ(+b.dataset.q)}});
+ /* батарея */
+ var BC={'st-float':'Нормальный режим. Зарядное устройство питает нагрузку (зелёные стрелки) и малым током подпитывает батарею, компенсируя саморазряд (п. 515).','st-emerg':'Переменное напряжение пропало. Зарядное устройство не работает, нагрузку без паузы питает батарея (жёлтые стрелки).','st-peak':'Включается привод выключателя: ток нагрузки резко растёт. Батарея должна удержать напряжение, поэтому раз в год на подстанциях проверяют падение напряжения при толчковых токах (п. 518).'};
+ var bs=$('battSvg');function setB(s){bs.setAttribute('class','svgb '+s);$('battCap').textContent=BC[s];document.querySelectorAll('.bst').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.s===s)})}
+ document.querySelectorAll('.bst').forEach(function(b){b.onclick=function(){setB(b.dataset.s)}});setB('st-float');
+ /* изоляция */
+ var IC={'st0':'Изоляция в норме: утечки через сопротивление изоляции малы, сигнала нет.','st1':'Первое замыкание на землю одного полюса. Замкнутого контура нет, ток не идёт, сеть работает. Подаётся сигнал о снижении изоляции: повреждение надо найти и устранить (п. 523).','st2':'Второе замыкание на другом полюсе. Появляется путь тока через землю в обход нагрузки, что может вызвать ложное срабатывание или отказ защиты.'};
+ var is=$('isoSvg');function setI(s){is.setAttribute('class','svgb '+s);$('isoCap').textContent=IC[s];document.querySelectorAll('.ist').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.s===s)})}
+ document.querySelectorAll('.ist').forEach(function(b){b.onclick=function(){setI(b.dataset.s)}});setI('st0');
+ /* охлаждение */
+ var CD={M:'М. Масло циркулирует само: горячее поднимается в радиатор, остывшее опускается. Воздух тоже естественный. Предел температуры верхних слоёв масла — 95 °C.',D:'Д. Масло циркулирует само, а воздух через радиатор гонят вентиляторы. Предел — 95 °C.',DC:'ДЦ. Масло гонит насос, воздух — вентиляторы: охлаждение интенсивнее. Предел температуры верхних слоёв масла — 75 °C.',C:'Ц. Масло гонит насос через масловодяной охладитель, воду тоже гонит насос. Давление масла выше давления воды не менее чем на 0,1 кгс/см² (10 кПа). Температура масла на входе в охладитель — не выше 70 °C.'};
+ function setC(k){document.querySelectorAll('.cvsvg').forEach(function(d){d.hidden=d.dataset.k!==k});document.querySelectorAll('.cv').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.k===k)});$('coolDesc').textContent=CD[k]}
+ document.querySelectorAll('.cv').forEach(function(b){b.onclick=function(){setC(b.dataset.k)}});setC('M');
+ /* ДГР */
+ var ds=$('dgrSvg'),fb=$('dgrFault'),rg=$('dgrRange');
+ function dgr(){var k=+rg.value;$('dgrPct').textContent=k;var IC=20,IL=IC*k/100,ind=$('indf');if(ind)ind.style.strokeWidth=Math.max(1,6*k/100);
+  var v=k-100,res=Math.abs(IC-IL).toFixed(1),o=$('dgrOut'),txt;
+  txt='Ёмкостный ток 20 А, ток реактора '+IL.toFixed(1).replace('.',',')+' А, остаточный ток '+res.replace('.',',')+' А. ';
+  if(v<0){o.className='dgrout bad';txt+='Недокомпенсация '+(-v)+' %: не допускается (п. 623).'}
+  else if(v===0){o.className='dgrout good';txt+='Резонансная настройка.'}
+  else if(v<=5){o.className='dgrout good';txt+='Перекомпенсация '+v+' %: допускается при расстройке не более 5 % (п. 623).'}
+  else{o.className='dgrout mid';txt+='Перекомпенсация '+v+' %: больше 5 %, допустимая расстройка превышена (п. 623).'}
+  o.textContent=txt}
+ fb.onclick=function(){var on=ds.classList.toggle('on');fb.setAttribute('aria-pressed',on)};rg.oninput=dgr;dgr();
+})();
 </script>
 <style>
 details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
