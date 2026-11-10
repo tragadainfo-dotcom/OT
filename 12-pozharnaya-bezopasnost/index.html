@@ -62,6 +62,20 @@ svg text{fill:currentColor;font:13px system-ui,sans-serif}
 @keyframes flick{to{transform:scale(1.06,.92)}}
 #useSvg.s4 .fire{transform-box:fill-box;transform-origin:50% 100%;animation:die 5s ease-in forwards}
 @keyframes die{to{transform:scale(0);opacity:0}}
+#wkSvg .press path{fill:none;stroke:#1a73c9;stroke-width:3}
+#wkSvg .run{display:none}#wkSvg.open .run{display:inline}
+#wkSvg .valve,#wkSvg .wlever{transition:transform .5s}
+#wkSvg .wlever{transform-origin:152px 50px}
+#wkSvg.open .valve{transform:translate(18px,0)}
+#wkSvg.open .wlever{transform:rotate(-13deg)}
+#wkSvg.open .press{animation:pulse .8s ease-in-out infinite}
+#wkSvg .jet.up{stroke:#2f7fd0;stroke-width:6;stroke-dasharray:2 12}
+#wkSvg .liq{transform-box:fill-box;transform-origin:50% 100%}
+#wkSvg.open .liq{animation:drain 16s linear forwards}
+@keyframes drain{to{transform:scaleY(.08)}}
+#wkSvg .snow circle{fill:#9fc3d1;animation:fall 1.2s linear infinite}
+#wkSvg .snow circle:nth-child(2n){animation-delay:.5s}
+@keyframes fall{from{transform:translateY(-30px);opacity:1}to{transform:translateY(30px);opacity:0}}
 .pulse{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{opacity:.3}}
 .fig.paused *{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.fig *{animation:none!important;transition:none!important}#useSvg.s4 .fire{opacity:.15}}
@@ -123,6 +137,36 @@ svg text{fill:currentColor;font:13px system-ui,sans-serif}
 <div class="bar"><button class="btn" id="ouAll">Собрать сразу</button><button class="btn" id="ouReset">Разобрать</button></div>
 </div>
 <h3>Как он работает</h3>
+<div class="fig" id="wkFig">
+<div class="bar"><button class="btn pri" id="wkBtn">Нажать рычаг</button><button class="btn" id="wkPause">⏸ Пауза</button></div>
+<svg viewBox="0 0 540 380" id="wkSvg" role="img" aria-label="Разрез углекислотного огнетушителя в работе">
+<rect x="120" y="96" width="110" height="250" rx="24" fill="var(--card)" stroke="#d62027" stroke-width="6"/>
+<rect x="160" y="78" width="30" height="24" fill="var(--card)" stroke="#d62027" stroke-width="6"/>
+<clipPath id="wkClip"><rect x="123" y="99" width="104" height="244" rx="21"/></clipPath>
+<g clip-path="url(#wkClip)"><rect class="liq" x="123" y="170" width="104" height="176" fill="#7fb6e6"/></g>
+<text x="60" y="130" text-anchor="middle">газ CO₂</text><path d="M84 126 L128 132" stroke="currentColor" stroke-width="1.5"/>
+<text x="56" y="270" text-anchor="middle">жидкая</text><text x="56" y="286" text-anchor="middle">углекислота</text><path d="M96 272 L128 266" stroke="currentColor" stroke-width="1.5"/>
+<g class="press"><path d="M140 120 v30 m-6 -8 l6 8 l6 -8" /><path d="M210 120 v30 m-6 -8 l6 8 l6 -8"/></g>
+<path d="M169 84 V326 M181 84 V326" stroke="#333" stroke-width="3"/>
+<text x="262" y="230">сифонная</text><text x="262" y="246">трубка</text><path d="M258 232 L184 240" stroke="currentColor" stroke-width="1.5"/>
+<rect x="150" y="44" width="50" height="36" rx="4" fill="#8a93a0"/>
+<path d="M169 62 H250" stroke="#333" stroke-width="12"/><path d="M175 84 V62 H250" stroke="#cfe3ea" stroke-width="6" fill="none"/>
+<rect class="valve" x="167" y="66" width="16" height="10" fill="#d33"/>
+<path d="M150 68 L96 68" stroke="#222" stroke-width="8" stroke-linecap="round"/>
+<path class="wlever" d="M152 50 L92 38" stroke="#222" stroke-width="8" stroke-linecap="round"/>
+<path d="M250 54 L250 70 L330 96 L330 28z" fill="#222"/>
+<text x="175" y="30" text-anchor="middle">клапан</text>
+<g class="run">
+<path class="jet up" d="M175 322 V88"/>
+<path class="jet up" d="M175 84 V62 H250"/>
+<path class="jet" d="M252 62 L420 62" style="stroke-width:18"/>
+<circle class="cloud" cx="400" cy="62" r="30"/><circle class="cloud" cx="450" cy="46" r="36" style="animation-delay:.3s"/><circle class="cloud" cx="470" cy="92" r="30" style="animation-delay:.6s"/>
+<g class="snow"><circle cx="410" cy="130" r="3"/><circle cx="440" cy="150" r="3"/><circle cx="470" cy="136" r="3"/><circle cx="455" cy="170" r="3"/><circle cx="425" cy="176" r="3"/></g>
+<text x="440" y="212" text-anchor="middle">газ и «снег»,</text><text x="440" y="228" text-anchor="middle">около −70 °C</text>
+</g>
+</svg>
+<div class="info" id="wkInfo"></div>
+</div>
 <ul class="pts">
 <li>В баллоне находится сжиженная двуокись углерода (CO₂) под высоким давлением. Отдельного газа-вытеснителя нет: углекислота выталкивает сама себя.</li>
 <li>При нажатии на рычаг клапан открывается, жидкая углекислота поднимается по сифонной трубке и выходит через раструб.</li>
@@ -210,6 +254,10 @@ document.querySelectorAll('.part').forEach(function(p){p.addEventListener('click
 $('ouAll').onclick=function(){inst=ORD.length;sync();$('ouInfo').className='info';$('ouInfo').innerHTML='Огнетушитель собран. Нажмите на деталь, чтобы прочитать о ней.'};
 $('ouReset').onclick=function(){inst=0;sync();$('ouInfo').className='info';$('ouInfo').innerHTML='<span class="muted">Начните с баллона.</span>'};
 $('ouReset').onclick();
+var wk=$('wkSvg'),WT=['Клапан закрыт. В баллоне жидкая углекислота, над ней её собственный газ под высоким давлением. Он давит на жидкость (синие стрелки), но выхода нет.','Рычаг нажат, клапан открыт. Давление газа выталкивает жидкость вверх по сифонной трубке и через клапан в раструб. В раструбе углекислота резко расширяется, охлаждается примерно до минус 70 °C и выходит облаком газа и «снега». Уровень жидкости в баллоне падает.'];
+function wkSet(o){wk.setAttribute('class',o?'open':'');$('wkBtn').textContent=o?'Отпустить рычаг':'Нажать рычаг';$('wkInfo').textContent=WT[o?1:0]}
+$('wkBtn').onclick=function(){wkSet(!wk.classList.contains('open'))};
+$('wkPause').onclick=function(){var f=$('wkFig');f.classList.toggle('paused');this.textContent=f.classList.contains('paused')?'▶ Запустить':'⏸ Пауза'};wkSet(false);
 /* использование */
 var US=['Огнетушитель готов. Подойдите к очагу с наветренной стороны.','Пломба сорвана. Она подтверждала, что огнетушителем не пользовались.','Чека выдернута: рычаг больше не заблокирован.','Раструб направлен на основание пламени. За сам раструб рукой не берутся.','Рычаг нажат: клапан открыт, углекислота выходит через раструб, вытесняет воздух и охлаждает очаг. Пламя гаснет.'];
 var st=0,us=$('useSvg'),uc=document.querySelectorAll('#useChips .chip');
