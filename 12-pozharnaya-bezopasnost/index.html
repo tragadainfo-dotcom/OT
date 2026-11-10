@@ -44,6 +44,9 @@ svg text{fill:currentColor;font:13px system-ui,sans-serif}
 .part{transition:transform .7s ease,opacity .5s;cursor:pointer}
 .part:not(.in){transform:translate(var(--dx),var(--dy));opacity:.4}
 .part.sel .o{stroke:#1a73c9;stroke-width:4}
+.part2{transition:transform .7s ease,opacity .5s;cursor:pointer}
+.part2:not(.in){transform:translate(var(--dx),var(--dy));opacity:.4}
+.part2.sel .o{stroke:#1a73c9;stroke-width:4}
 /* использование */
 #useSvg .seal,#useSvg .pin,#useSvg .horn,#useSvg .lever{transition:transform .8s ease,opacity .6s}
 #useSvg .horn{transform-origin:150px 108px;transform:rotate(-80deg)}
@@ -273,6 +276,37 @@ details .in{padding:0 14px 14px}
 </svg>
 <div class="info" id="krInfo"></div>
 </div>
+<h3>Состав пожарного крана: соберите по порядку</h3>
+<p class="muted">Нажимайте детали (или кнопки над рисунком) в правильном порядке, как при сборке огнетушителя. Состав дан по общим сведениям, в присланном документе его нет.</p>
+<div class="fig">
+<div class="chips" id="pkChips"></div>
+<svg viewBox="0 0 320 300" id="pkSvg" role="img" aria-label="Пожарный кран в разборе" style="max-width:360px;margin:0 auto">
+<rect x="26" y="0" width="12" height="300" fill="#2f86e8" opacity=".35"/><rect x="38" y="80" width="62" height="12" fill="#2f86e8" opacity=".35"/><text x="44" y="292" style="font-size:11px">стояк</text>
+<g class="part2" data-k="cab" style="--dx:0px;--dy:0px"><rect class="o" x="100" y="40" width="190" height="230" rx="6" fill="#d62027" stroke="transparent"/><rect x="112" y="52" width="166" height="206" rx="4" fill="#f6f6f6"/><text x="195" y="250" text-anchor="middle" style="fill:#d62027;font-weight:700;font-size:13px">ПК</text></g>
+<g class="part2" data-k="valve" style="--dx:-90px;--dy:-30px"><rect class="o" x="104" y="74" width="34" height="30" rx="4" fill="#8a93a0" stroke="transparent"/><circle cx="121" cy="64" r="13" fill="none" stroke="#333" stroke-width="3"/><line x1="108" y1="64" x2="134" y2="64" stroke="#333" stroke-width="3"/></g>
+<g class="part2" data-k="head" style="--dx:-80px;--dy:60px"><rect class="o" x="138" y="80" width="26" height="20" rx="3" fill="#c9a227" stroke="transparent"/><line x1="144" y1="80" x2="144" y2="100" stroke="#6b5710" stroke-width="2"/><line x1="152" y1="80" x2="152" y2="100" stroke="#6b5710" stroke-width="2"/></g>
+<g class="part2" data-k="hose" style="--dx:56px;--dy:50px"><circle class="o" cx="195" cy="160" r="46" fill="none" stroke="#d9c97a" stroke-width="14"/><circle cx="195" cy="160" r="28" fill="none" stroke="#d9c97a" stroke-width="12"/><path d="M164 100 C160 120 170 126 195 116" fill="none" stroke="#d9c97a" stroke-width="9"/></g>
+<g class="part2" data-k="noz" style="--dx:36px;--dy:-40px"><path class="o" d="M190 218 L262 224 L262 242 L190 238z" fill="#333" stroke="transparent"/><rect x="262" y="228" width="16" height="10" fill="#9aa4b0"/></g>
+</svg>
+<div class="info" id="pkInfo"></div>
+<div class="bar"><button class="btn" id="pkAll">Собрать сразу</button><button class="btn" id="pkReset">Разобрать</button></div>
+</div>
+<h3>Состав пожарного гидранта: соберите по порядку</h3>
+<p class="muted">Показан подземный гидрант с пожарной колонкой. Состав дан по общим сведениям, в присланном документе его нет.</p>
+<div class="fig">
+<div class="chips" id="pgChips"></div>
+<svg viewBox="0 0 320 300" id="pgSvg" role="img" aria-label="Пожарный гидрант в разборе" style="max-width:360px;margin:0 auto">
+<rect x="0" y="112" width="320" height="188" fill="#8a7a5a" opacity=".25"/><line x1="0" y1="112" x2="320" y2="112" stroke="currentColor" stroke-width="3" opacity=".5"/>
+<g class="part2" data-k="pipe" style="--dx:0px;--dy:0px"><rect class="o" x="0" y="238" width="320" height="34" fill="#2f86e8" opacity=".55" stroke="transparent"/><text x="160" y="260" text-anchor="middle" style="font-size:12px">водопроводная сеть</text></g>
+<g class="part2" data-k="hyd" style="--dx:-110px;--dy:-30px"><rect class="o" x="148" y="150" width="24" height="90" fill="#8a93a0" stroke="transparent"/><rect x="140" y="196" width="40" height="18" rx="3" fill="#44546a"/><circle cx="160" cy="140" r="9" fill="#8a93a0"/></g>
+<g class="part2" data-k="well" style="--dx:-90px;--dy:-70px"><path class="o" d="M96 128 V236 H224 V128" fill="none" stroke="#6b5a3a" stroke-width="6" stroke-dasharray="10 6"/><rect x="90" y="112" width="140" height="12" rx="3" fill="#5a5a5a"/></g>
+<g class="part2" data-k="col" style="--dx:100px;--dy:-10px"><rect class="o" x="146" y="28" width="28" height="100" rx="4" fill="#d62027" stroke="transparent"/><rect x="138" y="20" width="44" height="12" rx="3" fill="#8a1a20"/><rect x="174" y="62" width="22" height="12" fill="#8a1a20"/><rect x="124" y="62" width="22" height="12" fill="#8a1a20"/></g>
+<g class="part2" data-k="hose" style="--dx:56px;--dy:90px"><path class="o" d="M196 68 C250 68 260 100 250 150" fill="none" stroke="#d9c97a" stroke-width="10" stroke-linecap="round"/><rect x="244" y="148" width="14" height="10" fill="#9aa4b0"/></g>
+<g class="part2" data-k="key" style="--dx:-30px;--dy:-20px"><line class="o" x1="40" y1="30" x2="110" y2="30" stroke="#444" stroke-width="7" stroke-linecap="round"/><rect x="104" y="22" width="16" height="16" fill="#444"/><line x1="40" y1="14" x2="40" y2="46" stroke="#444" stroke-width="7" stroke-linecap="round"/></g>
+</svg>
+<div class="info" id="pgInfo"></div>
+<div class="bar"><button class="btn" id="pgAll">Собрать сразу</button><button class="btn" id="pgReset">Разобрать</button></div>
+</div>
 <h3>Чем отличаются</h3>
 <div class="scroll"><table><tr><th>Признак</th><th>Пожарный кран</th><th>Пожарный гидрант</th></tr>
 <tr><td>Где находится</td><td>внутри здания, в шкафу на стене, на внутреннем противопожарном водопроводе</td><td>снаружи, на сети наружного противопожарного водопровода (колонка или подземный гидрант в колодце)</td></tr>
@@ -383,6 +417,32 @@ var KM={kr:'Пожарный кран: вода идёт из внутренне
 var ks=$('krSvg');function setK(m){ks.setAttribute('class','m-'+m);document.querySelectorAll('#krChips .chip').forEach(function(c){c.setAttribute('aria-pressed',c.dataset.m===m)});$('krInfo').textContent=KM[m]}
 document.querySelectorAll('#krChips .chip').forEach(function(c){c.onclick=function(){setK(c.dataset.m)}});
 $('krPause').onclick=function(){var f=$('krFig');f.classList.toggle('paused');this.textContent=f.classList.contains('paused')?'▶ Запустить':'⏸ Пауза'};setK('kr');
+
+function asm(c){var ORD=c.o,ch=$(c.id+'Chips'),svg=$(c.id+'Svg'),inf=$(c.id+'Info'),n=0;
+ function part(k){return svg.querySelector('.part2[data-k='+k+']')}
+ ORD.forEach(function(k){var b=document.createElement('button');b.className='chip';b.textContent=c.d[k][0];b.onclick=function(){pick(k)};ch.appendChild(b)});
+ function show(k,pre,cls){inf.className='info'+(cls?' '+cls:'');inf.innerHTML=(pre?'<div style="margin-bottom:4px">'+pre+'</div>':'')+'<b class="t">'+c.d[k][0]+'</b>'+c.d[k][1];svg.querySelectorAll('.part2').forEach(function(p){p.classList.toggle('sel',p.dataset.k===k)})}
+ function sync(){ORD.forEach(function(k,i){part(k).classList.toggle('in',i<n);ch.children[i].classList.toggle('done',i<n)})}
+ function pick(k){var i=ORD.indexOf(k);if(i<n){show(k);return}
+  if(i===n){n++;sync();show(k,n===ORD.length?c.fin:'Верно, деталь на месте.','ok');return}
+  inf.className='info bad';inf.innerHTML='Рано. Сейчас нужна деталь «'+c.d[ORD[n]][0]+'».'}
+ svg.querySelectorAll('.part2').forEach(function(p){p.addEventListener('click',function(){pick(p.dataset.k)})});
+ $(c.id+'All').onclick=function(){n=ORD.length;sync();inf.className='info';inf.innerHTML=c.fin+' Нажмите на деталь, чтобы прочитать о ней.'};
+ $(c.id+'Reset').onclick=function(){n=0;sync();inf.className='info';inf.innerHTML='<span class="muted">Начните с детали «'+c.d[ORD[0]][0]+'».</span>'};
+ $(c.id+'Reset').onclick()}
+asm({id:'pk',o:['cab','valve','head','hose','noz'],fin:'Пожарный кран собран.',d:{
+cab:['Шкаф','Красный шкаф на стене, в нём хранится всё оборудование крана. Обычно имеет окно или дверцу, которую можно быстро открыть.'],
+valve:['Клапан (вентиль)','Запорный клапан на ответвлении от внутреннего водопровода (стояка). Его открывают маховиком, и вода идёт в рукав. В документе клапан назван в комплекте крана.'],
+head:['Соединительная головка','Быстроразъёмное соединение, которым рукав присоединяют к клапану. Головка есть и на другом конце рукава, к ней крепят ствол. Деталь названа по общим сведениям.'],
+hose:['Пожарный рукав','Рукав в скатке (катке) или сложенный «гармошкой», чтобы быстро раскатать. Подаёт воду от клапана к стволу. В документе рукав назван в комплекте крана.'],
+noz:['Ствол','Наконечник на конце рукава, формирует струю воды и позволяет направить её на очаг. В документе ствол назван в комплекте крана.']}});
+asm({id:'pg',o:['pipe','hyd','well','col','hose','key'],fin:'Гидрант собран и готов к подаче воды.',d:{
+pipe:['Водопроводная сеть','Наружный противопожарный водопровод под землёй. Из него гидрант берёт воду. Эта деталь не принадлежит гидранту, но без неё он бесполезен.'],
+hyd:['Гидрант (подставка и клапан)','Вертикальный патрубок с клапаном, подключённый к сети. Клапан закрыт, пока гидрант не используют. Находится под землёй, чтобы не мёрзнуть и не мешать.'],
+well:['Колодец с крышкой','Колодец защищает гидрант от грязи и холода; крышку на поверхности отмечают указателем. Для работы крышку открывают.'],
+col:['Пожарная колонка','Устанавливается сверху на гидрант на время тушения. Имеет патрубки, к которым присоединяют рукава. Вода начинает идти после открытия клапана.'],
+hose:['Рукав','Пожарные рукава присоединяют к патрубкам колонки; по ним вода идёт к пожарному автомобилю и стволам.'],
+key:['Специальный ключ','Ключом открывают и закрывают клапан гидранта через колонку, штурвалом вручную его не открыть. В таблице выше ключ назван в комплекте гидранта.']}});
 /* использование */
 var US=['Огнетушитель готов. Подойдите к очагу с наветренной стороны.','Пломба сорвана. Она подтверждала, что огнетушителем не пользовались.','Чека выдернута: рычаг больше не заблокирован.','Раструб направлен на основание пламени. За сам раструб рукой не берутся.','Рычаг нажат: клапан открыт, углекислота выходит через раструб, вытесняет воздух и охлаждает очаг. Пламя гаснет.'];
 var st=0,us=$('useSvg'),uc=document.querySelectorAll('#useChips .chip');
