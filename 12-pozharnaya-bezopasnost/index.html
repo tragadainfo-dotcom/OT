@@ -76,6 +76,13 @@ svg text{fill:currentColor;font:13px system-ui,sans-serif}
 #wkSvg .snow circle{fill:#9fc3d1;animation:fall 1.2s linear infinite}
 #wkSvg .snow circle:nth-child(2n){animation-delay:.5s}
 @keyframes fall{from{transform:translateY(-30px);opacity:1}to{transform:translateY(30px);opacity:0}}
+#krSvg .wf{fill:none;stroke:#2f86e8;stroke-width:6;stroke-linecap:round;stroke-dasharray:2 13;animation:jet .6s linear infinite}
+#krSvg .hose{fill:none;stroke:#5b7a8a;stroke-width:10;opacity:.5;stroke-linecap:round}
+#krSvg .jet2{fill:none;stroke:#4aa8d8;stroke-width:5;stroke-linecap:round;stroke-dasharray:2 10;animation:jet .5s linear infinite}
+#krSvg .kr-on,#krSvg .gp-on{display:none}
+#krSvg.m-kr .kr-on,#krSvg.m-both .kr-on,#krSvg.m-gp .gp-on,#krSvg.m-both .gp-on{display:inline}
+#krSvg.m-kr .hyd,#krSvg.m-kr .truck{opacity:.35}#krSvg.m-gp .firein{opacity:1}
+#krSvg[class*="m-"] .firein{transform-box:fill-box;transform-origin:50% 100%;animation:die 7s ease-in forwards}
 .pulse{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{opacity:.3}}
 .fig.paused *{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.fig *{animation:none!important;transition:none!important}#useSvg.s4 .fire{opacity:.15}}
@@ -110,11 +117,13 @@ details .in{padding:0 14px 14px}
 <h1>Пожарная безопасность</h1>
 <p class="lead">Первичные средства пожаротушения, устройство углекислотного огнетушителя и порядок работы с ним. Вопросы и ответы по документу, теория с анимациями и тест.</p>
 <div class="note">Вкладки «Вопросы и ответы» и «Тест» составлены по присланному документу о первичных средствах пожаротушения (судя по тексту, это документ ОАО «Россети»; его название и номер в файле не указаны). Сведения, которых в документе нет, даны по общим знаниям и помечены словом «сверить» или «по этикетке».</div>
-<div class="chips" id="tabs"><button class="chip" data-p="ref" aria-pressed="true">Вопросы и ответы</button><button class="chip" data-p="pr" aria-pressed="false">Первичные средства</button><button class="chip" data-p="ou" aria-pressed="false">Устройство огнетушителя ОУ</button><button class="chip" data-p="use" aria-pressed="false">Как пользоваться</button><button class="chip" data-p="tr" aria-pressed="false">Тренажёр: чем тушить</button><button class="chip" data-p="qz" aria-pressed="false">Тест</button></div>
+<div class="chips" id="tabs"><button class="chip" data-p="ref" aria-pressed="true">Вопросы и ответы</button><button class="chip" data-p="pr" aria-pressed="false">Первичные средства</button><button class="chip" data-p="ou" aria-pressed="false">Устройство огнетушителя ОУ</button><button class="chip" data-p="use" aria-pressed="false">Как пользоваться</button><button class="chip" data-p="kr" aria-pressed="false">Пожарные краны и гидранты</button><button class="chip" data-p="tr" aria-pressed="false">Тренажёр: чем тушить</button><button class="chip" data-p="qz" aria-pressed="false">Тест</button></div>
 
 <article id="p-pr" hidden>
 <h2>Первичные средства пожаротушения</h2>
-<p>Это то, чем тушат пожар в самом начале, до прибытия пожарных: огнетушители, пожарный инвентарь на щите, песок, вода, покрывало (кошма). Нажмите на предмет на щите, чтобы узнать, для чего он нужен.</p>
+<div class="note" style="margin:0 0 10px">Вся вкладка составлена только по присланному документу. Если в документе о чём-то не сказано, так и написано.</div>
+<p><b>Определение.</b> К первичным средствам пожаротушения относятся средства пожаротушения, используемые для борьбы с пожаром в начальной стадии его развития (переносные и передвижные огнетушители, пожарные краны и средства обеспечения их использования, пожарный инвентарь, покрывала для изоляции очага возгорания).</p>
+<p>Нажмите на предмет на рисунке, чтобы прочитать, что о нём сказано в документе.</p>
 <div class="fig">
 <svg viewBox="0 0 540 380" role="img" aria-label="Пожарный щит">
 <rect x="20" y="16" width="380" height="250" rx="6" fill="var(--card)" stroke="#d62027" stroke-width="8"/>
@@ -128,16 +137,29 @@ details .in{padding:0 14px 14px}
 <g class="it" data-i="ogn"><rect class="hl" x="284" y="56" width="50" height="200" rx="4"/><rect x="294" y="100" width="30" height="140" rx="10" fill="#d62027"/><rect x="302" y="84" width="14" height="18" fill="#555"/><path d="M316 90 l16 0 l8 -14" stroke="#222" stroke-width="5" fill="none"/><rect x="294" y="150" width="30" height="36" fill="#fff"/><text x="309" y="173" text-anchor="middle" style="font-size:11px;fill:#111">ОП</text></g>
 <g class="it" data-i="ogn"><rect class="hl" x="340" y="56" width="50" height="200" rx="4"/><rect x="350" y="100" width="30" height="140" rx="10" fill="#d62027"/><rect x="358" y="84" width="14" height="18" fill="#555"/><path d="M372 90 l10 0 l8 -22 l-10 -2z" fill="#222"/><rect x="350" y="150" width="30" height="36" fill="#fff"/><text x="365" y="173" text-anchor="middle" style="font-size:11px;fill:#111">ОУ</text></g>
 <g class="it" data-i="koshma"><rect class="hl" x="412" y="16" width="118" height="92" rx="4"/><rect x="420" y="30" width="102" height="70" rx="6" fill="#d62027"/><rect x="432" y="56" width="78" height="34" rx="3" fill="#bbb"/><text x="471" y="48" text-anchor="middle" style="fill:#fff;font-size:11px">ПОКРЫВАЛО</text></g>
-<g class="it" data-i="bochka"><rect class="hl" x="412" y="120" width="118" height="146" rx="4"/><rect x="430" y="136" width="82" height="122" rx="10" fill="#d62027"/><ellipse cx="471" cy="140" rx="41" ry="9" fill="#4aa8d8"/><text x="471" y="204" text-anchor="middle" style="fill:#fff">ВОДА</text></g>
-<g class="it" data-i="pesok"><rect class="hl" x="20" y="278" width="380" height="92" rx="4"/><path d="M40 300 h340 v60 h-340z" fill="#d62027"/><path d="M30 300 h360 l-14 -16 h-332z" fill="#b01a20"/><text x="210" y="338" text-anchor="middle" style="fill:#fff;font-weight:700">ПЕСОК</text></g>
+<g class="it" data-i="kran"><rect class="hl" x="412" y="120" width="118" height="146" rx="4"/><rect x="424" y="130" width="94" height="126" rx="6" fill="#d62027"/><rect x="432" y="140" width="78" height="86" rx="4" fill="#f6f6f6"/><circle cx="471" cy="178" r="26" fill="none" stroke="#999" stroke-width="7"/><circle cx="471" cy="178" r="12" fill="none" stroke="#999" stroke-width="5"/><text x="471" y="246" text-anchor="middle" style="fill:#fff;font-weight:700">ПК</text></g>
+<g class="it" data-i="pesok"><rect class="hl" x="20" y="278" width="380" height="92" rx="4"/><path d="M40 300 h340 v60 h-340z" fill="#d62027"/><path d="M30 300 h360 l-14 -16 h-332z" fill="#b01a20"/><text x="210" y="338" text-anchor="middle" style="fill:#fff;font-weight:700;font-size:12px">ЯЩИК: ПЕСОК, ПЕРЛИТ</text></g>
 </svg>
 <div class="info" id="prInfo"><span class="muted">Нажмите на предмет на рисунке.</span></div>
 </div>
-<h3>Классы пожаров</h3>
-<div class="scroll"><table><tr><th>Класс</th><th>Что горит</th></tr>
-<tr><td>A</td><td>твёрдые вещества (дерево, бумага, ткань)</td></tr><tr><td>B</td><td>горючие жидкости (бензин, масло)</td></tr><tr><td>C</td><td>горючие газы</td></tr><tr><td>D</td><td>металлы</td></tr><tr><td>E</td><td>электроустановки под напряжением</td></tr><tr><td>F</td><td>масла и жиры в кухонном оборудовании</td></tr></table></div>
-<p>На этикетке каждого огнетушителя указано, для каких классов пожара он предназначен. Перед применением смотрите этикетку.</p>
-<div class="memo"><b>Что запомнить</b><ol><li>Водой и пенными составами нельзя тушить электроустановки под напряжением и горящие нефтепродукты.</li><li>Сухой песок и покрывало перекрывают доступ воздуха к очагу.</li><li>Тип огнетушителя выбирают по классу пожара на этикетке.</li><li>Комплектацию щита и нормы определяют Правила противопожарного режима (приложения № 6 и 7).</li></ol></div>
+<h3>Что относится к первичным средствам (по документу)</h3>
+<div class="scroll"><table><tr><th>Группа</th><th>Что входит</th></tr>
+<tr><td>Огнетушители</td><td>все виды переносных и передвижных огнетушителей</td></tr>
+<tr><td>Пожарные краны</td><td>пожарные краны и средства обеспечения их использования</td></tr>
+<tr><td>Ящики с порошковыми составами</td><td>песок, перлит и т. п.</td></tr>
+<tr><td>Покрывала для изоляции очага возгорания</td><td>асбестовое полотно, кошма, войлок и т. п.</td></tr>
+<tr><td>Пожарный инвентарь</td><td>багры, ломы, лопаты, вёдра и т. п.</td></tr></table></div>
+<h3>Размещение, количество и нормы</h3>
+<ul class="pts">
+<li>Размещение огнетушителей и пожарного инвентаря и их количество не определяется проектом, а устанавливается руководством ДЗО ОАО «Россети» на всех уровнях управления.</li>
+<li>Для каждого объекта руководитель структурного подразделения разрабатывает нормы комплектования первичными средствами. Их согласовывают специалисты по пожарной безопасности ППКиОТ и утверждают главные технические руководители всех уровней управления ДЗО.</li>
+<li>Нормы рассчитываются на основании норм расчёта первичных средств в соответствии с Правилами противопожарного режима в Российской Федерации и норм комплектования первичными средствами объектов ЭСК ОАО «Россети» (Приложение 1).</li>
+<li>Первичные средства размещаются в легкодоступных местах, на видных местах вблизи выходов из помещений, на высоте не более 1,5 м. В коридорах и проходах они не должны препятствовать безопасной эвакуации людей.</li>
+<li>Допускается установка огнетушителей в тумбах или шкафах, конструкция которых позволяет визуально определить тип огнетушителя и быстро получить к нему доступ.</li>
+<li>Огнетушители защищают от прямых солнечных лучей, тепловых потоков, механических воздействий и других неблагоприятных факторов (вибрация, агрессивная среда, повышенная влажность). Предпочтительно размещать их вблизи мест наиболее вероятного возникновения пожара, вдоль путей прохода и около выхода из помещения.</li></ul>
+<h3>Осмотр</h3>
+<p>Регулярный осмотр первичных средств пожаротушения — не реже 1 раза в полугодие, для огнетушителей — 1 раз в квартал.</p>
+<div class="memo"><b>Что запомнить</b><ol><li>Пять групп первичных средств: огнетушители, пожарные краны, ящики с порошковыми составами, покрывала, пожарный инвентарь.</li><li>Количество и размещение определяет руководство ДЗО, нормы утверждают главные технические руководители; проектом они не определяются.</li><li>Высота размещения — не более 1,5 м, около выходов, эвакуации не мешать.</li><li>Осмотр: первичные средства — не реже 1 раза в полугодие, огнетушители — 1 раз в квартал.</li></ol></div>
 </article>
 
 <article id="p-ou" hidden>
@@ -229,6 +251,40 @@ details .in{padding:0 14px 14px}
 <div class="memo"><b>Порядок действий</b><ol><li>Сорвать пломбу и выдернуть чеку.</li><li>Направить раструб на очаг пожара.</li><li>Нажать на рычаг (устройство нажимного типа). В устройстве вентильного типа — повернуть маховичок против часовой стрелки до отказа, в устройстве рычажного типа — повернуть рычаг до отказа на 180°.</li></ol></div>
 </article>
 
+
+<article id="p-kr" hidden>
+<h2>Пожарные краны и гидранты: чем отличаются</h2>
+<div class="note" style="margin:0 0 10px">В присланном документе сказано только, что пожарные краны и средства обеспечения их использования относятся к первичным средствам пожаротушения. О гидрантах и об устройстве кранов там ничего нет. Всё ниже, включая анимацию, дано по общим сведениям: числа и состав комплекта сверяйте с Правилами противопожарного режима и инструкцией объекта.</div>
+<div class="fig" id="krFig">
+<div class="chips" id="krChips"><button class="chip" data-m="kr" aria-pressed="true">Пожарный кран (внутри здания)</button><button class="chip" data-m="gp" aria-pressed="false">Гидрант (снаружи)</button><button class="chip" data-m="both" aria-pressed="false">Сравнить оба</button><button class="btn" id="krPause" type="button">⏸ Пауза</button></div>
+<svg viewBox="0 0 540 370" id="krSvg" class="m-kr" role="img" aria-label="Пожарный кран внутри здания и пожарный гидрант снаружи">
+<line x1="0" y1="304" x2="540" y2="304" stroke="currentColor" stroke-width="3" opacity=".5"/>
+<rect x="0" y="322" width="540" height="22" fill="#2f86e8" opacity=".25"/><text x="270" y="361" text-anchor="middle">наружный противопожарный водопровод (под землёй)</text>
+<rect x="20" y="70" width="240" height="234" fill="var(--card)" stroke="currentColor" stroke-width="3"/><text x="140" y="60" text-anchor="middle">здание</text>
+<rect x="150" y="100" width="50" height="40" fill="none" stroke="currentColor" stroke-width="2"/><rect x="215" y="100" width="30" height="40" fill="none" stroke="currentColor" stroke-width="2"/>
+<path d="M32 332 V228" stroke="#2f86e8" stroke-width="10" opacity=".35"/><text x="26" y="206" style="font-size:11px">внутренний водопровод</text><text x="26" y="220" style="font-size:11px">(стояк)</text>
+<g><rect x="42" y="226" width="58" height="64" rx="5" fill="#d62027"/><rect x="48" y="232" width="46" height="40" rx="3" fill="#f6f6f6"/><text x="71" y="284" text-anchor="middle" style="fill:#fff;font-weight:700;font-size:11px">ПК</text></g>
+<text x="100" y="316" style="font-size:11px">пожарный кран в шкафу</text>
+<g class="firein"><path class="flame" d="M205 304 q-20 -44 6 -68 q0 20 15 26 q-6 -34 20 -54 q-2 34 20 52 q12 20 -7 44z" fill="#f08a24"/><path class="flame" d="M222 304 q-10 -24 8 -40 q2 14 12 20 q10 8 2 20z" fill="#ffd23f"/></g>
+<g class="kr-on"><path class="wf" d="M0 332 L32 332 L32 258 L42 258"/><path class="hose" d="M100 252 C130 252 140 292 178 288"/><path class="wf" d="M100 252 C130 252 140 292 178 288"/><path class="jet2" d="M180 286 L212 296"/></g>
+<g class="hyd"><rect x="372" y="246" width="16" height="58" rx="4" fill="#d62027"/><rect x="366" y="240" width="28" height="10" rx="3" fill="#8a1a20"/><rect x="388" y="262" width="14" height="8" fill="#8a1a20"/><text x="380" y="232" text-anchor="middle">гидрант</text><text x="380" y="218" text-anchor="middle">(колонка)</text></g>
+<g class="truck"><rect x="440" y="248" width="86" height="40" rx="4" fill="#d62027"/><rect x="496" y="236" width="30" height="22" fill="#c9d5dd"/><circle cx="462" cy="292" r="10" fill="#333"/><circle cx="508" cy="292" r="10" fill="#333"/><text x="483" y="312" text-anchor="middle" style="font-size:11px">пожарный автомобиль</text></g>
+<g class="gp-on"><path class="wf" d="M380 332 L380 280 L380 262"/><path class="hose" d="M402 266 C420 270 430 270 442 270"/><path class="wf" d="M402 266 C420 270 430 270 442 270"/><path class="hose" d="M442 282 L300 296 L262 262 L254 246"/><path class="wf" d="M442 282 L300 296 L262 262 L254 246"/><path class="jet2" d="M252 244 L214 288"/></g>
+</svg>
+<div class="info" id="krInfo"></div>
+</div>
+<h3>Чем отличаются</h3>
+<div class="scroll"><table><tr><th>Признак</th><th>Пожарный кран</th><th>Пожарный гидрант</th></tr>
+<tr><td>Где находится</td><td>внутри здания, в шкафу на стене, на внутреннем противопожарном водопроводе</td><td>снаружи, на сети наружного противопожарного водопровода (колонка или подземный гидрант в колодце)</td></tr>
+<tr><td>Кто использует</td><td>персонал и работники здания в начале пожара до прибытия пожарных</td><td>пожарные подразделения</td></tr>
+<tr><td>Комплект</td><td>рукав, ствол и клапан (вентиль) в шкафу</td><td>пожарная колонка, специальный ключ, рукава; воду подаёт пожарный автомобиль с насосом</td></tr>
+<tr><td>Назначение</td><td>подать воду на очаг сразу, на месте</td><td>обеспечить пожарные машины большим объёмом воды</td></tr>
+<tr><td>В присланном документе</td><td>назван среди первичных средств, подробностей нет</td><td>не упоминается</td></tr></table></div>
+<h3>Порядок действий (по общим сведениям)</h3>
+<p><b>Пожарный кран:</b></p><ul class="pts"><li>открыть шкаф;</li><li>достать рукав и раскатать его, присоединить ствол и рукав к клапану, если они не соединены;</li><li>открыть клапан (вентиль);</li><li>направить струю на очаг.</li></ul>
+<p><b>Гидрант:</b></p><ul class="pts"><li>открыть крышку колодца (подземный гидрант) и установить пожарную колонку;</li><li>присоединить рукава от колонки к пожарному автомобилю и к стволам;</li><li>открыть подачу воды специальным ключом;</li><li>воду на очаг подаёт расчёт пожарных.</li></ul>
+<div class="memo"><b>Главное отличие</b><ol><li>Кран — внутри здания, для людей в начальной стадии пожара.</li><li>Гидрант — снаружи, для пожарных машин и больших расходов воды.</li></ol></div>
+</article>
 <article id="p-tr" hidden>
 <h2>Тренажёр: чем тушить</h2>
 <p>Выберите, что горит, и средство тушения. Подсказки даны по общим сведениям: окончательно руководствуйтесь этикеткой огнетушителя и инструкцией о мерах пожарной безопасности объекта.</p>
@@ -287,18 +343,15 @@ details .in{padding:0 14px 14px}
 (function(){
 function $(i){return document.getElementById(i)}
 var tabs=document.querySelectorAll('#tabs .chip');
-tabs.forEach(function(c){c.onclick=function(){tabs.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['pr','ou','use','tr','ref','qz'].forEach(function(p){$('p-'+p).hidden=p!==c.dataset.p});document.querySelectorAll('details[open]').forEach(function(d){d.open=false})}});
+tabs.forEach(function(c){c.onclick=function(){tabs.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['pr','ou','use','kr','tr','ref','qz'].forEach(function(p){$('p-'+p).hidden=p!==c.dataset.p});document.querySelectorAll('details[open]').forEach(function(d){d.open=false})}});
 /* щит */
+var INV='Входит в пожарный инвентарь (багры, ломы, лопаты, вёдра и т. п.). В документе назначение отдельных предметов не раскрыто.';
 var IT={
-lom:['Лом','Вскрывать двери, полы и конструкции, чтобы добраться до очага.'],
-bagor:['Багор','Растаскивать и сбрасывать горящие конструкции и материалы, разбирать кровлю.'],
-shtyk:['Лопата штыковая','Окапывать очаг, перекапывать и засыпать горящий грунт.'],
-sovok:['Лопата совковая','Набирать и бросать песок на очаг. Песок набрасывают сначала по краям, потом в середину.'],
-vedro:['Ведро','Подносить воду и песок. Конусная форма нужна, чтобы ведро не ставили и не использовали для хозяйственных нужд. Водой нельзя тушить электроустановки под напряжением и горящие нефтепродукты.'],
-ogn:['Огнетушители','Главное средство в первые минуты. Тип (порошковый ОП, углекислотный ОУ и др.) выбирают по классу пожара на этикетке. Количество и вид на объекте определяют по приложениям № 1 и 2 Правил противопожарного режима.'],
-koshma:['Покрывало для изоляции очага возгорания (кошма)','Накрывают небольшой очаг или горящую одежду человека и перекрывают доступ воздуха. В документе названы асбестовое полотно, кошма, войлок. При тушении одежды голову человека не накрывают.'],
-bochka:['Ёмкость с водой','Запас воды у щита, обычно не менее 0,2 м³, с вёдрами (сверить по Правилам). Вода хорошо тушит твёрдые материалы: дерево, бумагу, ткань.'],
-pesok:['Ящик с песком','Сухой песок перекрывает доступ воздуха и впитывает разлитую горючую жидкость. Объём обычно 0,5 м³ (сверить по Правилам). Песок должен быть сухим и без комков.']};
+lom:['Лом',INV],bagor:['Багор',INV],shtyk:['Лопата (штыковая)',INV],sovok:['Лопата (совковая)',INV],vedro:['Ведро',INV],
+ogn:['Переносные и передвижные огнетушители','Относятся все виды переносных и передвижных огнетушителей. По виду заряда: воздушно-пенные (ОВП), порошковые (ОП), газовые — углекислотные (ОУ), водные ранцевой конструкции, комбинированные. Осмотр — не реже 1 раза в квартал. Устанавливать можно в тумбах и шкафах, если виден тип и есть быстрый доступ; размещать на высоте не более 1,5 м.'],
+koshma:['Покрывала для изоляции очага возгорания','Относятся к первичным средствам. В документе названы: асбестовое полотно, кошма, войлок и т. п. Размеры и порядок применения в документе не указаны.'],
+kran:['Пожарные краны и средства обеспечения их использования','Относятся к первичным средствам. Больше в документе о пожарных кранах ничего не сказано. Устройство и отличие от гидрантов — на вкладке «Пожарные краны и гидранты» (по общим сведениям).'],
+pesok:['Ящики с порошковыми составами','Относятся к первичным средствам. В документе названы песок, перлит и т. п. Объём ящика в документе не указан.']};
 document.querySelectorAll('.it').forEach(function(g){g.addEventListener('click',function(){document.querySelectorAll('.it').forEach(function(x){x.classList.toggle('sel',x.dataset.i===g.dataset.i)});var d=IT[g.dataset.i];$('prInfo').innerHTML='<b class="t">'+d[0]+'</b>'+d[1]})});
 /* сборка */
 var ORD=['cyl','tube','head','horn','pin','seal'];
@@ -326,6 +379,10 @@ var wk=$('wkSvg'),WT=['Клапан закрыт. В баллоне жидкая
 function wkSet(o){wk.setAttribute('class',o?'open':'');$('wkBtn').textContent=o?'Отпустить рычаг':'Нажать рычаг';$('wkInfo').textContent=WT[o?1:0]}
 $('wkBtn').onclick=function(){wkSet(!wk.classList.contains('open'))};
 $('wkPause').onclick=function(){var f=$('wkFig');f.classList.toggle('paused');this.textContent=f.classList.contains('paused')?'▶ Запустить':'⏸ Пауза'};wkSet(false);
+var KM={kr:'Пожарный кран: вода идёт из внутреннего противопожарного водопровода (стояка) в шкаф, по рукаву к стволу. Человек в здании подаёт струю на очаг, пока не приехали пожарные.',gp:'Гидрант: вода из наружной сети поднимается к колонке, по рукаву уходит на пожарный автомобиль с насосом, дальше по рукавным линиям расчёт подаёт её на очаг.',both:'Оба сразу: кран работает внутри, гидрант снабжает пожарную технику снаружи. Это разные части противопожарного водоснабжения.'};
+var ks=$('krSvg');function setK(m){ks.setAttribute('class','m-'+m);document.querySelectorAll('#krChips .chip').forEach(function(c){c.setAttribute('aria-pressed',c.dataset.m===m)});$('krInfo').textContent=KM[m]}
+document.querySelectorAll('#krChips .chip').forEach(function(c){c.onclick=function(){setK(c.dataset.m)}});
+$('krPause').onclick=function(){var f=$('krFig');f.classList.toggle('paused');this.textContent=f.classList.contains('paused')?'▶ Запустить':'⏸ Пауза'};setK('kr');
 /* использование */
 var US=['Огнетушитель готов. Подойдите к очагу с наветренной стороны.','Пломба сорвана. Она подтверждала, что огнетушителем не пользовались.','Чека выдернута: рычаг больше не заблокирован.','Раструб направлен на основание пламени. За сам раструб рукой не берутся.','Рычаг нажат: клапан открыт, углекислота выходит через раструб, вытесняет воздух и охлаждает очаг. Пламя гаснет.'];
 var st=0,us=$('useSvg'),uc=document.querySelectorAll('#useChips .chip');
