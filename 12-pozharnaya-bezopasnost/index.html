@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пожарная безопасность</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#c4262e;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#ff6b72;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:900px;margin:0 auto;padding:20px 16px 70px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 8px}h3{font-size:1.05rem;margin:18px 0 6px}
+.lead,.muted{color:var(--muted)}
+.note{font-size:.88rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+button,select{font:inherit;color:var(--fg);cursor:pointer}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:7px 14px}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip.done{background:var(--okbg);border-color:var(--ok)}
+article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.fig{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0;background:var(--bg)}
+.info{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);margin-top:8px;min-height:70px}
+.info b.t{display:block;font-size:1.05rem;margin-bottom:2px}
+.info.ok{border-color:var(--ok);background:var(--okbg)}.info.bad{border-color:var(--bad);background:var(--badbg)}.info.mid{border-color:var(--warn);background:var(--warnbg)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--chip)}
+.scroll{overflow-x:auto}
+ul.pts{margin:6px 0;padding-left:20px}ul.pts li{margin:5px 0}
+.memo{border:2px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:16px}
+.memo ol{margin:6px 0;padding-left:20px}
+svg{width:100%;height:auto;display:block;color:var(--fg)}
+svg text{fill:currentColor;font:13px system-ui,sans-serif}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:7px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+/* щит */
+.it{cursor:pointer}.it:hover .hl,.it.sel .hl{stroke:#1a73c9;stroke-width:4}
+.it .hl{stroke:transparent;fill:transparent}
+/* сборка */
+.part{transition:transform .7s ease,opacity .5s;cursor:pointer}
+.part:not(.in){transform:translate(var(--dx),var(--dy));opacity:.4}
+.part.sel .o{stroke:#1a73c9;stroke-width:4}
+/* использование */
+#useSvg .seal,#useSvg .pin,#useSvg .horn,#useSvg .lever{transition:transform .8s ease,opacity .6s}
+#useSvg .horn{transform-origin:150px 108px;transform:rotate(-80deg)}
+#useSvg .lever{transform-origin:105px 96px}
+#useSvg.s1 .seal,#useSvg.s2 .seal,#useSvg.s3 .seal,#useSvg.s4 .seal{transform:translate(-10px,60px);opacity:0}
+#useSvg.s2 .pin,#useSvg.s3 .pin,#useSvg.s4 .pin{transform:translate(0,-50px);opacity:0}
+#useSvg.s3 .horn,#useSvg.s4 .horn{transform:rotate(27deg)}
+#useSvg.s4 .lever{transform:rotate(-14deg)}
+#useSvg .gas{display:none}#useSvg.s4 .gas{display:inline}
+.jet{fill:none;stroke:#9fc3d1;stroke-width:16;stroke-linecap:round;stroke-dasharray:2 16;animation:jet .5s linear infinite}
+@keyframes jet{to{stroke-dashoffset:-18}}
+.cloud{fill:#cfe3ea;opacity:.8;animation:puff 1.2s ease-in-out infinite}
+@keyframes puff{50%{transform:scale(1.25);opacity:.5}}
+.cloud{transform-box:fill-box;transform-origin:center}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scale(1.06,.92)}}
+#useSvg.s4 .fire{transform-box:fill-box;transform-origin:50% 100%;animation:die 5s ease-in forwards}
+@keyframes die{to{transform:scale(0);opacity:0}}
+.pulse{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{opacity:.3}}
+.fig.paused *{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.fig *{animation:none!important;transition:none!important}#useSvg.s4 .fire{opacity:.15}}
+.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:8px 0}
+.opt{border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px;text-align:left}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Пожарная безопасность</h1>
+<p class="lead">Первичные средства пожаротушения, устройство углекислотного огнетушителя и порядок работы с ним. Вопросы и ответы и тест будут добавлены позже.</p>
+<div class="note">Нормы обеспечения огнетушителями и комплектация пожарных щитов установлены Правилами противопожарного режима (постановление Правительства РФ № 1479, раздел XIX, приложения № 1, 2, 6, 7). Текста этих Правил в материалах сайта нет, поэтому пояснения здесь даны по общим сведениям. Числа с пометкой «сверить» проверьте по Правилам, паспорту и этикетке огнетушителя.</div>
+<div class="chips" id="tabs"><button class="chip" data-p="pr" aria-pressed="true">Первичные средства</button><button class="chip" data-p="ou" aria-pressed="false">Устройство огнетушителя ОУ</button><button class="chip" data-p="use" aria-pressed="false">Как пользоваться</button><button class="chip" data-p="tr" aria-pressed="false">Тренажёр: чем тушить</button></div>
+
+<article id="p-pr">
+<h2>Первичные средства пожаротушения</h2>
+<p>Это то, чем тушат пожар в самом начале, до прибытия пожарных: огнетушители, пожарный инвентарь на щите, песок, вода, покрывало (кошма). Нажмите на предмет на щите, чтобы узнать, для чего он нужен.</p>
+<div class="fig">
+<svg viewBox="0 0 540 380" role="img" aria-label="Пожарный щит">
+<rect x="20" y="16" width="380" height="250" rx="6" fill="var(--card)" stroke="#d62027" stroke-width="8"/>
+<text x="210" y="44" text-anchor="middle" style="font-weight:700;fill:#d62027">ПОЖАРНЫЙ ЩИТ</text>
+<g class="it" data-i="lom"><rect class="hl" x="36" y="56" width="22" height="200" rx="4"/><line x1="47" y1="62" x2="47" y2="250" stroke="#d62027" stroke-width="7" stroke-linecap="round"/><path d="M47 62 l-5 -4" stroke="#d62027" stroke-width="5"/></g>
+<g class="it" data-i="bagor"><rect class="hl" x="64" y="56" width="36" height="200" rx="4"/><line x1="80" y1="70" x2="80" y2="250" stroke="#b5803a" stroke-width="6" stroke-linecap="round"/><path d="M80 78 L80 60 M80 72 q16 -2 14 14" stroke="#555" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+<g class="it" data-i="shtyk"><rect class="hl" x="108" y="56" width="44" height="200" rx="4"/><line x1="130" y1="62" x2="130" y2="190" stroke="#b5803a" stroke-width="6"/><path d="M114 188 h32 v34 l-16 28 l-16 -28z" fill="#777"/></g>
+<g class="it" data-i="sovok"><rect class="hl" x="158" y="56" width="50" height="200" rx="4"/><line x1="183" y1="62" x2="183" y2="190" stroke="#b5803a" stroke-width="6"/><rect x="163" y="188" width="40" height="58" rx="5" fill="#777"/></g>
+<g class="it" data-i="vedro"><rect class="hl" x="214" y="56" width="62" height="96" rx="4"/><path d="M220 78 h50 l-25 66z" fill="#d62027"/><path d="M222 78 q23 -24 46 0" stroke="#555" stroke-width="3" fill="none"/></g>
+<g class="it" data-i="vedro"><rect class="hl" x="214" y="158" width="62" height="96" rx="4"/><path d="M220 180 h50 l-25 66z" fill="#d62027"/><path d="M222 180 q23 -24 46 0" stroke="#555" stroke-width="3" fill="none"/></g>
+<g class="it" data-i="ogn"><rect class="hl" x="284" y="56" width="50" height="200" rx="4"/><rect x="294" y="100" width="30" height="140" rx="10" fill="#d62027"/><rect x="302" y="84" width="14" height="18" fill="#555"/><path d="M316 90 l16 0 l8 -14" stroke="#222" stroke-width="5" fill="none"/><rect x="294" y="150" width="30" height="36" fill="#fff"/><text x="309" y="173" text-anchor="middle" style="font-size:11px;fill:#111">ОП</text></g>
+<g class="it" data-i="ogn"><rect class="hl" x="340" y="56" width="50" height="200" rx="4"/><rect x="350" y="100" width="30" height="140" rx="10" fill="#d62027"/><rect x="358" y="84" width="14" height="18" fill="#555"/><path d="M372 90 l10 0 l8 -22 l-10 -2z" fill="#222"/><rect x="350" y="150" width="30" height="36" fill="#fff"/><text x="365" y="173" text-anchor="middle" style="font-size:11px;fill:#111">ОУ</text></g>
+<g class="it" data-i="koshma"><rect class="hl" x="412" y="16" width="118" height="92" rx="4"/><rect x="420" y="30" width="102" height="70" rx="6" fill="#d62027"/><rect x="432" y="56" width="78" height="34" rx="3" fill="#bbb"/><text x="471" y="48" text-anchor="middle" style="fill:#fff;font-size:11px">ПОКРЫВАЛО</text></g>
+<g class="it" data-i="bochka"><rect class="hl" x="412" y="120" width="118" height="146" rx="4"/><rect x="430" y="136" width="82" height="122" rx="10" fill="#d62027"/><ellipse cx="471" cy="140" rx="41" ry="9" fill="#4aa8d8"/><text x="471" y="204" text-anchor="middle" style="fill:#fff">ВОДА</text></g>
+<g class="it" data-i="pesok"><rect class="hl" x="20" y="278" width="380" height="92" rx="4"/><path d="M40 300 h340 v60 h-340z" fill="#d62027"/><path d="M30 300 h360 l-14 -16 h-332z" fill="#b01a20"/><text x="210" y="338" text-anchor="middle" style="fill:#fff;font-weight:700">ПЕСОК</text></g>
+</svg>
+<div class="info" id="prInfo"><span class="muted">Нажмите на предмет на рисунке.</span></div>
+</div>
+<h3>Классы пожаров</h3>
+<div class="scroll"><table><tr><th>Класс</th><th>Что горит</th></tr>
+<tr><td>A</td><td>твёрдые вещества (дерево, бумага, ткань)</td></tr><tr><td>B</td><td>горючие жидкости (бензин, масло)</td></tr><tr><td>C</td><td>горючие газы</td></tr><tr><td>D</td><td>металлы</td></tr><tr><td>E</td><td>электроустановки под напряжением</td></tr><tr><td>F</td><td>масла и жиры в кухонном оборудовании</td></tr></table></div>
+<p>На этикетке каждого огнетушителя указано, для каких классов пожара он предназначен. Перед применением смотрите этикетку.</p>
+<div class="memo"><b>Что запомнить</b><ol><li>Водой и пенными составами нельзя тушить электроустановки под напряжением и горящие нефтепродукты.</li><li>Сухой песок и покрывало перекрывают доступ воздуха к очагу.</li><li>Тип огнетушителя выбирают по классу пожара на этикетке.</li><li>Комплектацию щита и нормы определяют Правила противопожарного режима (приложения № 6 и 7).</li></ol></div>
+</article>
+
+<article id="p-ou" hidden>
+<h2>Углекислотный огнетушитель (ОУ): из чего состоит</h2>
+<p>Соберите огнетушитель: нажимайте на детали в правильном порядке, начиная с баллона. Деталь встанет на место, а ниже появится её описание. Собранный огнетушитель можно изучать: нажмите на любую деталь.</p>
+<div class="fig">
+<div class="chips" id="ouChips"></div>
+<svg viewBox="0 0 320 430" id="ouSvg" role="img" aria-label="Углекислотный огнетушитель в разборе" style="max-width:360px;margin:0 auto">
+<g class="part" data-k="cyl" style="--dx:0px;--dy:0px"><rect class="o" x="110" y="130" width="100" height="260" rx="22" fill="#d62027" stroke="transparent"/><rect x="140" y="110" width="40" height="26" fill="#d62027"/><rect x="110" y="220" width="100" height="70" fill="#fff"/><text x="133" y="260" text-anchor="middle" style="fill:#111;font-weight:700">ОУ</text><text x="188" y="260" text-anchor="middle" style="fill:#111;font-size:12px">CO₂</text></g>
+<g class="part" data-k="tube" style="--dx:-120px;--dy:0px"><rect class="o" x="150" y="108" width="20" height="270" fill="transparent" stroke="transparent"/><line x1="160" y1="112" x2="160" y2="372" stroke="#fff" stroke-width="9"/><line x1="160" y1="112" x2="160" y2="372" stroke="#333" stroke-width="5" stroke-dasharray="10 5"/></g>
+<g class="part" data-k="head" style="--dx:-56px;--dy:-52px"><rect class="o" x="138" y="78" width="44" height="34" rx="4" fill="#8a93a0" stroke="transparent"/><path d="M138 102 L80 102" stroke="#222" stroke-width="9" stroke-linecap="round"/><path d="M140 84 L74 70" stroke="#222" stroke-width="9" stroke-linecap="round"/></g>
+<g class="part" data-k="horn" style="--dx:30px;--dy:-56px"><path d="M182 96 L212 96" stroke="#222" stroke-width="8"/><path class="o" d="M210 90 L210 102 L276 126 L276 66z" fill="#222" stroke="transparent"/></g>
+<g class="part" data-k="pin" style="--dx:104px;--dy:120px"><rect class="o" x="138" y="50" width="24" height="44" fill="transparent" stroke="transparent"/><line x1="150" y1="70" x2="150" y2="92" stroke="#c9a227" stroke-width="4"/><circle cx="150" cy="62" r="9" fill="none" stroke="#c9a227" stroke-width="4"/></g>
+<g class="part" data-k="seal" style="--dx:112px;--dy:180px"><circle class="o" cx="168" cy="72" r="7" fill="#e5533d" stroke="transparent"/><path d="M158 66 L164 70" stroke="#777" stroke-width="2"/></g>
+</svg>
+<div class="info" id="ouInfo"></div>
+<div class="bar"><button class="btn" id="ouAll">Собрать сразу</button><button class="btn" id="ouReset">Разобрать</button></div>
+</div>
+<h3>Как он работает</h3>
+<ul class="pts">
+<li>В баллоне находится сжиженная двуокись углерода (CO₂) под высоким давлением. Отдельного газа-вытеснителя нет: углекислота выталкивает сама себя.</li>
+<li>При нажатии на рычаг клапан открывается, жидкая углекислота поднимается по сифонной трубке и выходит через раструб.</li>
+<li>На выходе она резко расширяется и охлаждается примерно до минус 70 °C, превращаясь в газ и «снег». Газ вытесняет воздух от очага, снег охлаждает.</li>
+<li>У углекислотного огнетушителя нет манометра: заряд контролируют взвешиванием.</li>
+<li>Углекислота не проводит ток и не оставляет следов, поэтому ОУ применяют для электрооборудования под напряжением (предельное напряжение и расстояние — по этикетке; обычно до 1000 В и не ближе 1 м, сверить).</li></ul>
+</article>
+
+<article id="p-use" hidden>
+<h2>Как пользоваться углекислотным огнетушителем</h2>
+<p>Нажимайте шаги по порядку и смотрите, что происходит.</p>
+<div class="fig" id="useFig">
+<div class="chips" id="useChips"><button class="chip" data-s="1">1. Сорвать пломбу</button><button class="chip" data-s="2">2. Выдернуть чеку</button><button class="chip" data-s="3">3. Направить раструб на очаг</button><button class="chip" data-s="4">4. Нажать рычаг</button></div>
+<svg viewBox="0 0 540 300" id="useSvg" role="img" aria-label="Порядок приведения огнетушителя в действие">
+<line x1="10" y1="272" x2="530" y2="272" stroke="currentColor" stroke-width="3" opacity=".5"/>
+<g class="fire"><path class="flame" d="M385 270 q-30 -60 10 -95 q0 30 22 38 q-8 -50 28 -80 q-4 50 30 78 q18 30 -10 59z" fill="#f08a24"/><path class="flame" d="M408 270 q-14 -34 12 -58 q2 22 18 30 q14 12 2 28z" fill="#ffd23f"/><rect x="380" y="262" width="100" height="10" rx="3" fill="#5a4636"/></g>
+<g class="gas"><path class="jet" d="M206 138 L420 248"/><circle class="cloud" cx="400" cy="232" r="26"/><circle class="cloud" cx="440" cy="244" r="30" style="animation-delay:.3s"/><circle class="cloud" cx="470" cy="226" r="22" style="animation-delay:.6s"/></g>
+<rect x="90" y="122" width="60" height="150" rx="14" fill="#d62027"/><rect x="108" y="108" width="24" height="18" fill="#d62027"/><rect x="90" y="176" width="60" height="40" fill="#fff"/><text x="120" y="201" text-anchor="middle" style="fill:#111;font-weight:700">ОУ</text>
+<rect x="105" y="92" width="30" height="20" rx="3" fill="#8a93a0"/>
+<path d="M105 108 L58 108" stroke="#222" stroke-width="8" stroke-linecap="round"/>
+<path class="lever" d="M105 96 L54 86" stroke="#222" stroke-width="8" stroke-linecap="round"/>
+<path d="M135 108 L152 108" stroke="#222" stroke-width="7"/>
+<path class="horn" d="M150 103 L150 113 L204 128 L204 88z" fill="#222"/>
+<g class="pin"><line x1="118" y1="84" x2="118" y2="100" stroke="#c9a227" stroke-width="4"/><circle cx="118" cy="76" r="8" fill="none" stroke="#c9a227" stroke-width="4"/></g>
+<circle class="seal" cx="131" cy="86" r="6" fill="#e5533d"/>
+</svg>
+<div class="info" id="useInfo"></div>
+<div class="bar"><button class="btn" id="useReset">Сначала</button><button class="btn" id="usePause">⏸ Пауза</button></div>
+</div>
+<h3>Меры безопасности</h3>
+<ul class="pts">
+<li>Не держите раструб голой рукой: он охлаждается примерно до минус 70 °C, возможно обморожение.</li>
+<li>Подходите к огню с наветренной стороны и направляйте струю в основание пламени, а не на его верх.</li>
+<li>Электроустановки под напряжением тушите с расстояния не ближе указанного на этикетке (обычно не менее 1 м, сверить).</li>
+<li>В небольшом закрытом помещении после применения выйдите и проветрите его: углекислый газ вытесняет воздух.</li>
+<li>Не направляйте струю на людей.</li>
+<li>После любого использования, даже частичного, огнетушитель сдают на перезарядку.</li></ul>
+<div class="memo"><b>Порядок действий</b><ol><li>Сорвать пломбу.</li><li>Выдернуть чеку.</li><li>Направить раструб на очаг.</li><li>Нажать рычаг.</li></ol></div>
+</article>
+
+<article id="p-tr" hidden>
+<h2>Тренажёр: чем тушить</h2>
+<p>Выберите, что горит, и средство тушения. Подсказки даны по общим сведениям: окончательно руководствуйтесь этикеткой огнетушителя и инструкцией о мерах пожарной безопасности объекта.</p>
+<label>Что горит<select id="trS" style="width:100%;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px;margin-top:4px"></select></label>
+<div class="opts" id="trO"></div>
+<div class="info" id="trInfo"><span class="muted">Выберите средство.</span></div>
+</article>
+</main>
+<script>
+(function(){
+function $(i){return document.getElementById(i)}
+var tabs=document.querySelectorAll('#tabs .chip');
+tabs.forEach(function(c){c.onclick=function(){tabs.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['pr','ou','use','tr'].forEach(function(p){$('p-'+p).hidden=p!==c.dataset.p})}});
+/* щит */
+var IT={
+lom:['Лом','Вскрывать двери, полы и конструкции, чтобы добраться до очага.'],
+bagor:['Багор','Растаскивать и сбрасывать горящие конструкции и материалы, разбирать кровлю.'],
+shtyk:['Лопата штыковая','Окапывать очаг, перекапывать и засыпать горящий грунт.'],
+sovok:['Лопата совковая','Набирать и бросать песок на очаг. Песок набрасывают сначала по краям, потом в середину.'],
+vedro:['Ведро','Подносить воду и песок. Конусная форма нужна, чтобы ведро не ставили и не использовали для хозяйственных нужд. Водой нельзя тушить электроустановки под напряжением и горящие нефтепродукты.'],
+ogn:['Огнетушители','Главное средство в первые минуты. Тип (порошковый ОП, углекислотный ОУ и др.) выбирают по классу пожара на этикетке. Количество и вид на объекте определяют по приложениям № 1 и 2 Правил противопожарного режима.'],
+koshma:['Покрывало для изоляции очага возгорания (кошма)','Накрывают небольшой очаг или горящую одежду человека и перекрывают доступ воздуха. Размер обычно не менее 1 × 1 м (сверить по Правилам). При тушении одежды голову человека не накрывают.'],
+bochka:['Ёмкость с водой','Запас воды у щита, обычно не менее 0,2 м³, с вёдрами (сверить по Правилам). Вода хорошо тушит твёрдые материалы: дерево, бумагу, ткань.'],
+pesok:['Ящик с песком','Сухой песок перекрывает доступ воздуха и впитывает разлитую горючую жидкость. Объём обычно 0,5 м³ (сверить по Правилам). Песок должен быть сухим и без комков.']};
+document.querySelectorAll('.it').forEach(function(g){g.addEventListener('click',function(){document.querySelectorAll('.it').forEach(function(x){x.classList.toggle('sel',x.dataset.i===g.dataset.i)});var d=IT[g.dataset.i];$('prInfo').innerHTML='<b class="t">'+d[0]+'</b>'+d[1]})});
+/* сборка */
+var ORD=['cyl','tube','head','horn','pin','seal'];
+var PD={
+cyl:['Баллон','Стальной баллон высокого давления. Внутри сжиженная двуокись углерода. Окрашен в красный цвет, на этикетке — классы пожара, предельное напряжение и порядок действий.'],
+tube:['Сифонная трубка','Идёт от головки почти до дна баллона. По ней наверх поднимается жидкая углекислота. Из-за трубки огнетушитель при работе держат вертикально, не переворачивают.'],
+head:['Запорно-пусковое устройство с ручкой и рычагом','Клапан, который закрывает баллон. Нижняя ручка — для переноски, верхний рычаг открывает клапан. Здесь же стоит предохранительная мембрана: она сбрасывает давление, если оно стало опасным.'],
+horn:['Раструб','Формирует струю газа и «снега». Сильно охлаждается при работе, поэтому голой рукой его не держат. У больших огнетушителей раструб на шланге.'],
+pin:['Чека','Блокирует рычаг, чтобы огнетушитель не сработал случайно. Перед применением её выдёргивают за кольцо.'],
+seal:['Пломба','Показывает, что огнетушителем не пользовались и чеку не вынимали. Перед применением её срывают. Нет пломбы — огнетушитель отправляют на проверку.']};
+var inst=0,ch=$('ouChips');
+ORD.forEach(function(k){var b=document.createElement('button');b.className='chip';b.dataset.k=k;b.textContent=PD[k][0];b.onclick=function(){pick(k)};ch.appendChild(b)});
+function part(k){return document.querySelector('.part[data-k='+k+']')}
+function show(k,pre,cls){$('ouInfo').className='info'+(cls?' '+cls:'');$('ouInfo').innerHTML=(pre?'<div style="margin-bottom:4px">'+pre+'</div>':'')+'<b class="t">'+PD[k][0]+'</b>'+PD[k][1];document.querySelectorAll('.part').forEach(function(p){p.classList.toggle('sel',p.dataset.k===k)})}
+function sync(){ORD.forEach(function(k,i){part(k).classList.toggle('in',i<inst);ch.children[i].classList.toggle('done',i<inst)})}
+function pick(k){var i=ORD.indexOf(k);
+ if(i<inst){show(k);return}
+ if(i===inst){inst++;sync();show(k,inst===ORD.length?'Огнетушитель собран.':'Верно, деталь на месте.','ok');return}
+ $('ouInfo').className='info bad';$('ouInfo').innerHTML='Рано. Сейчас нужна деталь «'+PD[ORD[inst]][0]+'».'}
+document.querySelectorAll('.part').forEach(function(p){p.addEventListener('click',function(){pick(p.dataset.k)})});
+$('ouAll').onclick=function(){inst=ORD.length;sync();$('ouInfo').className='info';$('ouInfo').innerHTML='Огнетушитель собран. Нажмите на деталь, чтобы прочитать о ней.'};
+$('ouReset').onclick=function(){inst=0;sync();$('ouInfo').className='info';$('ouInfo').innerHTML='<span class="muted">Начните с баллона.</span>'};
+$('ouReset').onclick();
+/* использование */
+var US=['Огнетушитель готов. Подойдите к очагу с наветренной стороны.','Пломба сорвана. Она подтверждала, что огнетушителем не пользовались.','Чека выдернута: рычаг больше не заблокирован.','Раструб направлен на основание пламени. За сам раструб рукой не берутся.','Рычаг нажат: клапан открыт, углекислота выходит через раструб, вытесняет воздух и охлаждает очаг. Пламя гаснет.'];
+var st=0,us=$('useSvg'),uc=document.querySelectorAll('#useChips .chip');
+function setU(n,msg){st=n;us.setAttribute('class',n?'s'+n:'');uc.forEach(function(c){c.classList.toggle('done',+c.dataset.s<=n)});$('useInfo').className='info';$('useInfo').innerHTML=msg||US[n]}
+uc.forEach(function(c){c.onclick=function(){var n=+c.dataset.s;if(n===st+1)setU(n);else if(n>st+1){$('useInfo').className='info bad';$('useInfo').innerHTML='Сначала шаг '+(st+1)+'. Порядок: пломба, чека, раструб, рычаг.'}}});
+$('useReset').onclick=function(){setU(0)};
+$('usePause').onclick=function(){var f=$('useFig');f.classList.toggle('paused');this.textContent=f.classList.contains('paused')?'▶ Запустить':'⏸ Пауза'};
+setU(0);
+/* тренажёр */
+var M=['Углекислотный огнетушитель (ОУ)','Порошковый огнетушитель (ОП)','Вода','Песок','Покрывало (кошма)'];
+var SC=[
+['Электрощит под напряжением',[['ok','Подходит: углекислота не проводит ток. Соблюдайте расстояние и предельное напряжение с этикетки.'],['ok','Подходит, если на этикетке указан класс E. Порошок загрязняет оборудование.'],['bad','Нельзя: вода проводит ток, возможно поражение током.'],['mid','Сухой песок ток не проводит, но засыпать щит им неудобно. Лучше огнетушитель ОУ или ОП.'],['mid','Не лучший выбор: к оборудованию под напряжением пришлось бы подходить вплотную.']]],
+['Разлитый бензин или масло на полу',[['ok','Подходит для горючих жидкостей (класс B).'],['ok','Подходит для горючих жидкостей (класс B).'],['bad','Нельзя: горящая жидкость всплывает и растекается вместе с водой, площадь пожара растёт.'],['ok','Подходит: песок впитывает жидкость и перекрывает доступ воздуха. Засыпают от краёв к середине.'],['ok','Подходит для небольшого очага: покрывало перекрывает доступ воздуха.']]],
+['Бумага, дерево, ветошь',[['mid','Пламя собьёт, но тлеющие материалы могут загореться снова: углекислота плохо охлаждает глубину.'],['ok','Подходит, если на этикетке указан класс A.'],['ok','Подходит: вода хорошо охлаждает твёрдые материалы. Убедитесь, что рядом нет оборудования под напряжением.'],['ok','Подходит для небольшого очага.'],['ok','Подходит для небольшого очага.']]],
+['Одежда на человеке',[['bad','Нельзя направлять на человека: струя имеет температуру около минус 70 °C, возможно обморожение и удушье.'],['bad','Не направляйте порошок на человека, особенно в лицо.'],['ok','Подходит: залить водой.'],['mid','Можно сбить пламя, но быстрее и безопаснее покрывало или вода.'],['ok','Лучший вариант: остановить человека, накрыть покрывалом, не накрывая голову, и прижать ткань.']]],
+['Компьютер или оргтехника, включённые в сеть',[['ok','Лучший вариант: не проводит ток и не оставляет следов. По возможности сначала обесточьте.'],['mid','Потушит (класс E на этикетке), но порошок испортит технику.'],['bad','Нельзя, пока техника под напряжением.'],['mid','Не лучший выбор: неудобно и портит технику.'],['mid','Допустимо для маленького очага после обесточивания.']]]];
+var ts=$('trS');SC.forEach(function(s,i){var o=document.createElement('option');o.value=i;o.textContent=s[0];ts.appendChild(o)});
+function trB(){var box=$('trO');box.innerHTML='';$('trInfo').className='info';$('trInfo').innerHTML='<span class="muted">Выберите средство.</span>';
+ M.forEach(function(m,j){var b=document.createElement('button');b.className='opt';b.textContent=m;b.onclick=function(){var r=SC[+ts.value][1][j];$('trInfo').className='info '+r[0];$('trInfo').innerHTML='<b class="t">'+m+'</b>'+r[1]};box.appendChild(b)})}
+ts.onchange=trB;trB();
+})();
+</script>
+</body>
+</html>
