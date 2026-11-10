@@ -131,6 +131,9 @@ table.tt th,table.tt td{border:1px solid var(--line);padding:6px 8px;text-align:
 .st2 .lamp{fill:#d33}.svgb .lamp{fill:#e0a020}.st1 .lamp,.st2 .lamp{animation:pulse 1s infinite}
 .st0 .leak{display:inline}.st1 .leak,.st2 .leak{display:none}
 .slidebox{margin-top:8px}.slidebox input{width:100%;display:block;margin-top:6px}
+.cmpPulse{transform-box:fill-box;transform-origin:center;animation:cmpp 1.4s ease-out infinite}@keyframes cmpp{from{transform:scale(1);opacity:.9}to{transform:scale(2.6);opacity:0}}
+#cmpSvg .lb{fill:currentColor;font:13px system-ui,sans-serif}
+.scroll{overflow-x:auto}
 .dgrout{font-size:.95rem;margin:8px 0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card)}
 .dgrout.good{border-color:var(--ok);background:var(--okbg)}.dgrout.bad{border-color:var(--bad);background:var(--badbg)}.dgrout.mid{border-color:var(--warn);background:var(--warnbg)}
 #dgrSvg .fault-on{display:none}#dgrSvg.on .fault-on{display:inline}
@@ -609,7 +612,7 @@ VIII, см. вопрос 17) и отдельного распоряжения н
 <section id="theory" hidden>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><marker id="ar" viewBox="0 0 10 10" refX="6" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="context-stroke"/></marker></defs></svg>
 <div class="thintro"><p class="muted">Здесь Правила объяснены связным текстом: зачем нужно каждое требование и как работает оборудование. Числа из Правил помечены номерами пунктов. Пояснения, которых нет в тексте Правил, помечены ярлыком «Пояснение». Анимации можно поставить на паузу.</p></div>
-<div class="chips" id="thChips"><button class="chip" data-p="acc" aria-pressed="true">Аккумуляторные батареи</button><button class="chip" data-p="cool" aria-pressed="false">Охлаждение трансформаторов</button><button class="chip" data-p="dgr" aria-pressed="false">Дугогасящие реакторы</button><button class="chip" data-p="par" aria-pressed="false">Параллельная работа</button></div>
+<div class="chips" id="thChips"><button class="chip" data-p="acc" aria-pressed="true">Аккумуляторные батареи</button><button class="chip" data-p="cool" aria-pressed="false">Охлаждение трансформаторов</button><button class="chip" data-p="dgr" aria-pressed="false">Дугогасящие реакторы</button><button class="chip" data-p="comp" aria-pressed="false">Перекомпенсация и недокомпенсация</button><button class="chip" data-p="par" aria-pressed="false">Параллельная работа</button></div>
 
 <!-- ======== АККУМУЛЯТОРЫ ======== -->
 <article class="th" id="th-acc">
@@ -813,6 +816,72 @@ VIII, см. вопрос 17) и отдельного распоряжения н
 <li>Измерения ёмкостных токов — не реже 1 раза в 6 лет.</li></ol>
 <button class="linkb" type="button" data-q="9">Открыть вопрос 9 в «Вопросах и ответах»</button> <button class="linkb" type="button" data-q="10">Открыть вопрос 10</button></div>
 </article>
+<article class="th" id="th-comp" hidden>
+<h2>Перекомпенсация и недокомпенсация: что это и почему важно (п. 623)</h2>
+<p class="muted">Сначала идёт объяснение по шагам, потом анимация, где можно «покрутить» настройку реактора, потом нормы из Правил.</p>
+
+<h3>Шаг 1. Что вообще компенсируют</h3>
+<p><span class="lbl e">Пояснение</span> В сетях 6–35 кВ нейтраль не заземлена наглухо. Когда одна фаза замыкается на землю, ток всё равно идёт: он возвращается через две другие фазы, потому что провода и кабели относительно земли ведут себя как обкладки конденсаторов (ёмкости). Этот ток называют <b>ёмкостным током замыкания на землю</b>, обозначим его <b>Iс</b>. Чем больше в сети линий и кабелей, тем больше Iс. Если он велик, дуга на месте замыкания не гаснет сама. Поэтому Правила требуют его компенсировать (пороги по классам напряжения — в теме «Дугогасящие реакторы», п. 621).</p>
+
+<h3>Шаг 2. Чем компенсируют</h3>
+<p><span class="lbl e">Пояснение</span> В нейтраль включают катушку — дугогасящий реактор (ДГР). При замыкании через неё идёт <b>индуктивный ток Iл</b>. Он направлен навстречу ёмкостному, и они вычитаются. В месте замыкания остаётся только разница: <b>остаточный ток ≈ |Iс − Iл|</b>. Чем она меньше, тем легче гаснет дуга.</p>
+
+<h3>Шаг 3. Три варианта настройки</h3>
+<div class="scroll"><table class="tt"><tr><th>Соотношение токов</th><th>Название</th><th>Как запомнить</th></tr>
+<tr><td>Iл = Iс</td><td>Резонансная настройка (полная компенсация)</td><td>Реактор в точности «гасит» ёмкостный ток</td></tr>
+<tr><td>Iл &gt; Iс</td><td><b>Перекомпенсация</b></td><td>Реактор «перестарался»: тока от него больше, чем нужно</td></tr>
+<tr><td>Iл &lt; Iс</td><td><b>Недокомпенсация</b></td><td>Реактор «не дотянул»: тока от него меньше, чем нужно</td></tr></table></div>
+<p><span class="lbl e">Пояснение</span> Для расчётов удобна <b>расстройка v = (Iл − Iс) / Iс × 100 %</b>. Плюс означает перекомпенсацию, минус — недокомпенсацию. Пример: Iс = 20 А, ток реактора 21 А. v = (21 − 20) / 20 × 100 % = +5 %, это перекомпенсация 5 %. При токе реактора 19 А будет −5 %: недокомпенсация 5 %.</p>
+
+<h3>Шаг 4. Почему не настраивают «ровно в ноль» и почему сеть меняется</h3>
+<p><span class="lbl e">Пояснение</span> Реактор (индуктивность) и ёмкости сети вместе образуют колебательный контур. При точном резонансе контур «раскачивается» сильнее всего: любая небольшая несимметрия ёмкостей фаз даёт заметное напряжение на нейтрали — <b>напряжение смещения нейтрали</b>. Правила его ограничивают: без замыкания на землю не выше 15 % фазного длительно и не выше 30 % в течение 1 ч, напряжение несимметрии не выше 0,75 % (п. 624). Кроме того, сеть живая: линии отключают и включают, и ёмкостный ток Iс меняется.</p>
+
+<h3>Шаг 5. Почему недокомпенсацию запрещают, а перекомпенсацию допускают</h3>
+<p><span class="lbl e">Пояснение</span> Это общий принцип, в Правилах причина не объяснена. Пусть реактор настроен с недокомпенсацией: Iл чуть меньше Iс. Отключили линию — Iс уменьшился и «догнал» Iл: попали в резонанс, смещение нейтрали выросло. Если отключить ещё линию, проскочили в перекомпенсацию. То есть недокомпенсация означает, что обычное оперативное действие (отключение линии) приводит сеть через резонанс.</p>
+<p><span class="lbl e">Пояснение</span> При перекомпенсации Iл больше Iс. Отключение линий лишь увеличивает запас, резонанса по пути нет. Зато включение линий увеличивает Iс и приближает сеть к резонансу, поэтому допустимую перекомпенсацию ограничивают (не более 5 %).</p>
+
+<h3>Попробуйте сами</h3>
+<div class="fig" id="figComp">
+<div class="figbar"><button class="chip" id="cmpA" aria-pressed="false">Пример А: недокомпенсация 5 %</button><button class="chip" id="cmpB" aria-pressed="false">Пример Б: перекомпенсация 5 %</button><button class="pausebtn" type="button">⏸ Пауза</button></div>
+<svg class="svgb" id="cmpSvg" viewBox="0 0 540 290" role="img" aria-label="Смещение нейтрали в зависимости от настройки реактора">
+<rect id="cmpZ1" x="40" y="20" width="230" height="210" fill="#e5533d" opacity=".12"/>
+<rect id="cmpZ2" x="270" y="20" width="38" height="210" fill="#1d7a46" opacity=".2"/>
+<rect id="cmpZ3" x="308" y="20" width="192" height="210" fill="#e0a020" opacity=".14"/>
+<line x1="40" y1="230" x2="500" y2="230" stroke="currentColor" stroke-width="2"/><line x1="40" y1="20" x2="40" y2="230" stroke="currentColor" stroke-width="2"/>
+<line x1="270" y1="20" x2="270" y2="230" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line id="cmpL15" x1="40" y1="50" x2="500" y2="50" stroke="#c4262e" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text class="lb" x="500" y="44" text-anchor="end" style="font-size:11px;fill:#c4262e">15 % — предел длительно (п. 624)</text>
+<path id="cmpCurve" d="" fill="none" stroke="#1a73c9" stroke-width="3"/>
+<g id="cmpDot" style="transition:transform .6s ease"><circle id="cmpCirc" r="9" fill="#d9822b" stroke="#fff" stroke-width="2"/><circle class="cmpPulse" r="9" fill="none" stroke="#d9822b" stroke-width="2"/></g>
+<text class="lb" x="150" y="256" text-anchor="middle">недокомпенсация</text><text class="lb" x="289" y="222" text-anchor="middle" style="font-size:10px">до 5 %</text><text class="lb" x="404" y="256" text-anchor="middle">перекомпенсация</text>
+<text class="lb" x="270" y="274" text-anchor="middle">настройка: ток реактора Iл относительно ёмкостного тока Iс (резонанс по центру)</text>
+<text class="lb" x="46" y="34" style="font-size:11px">смещение нейтрали, %</text>
+</svg>
+<div class="slidebox"><label>Ток реактора Iл: <b id="cmpIl">21</b> А<input type="range" id="cmpRange" min="10" max="30" step="0.5" value="21"></label>
+<div class="figbar"><button class="chip" id="cmpOff" type="button" aria-pressed="false">Отключить линию (Iс −1 А)</button><button class="chip" id="cmpOn" type="button" aria-pressed="false">Включить линию (Iс +1 А)</button><span>Ёмкостный ток сети Iс: <b id="cmpIc">20</b> А</span></div>
+<div class="dgrout" id="cmpOut"></div></div>
+<p class="figcap muted">Условная модель, а не расчёт реальной сети: кривая резонанса построена по общей формуле смещения нейтрали при несимметрии 0,75 % и затухании 5 %, поэтому в резонансе получается около 15 %. Попробуйте пример А и несколько раз нажмите «Отключить линию»: точка пройдёт через пик. В примере Б при отключении линий пика нет.</p>
+</div>
+
+<h3>Что допускают Правила (п. 623)</h3>
+<p><span class="lbl n">Правила</span> Дугогасящие реакторы должны иметь резонансную настройку.</p>
+<p><span class="lbl n">Правила</span> Настройка с перекомпенсацией, при которой степень расстройки компенсации должна быть не более 5 %, допускается. Если установленные в сетях 6–20 кВ дугогасящие реакторы имеют большую разность токов смежных ответвлений, допускается настройка с реактивной составляющей тока замыкания на землю не более 10 А. В сетях 35 кВ при ёмкостном токе замыкания на землю менее 15 А допускается степень расстройки не более 10 %.</p>
+<p><span class="lbl n">Правила</span> Работа сетей с недокомпенсацией ёмкостного тока не допускается (за исключением случаев применения дугогасящих реакторов, настраиваемых в резонанс при возникновении замыкания на землю).</p>
+<p><span class="lbl n">Правила</span> Допускается применение настройки с недокомпенсацией временно при отсутствии дугогасящих реакторов необходимой мощности и при условии, что аварийно возникающие несимметрии ёмкостей фаз сети не могут привести к появлению напряжения смещения нейтрали, превышающего 70 % фазного напряжения.</p>
+<p><span class="lbl e">Пояснение</span> Исключение для «реакторов, настраиваемых в резонанс при возникновении замыкания на землю» означает реакторы с автоматикой: в нормальном режиме их настройка далека от резонанса, а в резонанс они настраиваются только когда замыкание уже произошло. Поэтому опасного смещения нейтрали в нормальном режиме у них нет.</p>
+
+<h3>Калькулятор: какой ток реактора допустим</h3>
+<div class="figbar"><label style="max-width:100%">Сеть <select id="clcNet" style="max-width:100%;width:100%"><option value="n">6–20 кВ, или 35 кВ при Iс от 15 А</option><option value="m">35 кВ при Iс менее 15 А</option></select></label><label>Ёмкостный ток Iс, А <input type="number" id="clcIc" value="20" min="1" step="0.5" style="width:90px"></label></div>
+<div class="dgrout" id="clcOut"></div>
+
+<div class="memo"><b>Что запомнить</b><ol>
+<li>ДГР создаёт индуктивный ток Iл навстречу ёмкостному Iс; в месте замыкания остаётся разница.</li>
+<li>Iл больше Iс — перекомпенсация; Iл меньше Iс — недокомпенсация; Iл равен Iс — резонанс.</li>
+<li>Перекомпенсация допускается при расстройке не более 5 % (в 35 кВ при Iс менее 15 А — не более 10 %); недокомпенсация не допускается.</li>
+<li>Причина запрета (пояснение): отключение линии при недокомпенсации проводит сеть через резонанс и раскачивает напряжение нейтрали.</li>
+<li>Смещение нейтрали без замыкания: не выше 15 % длительно, не выше 30 % за 1 ч (п. 624).</li></ol>
+<button class="linkb" type="button" data-q="9">Открыть вопрос 9 в «Вопросах и ответах»</button></div>
+</article>
 <!-- ======== ПАРАЛЛЕЛЬНАЯ РАБОТА ======== -->
 <article class="th" id="th-par" hidden>
 <h2>Параллельная работа трансформаторов (разд. XXXIII, пп. 480, 485)</h2>
@@ -981,6 +1050,14 @@ var Q=[
 {t:'m',n:9,q:'Какие утверждения о подключении ДГР верны (п. 623)? Выберите все верные варианты.',
  o:['ДГР подключаются к нейтралям через разъединители','Трансформаторы для подключения ДГР — со схемой «звезда—треугольник»','Настройка ДГР — резонансная','К трансформаторам с плавкими предохранителями подключение допускается','В сетях 6–20 кВ при большой разности токов смежных ответвлений реактивная составляющая тока замыкания на землю — не более 10 А','Ввод ДГР выполняется без трансформатора тока'],
  a:[0,1,2,4],e:'К трансформаторам с плавкими предохранителями подключение не допускается; ввод — через трансформатор тока.'},
+{t:'s',n:9,q:'Что такое недокомпенсация ёмкостного тока?',
+ o:['Ток дугогасящего реактора меньше ёмкостного тока сети','Ток дугогасящего реактора больше ёмкостного тока сети','Ток дугогасящего реактора равен ёмкостному току сети','Ёмкостный ток сети меньше 10 А'],a:0,e:'Недокомпенсация: Iл < Iс. Перекомпенсация: Iл > Iс. Равенство — резонанс.'},
+{t:'s',n:9,q:'Ёмкостный ток сети 20 А, ток реактора 21 А. Что это за настройка и допустима ли она по п. 623?',
+ o:['Перекомпенсация 5 %, допускается','Недокомпенсация 5 %, не допускается','Перекомпенсация 10 %, допускается','Резонанс, не допускается'],a:0,e:'Расстройка (21 − 20) / 20 = +5 %: перекомпенсация не более 5 % допускается.'},
+{t:'s',n:9,q:'Ёмкостный ток сети 20 А, ток реактора 19 А. Что это за настройка?',
+ o:['Недокомпенсация 5 %, не допускается','Перекомпенсация 5 %, допускается','Резонансная настройка','Недокомпенсация 5 %, допускается постоянно'],a:0,e:'Iл < Iс: недокомпенсация; в нормальной эксплуатации она не допускается (п. 623).'},
+{t:'m',n:9,q:'Какие утверждения о настройке ДГР верны (п. 623)? Выберите все верные варианты.',
+ o:['Реакторы должны иметь резонансную настройку','Перекомпенсация допускается при расстройке не более 5 %','В сетях 35 кВ при ёмкостном токе менее 15 А допускается расстройка не более 10 %','Недокомпенсация допускается временно при отсутствии ДГР нужной мощности при условии, что смещение нейтрали не превысит 70 % фазного','Недокомпенсация допускается всегда, если смещение нейтрали не выше 15 %','Перекомпенсация допускается при любой расстройке'],a:[0,1,2,3],e:'Недокомпенсация в общем случае не допускается; временное исключение — только при указанном условии.'},
 /* 10 */
 {t:'x',n:10,q:'Сопоставьте класс напряжения сети и ток замыкания на землю, при превышении которого применяется компенсация ёмкостного тока ДГР (п. 621).',
  l:['6 кВ','10 кВ','15–20 кВ','35 кВ и выше'],r:['30 А','20 А','15 А','10 А','5 А'],a:[0,1,2,3],e:'Работа сетей 6–35 кВ без компенсации при токах выше указанных недопустима.'},
@@ -1265,7 +1342,7 @@ $('start').onclick=build;
  function $(i){return document.getElementById(i)}
  window.showTab=function(t){document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x.dataset.t===t)});['ref','theory','quiz'].forEach(function(id){var e=$(id);if(e)e.hidden=id!==t})};
  var chips=document.querySelectorAll('#thChips .chip');
- chips.forEach(function(c){c.onclick=function(){chips.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['acc','cool','dgr','par'].forEach(function(p){$('th-'+p).hidden=p!==c.dataset.p});window.scrollTo({top:$('theory').offsetTop-10,behavior:'smooth'})}});
+ chips.forEach(function(c){c.onclick=function(){chips.forEach(function(x){x.setAttribute('aria-pressed',x===c)});['acc','cool','dgr','comp','par'].forEach(function(p){$('th-'+p).hidden=p!==c.dataset.p});window.scrollTo({top:$('theory').offsetTop-10,behavior:'smooth'})}});
  document.querySelectorAll('.pausebtn').forEach(function(b){b.onclick=function(){var f=b.closest('.fig');f.classList.toggle('paused');b.textContent=f.classList.contains('paused')?'▶ Запустить анимацию':'⏸ Пауза'}});
  document.querySelectorAll('.linkb[data-q]').forEach(function(b){b.onclick=function(){if(window.openQ)window.openQ(+b.dataset.q)}});
  /* батарея */
@@ -1291,6 +1368,28 @@ $('start').onclick=build;
   else{o.className='dgrout mid';txt+='Перекомпенсация '+v+' %: больше 5 %, допустимая расстройка превышена (п. 623).'}
   o.textContent=txt}
  fb.onclick=function(){var on=ds.classList.toggle('on');fb.setAttribute('aria-pressed',on)};rg.oninput=dgr;dgr();
+ /* перекомпенсация */
+ var cr=$('cmpRange'),Ic=20;
+ function cx(r){return 40+(r-0.7)/0.6*460}
+ function cy(u){return 230-u/17*200}
+ function U0(r){var v=1-r;return 0.75/Math.sqrt(v*v+0.0025)}
+ (function(){var d='';for(var r=0.7;r<=1.3001;r+=0.005){d+=(d?'L':'M')+cx(r).toFixed(1)+' '+cy(U0(r)).toFixed(1)}$('cmpCurve').setAttribute('d',d)})();
+ function f1(x){return x.toFixed(1).replace('.',',')}
+ function cmp(){var Il=+cr.value;$('cmpIl').textContent=f1(Il).replace(',0','');$('cmpIc').textContent=Ic;var r=Il/Ic,rr=Math.max(0.7,Math.min(1.3,r)),u=U0(rr);
+  $('cmpDot').style.transform='translate('+cx(rr).toFixed(1)+'px,'+cy(u).toFixed(1)+'px)';
+  var v=(Il-Ic)/Ic*100,o=$('cmpOut'),t='Iс = '+Ic+' А, Iл = '+f1(Il)+' А. Расстройка '+(v>0?'+':'')+f1(v)+' %. Остаточный ток в месте замыкания ≈ '+f1(Math.abs(Ic-Il))+' А. Смещение нейтрали (условная модель) ≈ '+f1(u)+' %. ';
+  if(Math.abs(v)<0.5){o.className='dgrout mid';t+='Резонанс: смещение нейтрали максимально. Правила требуют резонансной настройки, но любое оперативное действие меняет Iс, поэтому настраивают с допустимой перекомпенсацией.'}
+  else if(v<0){o.className='dgrout bad';t+='Недокомпенсация '+f1(-v)+' %: не допускается (п. 623). Отключите линию кнопкой выше и посмотрите, как точка пройдёт через пик.'}
+  else if(v<=5){o.className='dgrout good';t+='Перекомпенсация '+f1(v)+' %: допускается при расстройке не более 5 % (п. 623).'}
+  else{o.className='dgrout mid';t+='Перекомпенсация '+f1(v)+' %: больше 5 %, допустимая расстройка превышена (п. 623; в сетях 35 кВ при Iс менее 15 А допускается до 10 %).'}
+  o.textContent=t}
+ cr.oninput=cmp;$('cmpOff').onclick=function(){Ic=Math.max(5,Ic-1);cmp()};$('cmpOn').onclick=function(){Ic=Math.min(40,Ic+1);cmp()};
+ $('cmpA').onclick=function(){Ic=20;cr.value=19;cmp()};$('cmpB').onclick=function(){Ic=20;cr.value=21;cmp()};cmp();
+ function clc(){var net=$('clcNet').value,ic=parseFloat($('clcIc').value),o=$('clcOut');if(!(ic>0)){o.className='dgrout';o.textContent='Введите ёмкостный ток больше нуля.';return}
+  var k=net==='m'?0.10:0.05;if(net==='m'&&ic>=15){o.className='dgrout mid';o.textContent='Для 35 кВ расстройка до 10 % допускается только при ёмкостном токе менее 15 А; при Iс = '+ic+' А действует обычное ограничение 5 %: Iл от '+f1(ic)+' до '+f1(ic*1.05)+' А (п. 623).';return}
+  o.className='dgrout good';o.textContent='При Iс = '+f1(ic)+' А допустимый ток реактора: от '+f1(ic)+' А (резонанс) до '+f1(ic*(1+k))+' А (перекомпенсация '+(k*100)+' %). Ток ниже '+f1(ic)+' А — недокомпенсация, не допускается (п. 623).'}
+ $('clcNet').onchange=clc;$('clcIc').oninput=clc;clc();
+
 })();
 (function(){
  function $(i){return document.getElementById(i)}
