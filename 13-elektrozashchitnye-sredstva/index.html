@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Электрозащитные средства</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c2330;--card:#fff;--muted:#5b6575;--line:#dfe3ea;--accent:#c4262e;--ok:#1d7a46;--okbg:#dff1e6;--bad:#c4262e;--badbg:#fbdedf;--warn:#8a5a00;--warnbg:#fdf0cf;--chip:#e9ecf1}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--fg:#e8ebf0;--card:#1c222c;--muted:#9aa4b2;--line:#2a323f;--accent:#ff6b72;--ok:#5ec489;--okbg:#173225;--bad:#ff6b72;--badbg:#3b1a1d;--warn:#f0c060;--warnbg:#38290d;--chip:#262e3a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:900px;margin:0 auto;padding:20px 16px 70px}
+a.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:8px 0 4px}
+h2{font-size:1.25rem;margin:0 0 8px}h3{font-size:1.05rem;margin:18px 0 6px}
+.lead,.muted{color:var(--muted)}
+.note{font-size:.88rem;background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0}
+button,select{font:inherit;color:var(--fg);cursor:pointer}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:7px 14px}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip.done{background:var(--okbg);border-color:var(--ok)}
+article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.fig{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0;background:var(--bg)}
+.info{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);margin-top:8px;min-height:70px}
+.info b.t{display:block;font-size:1.05rem;margin-bottom:2px}
+.info.ok{border-color:var(--ok);background:var(--okbg)}.info.bad{border-color:var(--bad);background:var(--badbg)}.info.mid{border-color:var(--warn);background:var(--warnbg)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--chip)}
+.scroll{overflow-x:auto}
+ul.pts{margin:6px 0;padding-left:20px}ul.pts li{margin:5px 0}
+.memo{border:2px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:16px}
+.memo ol{margin:6px 0;padding-left:20px}
+svg{width:100%;height:auto;display:block;color:var(--fg)}
+svg text{fill:currentColor;font:13px system-ui,sans-serif}
+.btn{border:1px solid var(--fg);background:transparent;border-radius:8px;padding:7px 14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:8px 0}
+.opt{border:1px solid var(--line);background:var(--chip);border-radius:8px;padding:10px 12px;text-align:left}
+details{border:1px solid var(--line);border-radius:10px;background:var(--bg);margin-bottom:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+details .in{padding:0 14px 14px}
+.q{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.q .meta{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.q p.t{margin:0 0 10px;font-weight:600}
+.q .opts{display:grid;gap:8px;grid-template-columns:1fr;margin:0}
+.q .opt{display:flex;gap:10px;align-items:flex-start;width:100%}
+.q .opt input{margin-top:5px;flex:none}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}.opt.bad{background:var(--badbg);border-color:var(--bad)}.opt.miss{border:2px dashed var(--ok)}
+.mrow{display:grid;grid-template-columns:1fr minmax(120px,45%);gap:8px;align-items:center;margin-bottom:8px}
+.mrow select,#p-qz .bar select{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px;width:100%}
+#p-qz .bar select{width:auto;max-width:100%}
+.mrow.ok select{border-color:var(--ok);background:var(--okbg)}.mrow.bad select{border-color:var(--bad);background:var(--badbg)}
+.exp{margin-top:10px;font-size:.9rem;display:none}.q.done .exp{display:block}
+.verdict{font-weight:700;margin:8px 0}.v-ok{color:var(--ok)}.v-bad{color:var(--bad)}
+.score{position:sticky;top:0;z-index:5;background:var(--card);padding:8px 0;font-weight:700;border-bottom:1px solid var(--line);margin-bottom:12px}
+.cntl{display:flex;gap:6px;align-items:center;font-size:.92rem}.cntl input{width:90px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;padding:8px 10px}
+.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.resf{font-size:1.1rem;font-weight:700;margin:14px 0}
+[hidden]{display:none!important}
+
+
+.src{font-size:.8rem;font-weight:400;color:var(--muted)}
+.stamp{border:2px solid var(--fg);border-radius:6px;padding:10px 14px;max-width:440px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;margin:8px 0;background:var(--card)}
+.sl{margin:3px 0}
+.pt{cursor:pointer}.pt:hover .o,.pt.sel .o{stroke:#1a73c9;stroke-width:4}
+.bar select,.bar input[type=number]{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;padding:8px;max-width:100%}
+.bar label{display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:100%}.bar label select{max-width:100%;min-width:0;flex:1 1 180px}
+.flow{fill:none;stroke:#e08a00;stroke-width:4;stroke-linecap:round;stroke-dasharray:2 10;animation:jet .6s linear infinite}
+@keyframes jet{to{stroke-dashoffset:-12}}
+body.paused *{animation-play-state:paused!important}
+.tst,.spark{display:none}
+#shSvg.t .tst{display:inline}#shSvg.b .spark{display:inline;animation:pulse .5s ease-in-out infinite}#shSvg.b .flow{stroke:#c4262e}
+@keyframes pulse{50%{opacity:.25}}
+.cur,.lvg,.hvg{display:none}
+#clSvg.lv .lvg{display:inline}#clSvg.hv .hvg{display:inline}#clSvg.on .cur{display:inline}
+.fluxr{stroke:#1a73c9;stroke-width:3;stroke-dasharray:2 8;opacity:0;animation:jet .8s linear infinite}
+#clSvg.on .fluxr{opacity:1}
+#clNeedle{transform-origin:475px 205px;transition:transform .9s}#clSvg.on #clNeedle{transform:rotate(58deg)}
+.twog,.glove,.cur1,.cur2{display:none}
+#ukSvg.two .twog{display:inline}#ukSvg.two .person{opacity:.22}
+#ukSvg.one:not(.gl) .cur1{display:inline}#ukSvg.two .cur2{display:inline}#ukSvg.gl .glove{display:inline}
+.ringbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.ringbox svg{width:120px;height:120px;flex:none}
+.fing rect,.fing2 rect,.th{transition:transform .8s;transform-box:fill-box;transform-origin:50% 100%}
+.cuff{transition:transform .8s;transform-origin:248px 196px}
+#gtSvg.tw .cuff{transform:translateY(-70px) scaleY(.45)}
+#gtSvg.ok.tw .fing rect,#gtSvg.ok.tw .th{transform:scale(1.1)}
+#gtSvg.bad.tw .fing rect,#gtSvg.bad.tw .th{transform:scale(.88,.82)}
+.air,.hole{display:none}#gtSvg.bad.tw .air{display:inline}#gtSvg.bad .hole{display:inline}
+.leak{stroke:#7aa6c8}
+.bth .flow,.boom{display:none}.bth.run .flow{display:inline}.bth.brk .boom{display:inline;animation:pulse .4s infinite}.bth.brk .flow{stroke:#c4262e}
+.vlist{display:grid;gap:8px}.vi{display:grid;gap:2px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)}
+.vi.ok{border-color:var(--ok);background:var(--okbg)}.vi.no{border-color:var(--bad);background:var(--badbg)}.vi.mid{border-color:var(--warn);background:var(--warnbg)}
+.c0,.c1,.c3,.vc{display:none}
+#zoSvg.z0 .c0,#zoSvg.z1 .c1,#zoSvg.z2 .c1,#zoSvg.z3 .c3{display:inline}
+#zoSvg.z2 .vc,#zoSvg.z3 .vc{display:inline}
+.gcl,.hot{transition:transform .8s}
+#zoSvg.z0 .gcl{transform:translate(40px,-24px)}
+#zoSvg.z1 .gcl rect,#zoSvg.z2 .gcl rect,#zoSvg.z3 .gcl rect{fill:#1d7a46}
+#zoSvg.z3 .hot{transform:translate(0,-52px)}
+.q .exp{display:none}.q.done .exp{display:block}
+@media (prefers-reduced-motion:reduce){.flow,.fluxr,.bth.brk .boom,#shSvg.b .spark{animation:none!important}}
+details .src{display:block;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">← Все пособия</a>
+<h1>Электрозащитные средства</h1>
+<p class="lead">Штанги изолирующие, клещи электроизмерительные и индикаторы тока, указатели напряжения до и выше 1000 В, ручной изолирующий инструмент, перчатки, переносные заземления, боты и ковры диэлектрические. Для чего, из чего, как проверять, как испытывают и как применять.</p>
+<div class="note">Раздел составлен только по СТО 34.01-30.1-001-2016 ПАО «Россети» (файл лежит в папке «Справочные материалы»). Это стандарт организации, а не приказ государственного органа. Единственное исключение — порядок наложения заземления: он взят из приказа Минтруда № 903н (п. 20) и помечен как не из СТО. Пояснения «как это работает» на рисунках — упрощённые схемы и помечены, если не следуют из текста СТО.</div>
+<div class="chips" id="tabs"><button class="chip" data-p="ref" aria-pressed="true">Вопросы и ответы</button><button class="chip" data-p="gen" aria-pressed="false">Общие правила</button><button class="chip" data-p="shg" aria-pressed="false">Штанги</button><button class="chip" data-p="cl" aria-pressed="false">Клещи, индикаторы тока</button><button class="chip" data-p="ukz" aria-pressed="false">Указатели напряжения</button><button class="chip" data-p="ins" aria-pressed="false">Инструмент</button><button class="chip" data-p="gl" aria-pressed="false">Перчатки</button><button class="chip" data-p="bk" aria-pressed="false">Боты и ковры</button><button class="chip" data-p="zem" aria-pressed="false">Заземления</button><button class="chip" data-p="nr" aria-pressed="false">Нормы и сроки</button><button class="chip" data-p="tr" aria-pressed="false">Тренажёр</button><button class="chip" data-p="qz" aria-pressed="false">Тест</button></div>
+<div class="bar"><button class="btn" id="pauseAll">⏸ Пауза анимации</button></div>
+<article id="p-ref">
+<h2>Вопросы и ответы</h2>
+<p class="muted">Каждый ответ составлен из пунктов СТО и показан списком. Нажмите на вопрос, чтобы раскрыть; свернуть можно кнопкой внутри ответа или плавающей кнопкой внизу экрана.</p>
+<details><summary>Какие средства защиты от поражения электрическим током применяют при обслуживании электроустановок?</summary><div class="in"><ul class="pts"><li>электроизоляционные (изолирующие) средства и устройства;</li><li>изолирующие покрытия;</li><li>токопроводящие средства защиты;</li><li>устройства сигнализации;</li><li>средства индивидуальной защиты от поражения электрическим током;</li><li>блокировки и оградительные устройства;</li><li>плакаты и знаки безопасности.</li></ul><div class="src">СТО п. 1.3.1</div></div></details>
+<details><summary>Что работник обязан сделать перед каждым применением электрозащитного средства?</summary><div class="in"><ul class="pts"><li>проверить исправность;</li><li>проверить отсутствие внешних повреждений и загрязнений;</li><li>проверить по штампу дату следующего эксплуатационного испытания: она не должна быть просрочена;</li><li>использовать средство с истёкшим сроком испытаний запрещено.</li></ul><div class="src">СТО п. 1.3.8</div></div></details>
+<details><summary>За какие части средства нельзя браться при работе?</summary><div class="in"><ul class="pts"><li>нельзя прикасаться к рабочей части;</li><li>нельзя прикасаться к изолирующей части за ограничительным кольцом или упором.</li></ul><div class="src">СТО п. 1.3.9</div></div></details>
+<details><summary>Какие отметки должно иметь средство в эксплуатации?</summary><div class="in"><ul class="pts"><li>инвентарный номер (кроме диэлектрических ковров, изолирующих подставок, блокировочных устройств, защитных ограждений, плакатов и знаков безопасности);</li><li>отметку (клеймо, штамп) об эксплуатационных испытаниях, если испытания нужны;</li><li>если средство из нескольких разъёмных частей, общий номер ставят на каждую часть;</li><li>отметки наносят так, чтобы не ухудшить механические и изоляционные свойства, они должны быть стойкими и легко читаться.</li></ul><div class="src">СТО п. 1.7.1</div></div></details>
+<details><summary>Какой штамп ставят на выдержавшее испытание средство?</summary><div class="in"><ul class="pts"><li>если применение зависит от напряжения электроустановки (штанги, указатели и т. п.): номер, «Годно до … кВ», дата следующего испытания, наименование лаборатории;</li><li>если не зависит от напряжения (перчатки, галоши, боты и т. п.): номер, дата следующего испытания, наименование лаборатории;</li><li>штамп ставят у ограничительного кольца (упора) изолирующих средств или у края резиновых изделий; если частей несколько — только на одной;</li><li>у перчаток, бот и галош при отсутствии заводской маркировки при испытании ставят Эв или Эн.</li></ul><div class="src">СТО п. 1.7.5</div></div></details>
+<details><summary>Что делают со средством, не выдержавшим испытания?</summary><div class="in"><ul class="pts"><li>штамп перечёркивают красной краской;</li><li>средство изымают из эксплуатации;</li><li>хранить непригодные средства и средства с истёкшим сроком испытаний вместе с пригодными запрещено.</li></ul><div class="src">СТО п. 1.7.5</div></div></details>
+<details><summary>Как часто осматривают средства и кто это делает?</summary><div class="in"><ul class="pts"><li>не реже 1 раза в 6 месяцев;</li><li>переносные заземления — не реже 1 раза в 3 месяца;</li><li>осмотр проводит работник, ответственный за состояние средств, результат записывает в журнал;</li><li>осмотр проводят и непосредственно перед применением.</li></ul><div class="src">СТО п. 1.7.3, 5.1.5.6</div></div></details>
+<details><summary>Кто отвечает за комплектование, учёт, осмотры и испытания средств?</summary><div class="in"><ul class="pts"><li>лицо, ответственное за состояние и безопасную эксплуатацию электроустановки (ответственный за электрохозяйство);</li><li>либо иное лицо с группой по электробезопасности не ниже IV, назначенное распорядительным документом;</li><li>работник, получивший средства в индивидуальное пользование, отвечает за правильную эксплуатацию, контроль состояния и сообщает ответственному о непригодности.</li></ul><div class="src">СТО п. 1.3.6</div></div></details>
+<details><summary>Что бракуют при электрических испытаниях?</summary><div class="in"><ul class="pts"><li>пробой;</li><li>перекрытие или разряды по поверхности;</li><li>увеличение тока через изделие выше нормы;</li><li>местные нагревы из-за диэлектрических потерь (у твёрдых материалов проверяют ощупыванием сразу после испытания).</li></ul><div class="src">СТО п. 1.8.13, 1.8.14</div></div></details>
+<details><summary>Когда проводят внеочередные испытания?</summary><div class="in"><ul class="pts"><li>после падения;</li><li>после ремонта;</li><li>после замены каких-либо деталей;</li><li>при наличии признаков неисправности.</li></ul><div class="src">СТО п. 1.8.5</div></div></details>
+<details><summary>Из каких частей состоит изолирующая штанга и для чего она нужна?</summary><div class="in"><ul class="pts"><li>части: рабочая, изолирующая, рукоятка; рукоятку и изолирующую часть разделяет ограничительное кольцо из электроизоляционного материала;</li><li>оперативная работа: операции с разъединителями, смена предохранителей, установка раскрепляющих устройств, обрезка веток вдоль ВЛ;</li><li>измерения: проверка изоляции, наличия или отсутствия напряжения, совпадения фаз;</li><li>установка и снятие переносных заземлений, не имеющих своих штанг;</li><li>разряд конденсаторов, снятие, перенос и выравнивание потенциала, освобождение пострадавшего от действия тока.</li></ul><div class="src">СТО п. 2.1.1.1, 2.1.2.2</div></div></details>
+<details><summary>Как испытывают изолирующие штанги?</summary><div class="in"><ul class="pts"><li>оперативные до 1000 В: 2 кВ в течение 5 минут;</li><li>оперативные и измерительные от 1 до 35 кВ: трёхкратное линейное напряжение, но не менее 40 кВ, 5 минут; 110 кВ и выше: трёхкратное фазное, 5 минут;</li><li>изолирующая часть штанг для разряда конденсаторов: 40 кВ, 5 минут;</li><li>напряжение прикладывают к рабочей части и к накладному электроду у ограничительного кольца со стороны изолирующей части;</li><li>периодичность: оперативные — 1 раз в 24 месяца, измерительные — 1 раз в 12 месяцев;</li><li>механические испытания в эксплуатации не проводят; штанги заземлений без металлических звеньев электрически в эксплуатации тоже не испытывают.</li></ul><div class="src">СТО п. 2.1.3, Приложение 10</div></div></details>
+<details><summary>Что сделать перед работой со штангой и как с ней обращаться?</summary><div class="in"><ul class="pts"><li>если рабочая часть съёмная: убедиться в отсутствии заклинивания резьбы, один раз свинтив и развинтив её; так же проверить каждое резьбовое соединение звеньев;</li><li>подниматься на конструкцию или телескопическую вышку и спускаться с них нужно без штанги;</li><li>в электроустановках выше 1000 В штангой пользуются в диэлектрических перчатках;</li><li>хранить так, чтобы штанга не прогибалась и не касалась стен.</li></ul><div class="src">СТО п. 2.1.5, 2.1.4.2</div></div></details>
+<details><summary>Что такое электроизмерительные клещи и где их применяют?</summary><div class="in"><ul class="pts"><li>трансформатор тока с разъёмным магнитопроводом: первичная обмотка — проводник с измеряемым током, вторичная замкнута на стрелочный или цифровой прибор;</li><li>измерение тока в цепях до 10 кВ без нарушения целостности цепи;</li><li>измерение тока, напряжения и мощности в электроустановках до 1 кВ.</li></ul><div class="src">СТО п. 2.4.1.1</div></div></details>
+<details><summary>Правила работы с клещами выше 1000 В?</summary><div class="in"><ul class="pts"><li>работать в диэлектрических перчатках;</li><li>держать клещи на весу, не наклоняться к прибору для отсчёта показаний;</li><li>не применять выносные приборы;</li><li>не переключать пределы измерения, не сняв клещей с токоведущих частей;</li><li>клещами до 1000 В нельзя работать, находясь на опоре ВЛ, если они специально для этого не предназначены.</li></ul><div class="src">СТО п. 2.4.5</div></div></details>
+<details><summary>Какие бывают указатели напряжения до 1000 В?</summary><div class="in"><ul class="pts"><li>однополюсные: работают при протекании ёмкостного тока через тело оператора; один корпус;</li><li>двухполюсные: работают при протекании активного тока; два корпуса, соединённые гибким изолированным проводом длиной не менее 1 м;</li><li>напряжение индикации у тех и других не выше 50 В;</li><li>длина неизолированной части электрода-наконечника не более 7 мм (в РУ и цепях вторичной коммутации), ограничительные упоры высотой не менее 3 мм.</li></ul><div class="src">СТО п. 2.5.2.4–2.5.2.7, 2.5.5.1</div></div></details>
+<details><summary>Из чего состоит указатель напряжения выше 1000 В?</summary><div class="in"><ul class="pts"><li>рабочая часть (реагирует на напряжение, может быть с электродом-наконечником или бесконтактной);</li><li>индикаторная часть (световая или светозвуковая индикация, звук не менее 70 дБ на расстоянии 1 м), может быть совмещена с рабочей;</li><li>изолирующая часть;</li><li>рукоятка;</li><li>напряжение индикации не более 25 % номинального напряжения электроустановки.</li></ul><div class="src">СТО п. 2.5.2.9, 2.5.2.10, 2.5.2.13</div></div></details>
+<details><summary>Как проверяют исправность указателя перед работой?</summary><div class="in"><ul class="pts"><li>встроенным органом контроля, если он есть;</li><li>если его нет: специальным приспособлением — малогабаритным источником повышенного напряжения;</li><li>если нет и его: кратковременным прикосновением электродом-наконечником к токоведущим частям, заведомо находящимся под напряжением.</li></ul><div class="src">СТО п. 2.5.6.2</div></div></details>
+<details><summary>Сколько держать указатель на токоведущей части при проверке отсутствия напряжения?</summary><div class="in"><ul class="pts"><li>время контакта рабочей части с токоведущими частями не менее 5 секунд (при отсутствии сигнала);</li><li>некоторые указатели подают сигнал на расстоянии, но непосредственный контакт рабочей части с токоведущей частью обязателен.</li></ul><div class="src">СТО п. 2.5.6.4</div></div></details>
+<details><summary>Можно ли пользоваться однополюсным указателем до 1000 В в диэлектрических перчатках?</summary><div class="in"><ul class="pts"><li>нет: должен быть обеспечен контакт руки оператора с электродом на торцевой (боковой) части корпуса;</li><li>применение диэлектрических перчаток не допускается;</li><li>в электроустановках выше 1000 В указателем, наоборот, пользуются в диэлектрических перчатках.</li></ul><div class="src">СТО п. 2.5.6.3, 2.5.6.5</div></div></details>
+<details><summary>Что относится к ручному изолирующему инструменту и где его применяют?</summary><div class="in"><ul class="pts"><li>гаечные ключи всех видов, трещоточные ключи, плоскогубцы, пассатижи, круглогубцы, торцевые и боковые кусачки, монтерские ножи (не складные), ножницы для резки проводов и кабелей, отвёртки, молотки;</li><li>в электроустановках до 1000 В переменного и 1500 В постоянного тока;</li><li>в закрытых электроустановках, кроме особо сырых помещений, и в открытых электроустановках в сухую погоду;</li><li>выше 1000 В для операций применяют штанги-манипуляторы (оперативные, универсальные, с крюком, штанги-ключи и др.).</li></ul><div class="src">СТО п. 2.7.1</div></div></details>
+<details><summary>Какой должна быть неизолированная часть отвёртки?</summary><div class="in"><ul class="pts"><li>отвёртки для винтов со шлицевой головкой: неизолированный стержень не более 15 мм;</li><li>отвёртки других типов (крестообразные, квадратные, шестигранные шлицы): не более 18 мм;</li><li>изоляция на рукоятке и стержне неснимаемая; на расстоянии не менее 30 мм от неизолированной рабочей части её толщина не более 2 мм.</li></ul><div class="src">СТО п. 2.7.2.9, 2.7.2.10</div></div></details>
+<details><summary>Что делать, если повреждена изоляция инструмента?</summary><div class="in"><ul class="pts"><li>два слоя: нарушен верхний слой и появилось покрытие другого цвета — инструмент заменить;</li><li>три слоя: повреждён внешний слой (трещины, потёртости) — можно оставить с осторожностью и при первой возможности сдать в ремонт;</li><li>три слоя: появился нижний слой, примыкающий к корпусу, — изъять из применения;</li><li>перед каждым применением инструмент осматривают.</li></ul><div class="src">СТО п. 2.7.5</div></div></details>
+<details><summary>Как испытывают и осматривают ручной изолирующий инструмент?</summary><div class="in"><ul class="pts"><li>однослойная изоляция: 2 кВ частотой 50 Гц, 60 секунд, 1 раз в 12 месяцев; ток утечки не измеряют;</li><li>погружают изолированной частью в воду так, чтобы вода не доходила до края изоляции на 10 мм; один вывод трансформатора на металлическую часть, второй на ванну;</li><li>многослойная изоляция: осмотр не реже 1 раза в 6 месяцев, электрических испытаний нет.</li></ul><div class="src">СТО п. 2.7.3.3–2.7.3.5, Приложение 10</div></div></details>
+<details><summary>Что нужно проверить перед применением диэлектрических перчаток?</summary><div class="in"><ul class="pts"><li>штамп испытаний;</li><li>отсутствие механических повреждений;</li><li>отсутствие загрязнения и увлажнения;</li><li>отсутствие проколов: перчатки скручивают в сторону пальцев;</li><li>края при работе подвёртывать нельзя; поверх разрешено надевать кожаные или брезентовые перчатки и рукавицы.</li></ul><div class="src">СТО п. 4.1.5.3, 4.1.5.4</div></div></details>
+<details><summary>Как испытывают перчатки?</summary><div class="in"><ul class="pts"><li>1 раз в 6 месяцев;</li><li>погружают в ванну с водой, воду наливают и внутрь; уровень снаружи и внутри на 45–55 мм ниже краёв, края сухие;</li><li>напряжение подают между корпусом ванны и электродом в воде внутри перчатки;</li><li>9 кВ, 1 минута, ток не более 9 мА;</li><li>бракуют при пробое или превышении тока; после испытаний просушивают; на штамп наносят Эн или Эв; у не прошедших штамп перечёркивают красной краской.</li></ul><div class="src">СТО п. 4.1.3, Приложение 10</div></div></details>
+<details><summary>Что означает маркировка Эв и Эн?</summary><div class="in"><ul class="pts"><li>в электроустановках разрешено использовать только перчатки с такой маркировкой;</li><li>Эв — защита от тока напряжением выше 1000 В;</li><li>Эн — защита от тока напряжением до 1000 В;</li><li>по обуви: Эн — резиновые клеёные галоши, Эв — резиновые клеёные и формовые боты.</li></ul><div class="src">СТО п. 4.1.2.7, 4.2.2.6</div></div></details>
+<details><summary>Чем различаются боты и галоши и где их применяют?</summary><div class="in"><ul class="pts"><li>обувь изолирует от токопроводящих поверхностей (пола, земли), защищает от напряжения шага;</li><li>применяют в закрытых электроустановках, а при отсутствии осадков — в открытых;</li><li>галоши — в электроустановках до 1000 В, боты — при всех напряжениях;</li><li>ток утечки: галоши не более 2,5 мА, боты не более 10 мА;</li><li>боты имеют отвороты, высота не менее 160 мм.</li></ul><div class="src">СТО п. 4.2.1, 4.2.2</div></div></details>
+<details><summary>Где применяют ковры и изолирующие подставки и испытывают ли их?</summary><div class="in"><ul class="pts"><li>ковры: в закрытых электроустановках, кроме сырых помещений, и в открытых в сухую погоду;</li><li>подставки (подмости): в сырых и подверженных загрязнению помещениях;</li><li>в эксплуатации ковры и подставки не испытывают;</li><li>их осматривают не реже 1 раза в 6 месяцев и непосредственно перед применением;</li><li>при механических дефектах ковры изымают и заменяют новыми, подставки направляют в ремонт и после ремонта испытывают по нормам приёмо-сдаточных испытаний.</li></ul><div class="src">СТО п. 2.10.1.1, 2.10.5.2</div></div></details>
+<details><summary>Для чего нужны переносные защитные заземления?</summary><div class="in"><ul class="pts"><li>защита работающих на отключённых токоведущих частях от ошибочно поданного или наведённого напряжения;</li><li>применяют при отсутствии стационарных заземляющих ножей;</li><li>закорачивающие проводники соединяют между собой токоведущие части: вторичную обмотку трансформатора тока, выводы конденсаторных установок, двигателей, генераторов.</li></ul><div class="src">СТО п. 5.1.1.1</div></div></details>
+<details><summary>Из чего состоит переносное заземление?</summary><div class="in"><ul class="pts"><li>по назначению: для работ на ВЛ и для работ в РУ;</li><li>по конструкции: штанговые, штанговые с металлическими звеньями, бесштанговые;</li><li>штанговое: изолирующая часть (штанга с рукояткой), токопроводящая часть (гибкий провод), контактная часть (фазные зажимы, наконечники, струбцины);</li><li>бесштанговые применяют для ВЛИ 0,38 кВ.</li></ul><div class="src">СТО п. 5.1.2.1–5.1.2.3, 5.1.2.9</div></div></details>
+<details><summary>Каким должно быть сечение провода заземления?</summary><div class="in"><ul class="pts"><li>не менее 16 мм² в электроустановках до 1000 В;</li><li>не менее 25 мм² в электроустановках выше 1000 В;</li><li>стандартный ряд от 16 до 120 мм²;</li><li>сечение выбирают по термической стойкости при токе короткого замыкания;</li><li>провод соединяют с зажимом болтами, прижимной пластиной, гнездовым соединением или запрессованным наконечником; пайка не допускается.</li></ul><div class="src">СТО п. 5.1.2.13, 5.1.2.14, 5.1.2.19</div></div></details>
+<details><summary>Когда переносное заземление изымают из эксплуатации?</summary><div class="in"><ul class="pts"><li>обнаружены механические дефекты контактных соединений;</li><li>оборвано более 5 % проводников;</li><li>произошло расплавление;</li><li>после воздействия токов короткого замыкания;</li><li>до этого заземление осматривают не реже 1 раза в 3 месяца и перед применением.</li></ul><div class="src">СТО п. 5.1.5.6</div></div></details>
+<details><summary>Как устанавливают и снимают переносные заземления?</summary><div class="in"><ul class="pts"><li>в диэлектрических перчатках; в электроустановках выше 1000 В — с изолирующей штангой;</li><li>зажимы закрепляют этой же штангой, заземляющий зажим — штангой или руками в диэлектрических перчатках (СТО п. 5.1.5.3);</li><li>перед использованием осматривают надёжность соединений, контакт заземляющего зажима очищают щёткой (СТО п. 5.1.5.2);</li><li>последовательность: сначала присоединяют к заземляющему устройству, затем после проверки отсутствия напряжения устанавливают на токоведущие части, снимают в обратном порядке (это не СТО, а приказ № 903н, п. 20.2);</li><li>все установленные заземления учитывают в оперативной документации (СТО п. 5.1.5.5).</li></ul><div class="src">СТО п. 5.1.5; приказ № 903н, п. 20</div></div></details>
+</article>
+
+<article id="p-gen" hidden>
+<h2>Общие правила для всех средств</h2>
+<p class="muted">То, что относится к любому из восьми средств раздела. Номера пунктов — СТО 34.01-30.1-001-2016.</p>
+<h3>Что обязан сделать работник перед каждым применением <span class="src">п. 1.3.8, 1.3.9</span></h3>
+<ul class="pts">
+<li>проверить исправность средства;</li>
+<li>проверить, что нет внешних повреждений и загрязнений;</li>
+<li>проверить по штампу дату следующего испытания: просроченное средство использовать запрещено;</li>
+<li>не касаться рабочей части и изолирующей части за ограничительным кольцом или упором.</li>
+</ul>
+<h3>Как устроен штамп об испытаниях <span class="src">п. 1.7.5</span></h3>
+<p>Выберите вид средства, чтобы увидеть, какой штамп на него ставят.</p>
+<div class="chips" id="stChips"><button class="chip" data-s="v" aria-pressed="true">Применение зависит от напряжения (штанга, указатель)</button><button class="chip" data-s="n" aria-pressed="false">Не зависит от напряжения (перчатки, боты, галоши)</button></div>
+<div class="stamp" id="stamp"></div>
+<div class="info" id="stInfo"></div>
+<h3>Что учитывается и кем <span class="src">п. 1.3.6, 1.7.2, 1.7.3, 1.7.6</span></h3>
+<ul class="pts">
+<li>учёт ведут в журнале учёта и содержания электрозащитных средств (форма в Приложении 4 СТО);</li>
+<li>результаты испытаний записывают в журнал испытаний (Приложение 5);</li>
+<li>средства, выданные в индивидуальное пользование, тоже записывают в журнал;</li>
+<li>за комплектование, хранение, осмотры, испытания и изъятие непригодных отвечает ответственный за электрохозяйство либо лицо с группой не ниже IV, назначенное распорядительным документом;</li>
+<li>при непригодности средство изымают, запись об изъятии делают в журнале (п. 1.3.5).</li>
+</ul>
+<h3>Эксплуатационные испытания <span class="src">п. 1.7.4, 1.8.5–1.8.14</span></h3>
+<ul class="pts">
+<li>средства, полученные от изготовителя или со склада, проверяют по нормам эксплуатационных испытаний, кроме подставок, ковров, переносных заземлений и защитных ограждений (п. 1.7.4);</li>
+<li>очередные испытания проводят по срокам из Приложения 10, внеочередные — после падения, ремонта, замены деталей, при признаках неисправности (п. 1.8.5);</li>
+<li>перед испытанием средство осматривают: маркировка, номер, комплектность, повреждения, состояние изоляции; при несоответствии испытание не проводят до устранения недостатков (п. 1.8.7);</li>
+<li>длительность приложения напряжения, как правило, 1 минута для изоляции до 1000 В и из эластичных материалов, 5 минут для слоистых диэлектриков (п. 1.8.10);</li>
+<li>напряжение для основных средств на 1–35 кВ — трёхкратное линейное, но не ниже 40 кВ; на 110 кВ и выше — трёхкратное фазное (п. 1.8.9);</li>
+<li>бракуют при пробое, перекрытии, разрядах по поверхности, превышении тока, местных нагревах (п. 1.8.14).</li>
+</ul>
+<div class="note">Все нормы по восьми средствам собраны во вкладке «Нормы и сроки».</div>
+</article>
+
+<article id="p-shg" hidden>
+<h2>Штанги изолирующие</h2>
+<p class="muted">СТО, раздел 2.1. Нажмите на часть штанги на рисунке.</p>
+<div class="fig">
+<svg viewBox="0 0 560 170" id="shSvg" role="img" aria-label="Устройство изолирующей штанги">
+<defs><marker id="arrS" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs>
+<g class="pt" data-i="rk"><rect class="o" x="20" y="64" width="130" height="30" rx="14" fill="#44546a"/><rect x="28" y="70" width="6" height="18" fill="#2b3647"/><rect x="48" y="70" width="6" height="18" fill="#2b3647"/><rect x="68" y="70" width="6" height="18" fill="#2b3647"/><rect x="88" y="70" width="6" height="18" fill="#2b3647"/><rect x="108" y="70" width="6" height="18" fill="#2b3647"/></g>
+<g class="pt" data-i="kol"><rect class="o" x="150" y="52" width="14" height="54" rx="4" fill="#d9822b"/></g>
+<g class="pt" data-i="iz"><rect class="o" x="164" y="68" width="250" height="22" fill="#e9dfa8"/><rect x="164" y="68" width="250" height="5" fill="#fff" opacity=".35"/></g>
+<g class="pt" data-i="rb"><rect class="o" x="414" y="70" width="60" height="18" fill="#9aa4b0"/><path class="o" d="M474 79 h26 q30 0 30 -28 q0 -14 -14 -14" fill="none" stroke="#9aa4b0" stroke-width="10" stroke-linecap="round"/></g>
+<g class="tst"><rect x="140" y="46" width="36" height="66" rx="6" fill="none" stroke="#1a73c9" stroke-width="3" stroke-dasharray="6 4"/><text x="158" y="130" text-anchor="middle" style="fill:#1a73c9;font-weight:700">накладной электрод</text><path class="flow" d="M440 78 L176 78"/><text x="440" y="106" text-anchor="middle" style="fill:#1a73c9;font-weight:700">к рабочей части</text><g class="spark"><path d="M290 66 l-8 12 l12 0 l-8 14" fill="none" stroke="#c4262e" stroke-width="3"/></g></g>
+<text x="85" y="148" text-anchor="middle">рукоятка</text><text x="157" y="40" text-anchor="middle">кольцо</text><text x="289" y="148" text-anchor="middle">изолирующая часть</text><text x="470" y="148" text-anchor="middle">рабочая часть</text>
+</svg>
+<div class="bar"><button class="btn" id="shTest">Показать испытание</button><button class="btn" id="shBreak" disabled>Показать перекрытие</button><span class="muted" id="shHint"></span></div>
+</div>
+<div class="info" id="shInfo"><b class="t">Выберите часть</b>Нажмите на рукоятку, кольцо, изолирующую или рабочую часть.</div>
+<h3>Для чего служат штанги <span class="src">п. 2.1.1.1</span></h3>
+<ul class="pts">
+<li>оперативная работа: операции с разъединителями, смена предохранителей, установка раскрепляющих устройств, обрезка веток и сучьев вдоль ВЛ;</li>
+<li>измерения: проверка изоляции, наличия или отсутствия напряжения, совпадения фаз;</li>
+<li>установка и снятие переносных заземлений, не имеющих своих штанг;</li>
+<li>снятие, перенос и выравнивание потенциала, разряд конденсаторов, освобождение пострадавшего от действия тока.</li>
+</ul>
+<h3>Виды штанг <span class="src">п. 2.1.1.1, 2.1.2.3–2.1.2.6</span></h3>
+<ul class="pts">
+<li><b>оперативные</b> — несъёмный рабочий инструмент из металла или диэлектрика;</li>
+<li><b>универсальные</b> — адаптер в виде винта не менее М14 для насадок и инструментов;</li>
+<li><b>для переноса потенциала</b> — пружинный захват, изолирующая рукоятка, медный провод не менее 25 мм²;</li>
+<li><b>для выравнивания потенциала</b> — крюк, рукоятка, медный провод не менее 4 мм²;</li>
+<li><b>для снятия разряда конденсаторов (0,23–10 кВ)</b> — электрод и ограничительный резистор; сопротивление цепи между электродом и струбциной 10–15 Ом, провод не менее 1,5 м;</li>
+<li><b>дугогасящая</b> — для снятия наведённого потенциала с проводов ВЛ, с дугогасителем.</li>
+</ul>
+<h3>Какой длины должна быть штанга <span class="src">таблица 1</span></h3>
+<p>Минимальные размеры оперативных штанг. Выберите напряжение электроустановки.</p>
+<div class="bar"><select id="shV"></select></div>
+<div class="info" id="shLen"></div>
+<h3>Как обращаться <span class="src">п. 2.1.5, 2.1.4.2</span></h3>
+<ul class="pts">
+<li>если рабочая часть съёмная, перед работой убедиться, что резьба не заклинивает: один раз свинтить и развинтить; так же проверить каждое резьбовое соединение звеньев;</li>
+<li>подниматься на конструкцию или телескопическую вышку и спускаться с них без штанги;</li>
+<li>выше 1000 В работать в диэлектрических перчатках;</li>
+<li>хранить, исключая прогиб и касание стен.</li>
+</ul>
+<h3>Прочие требования <span class="src">п. 2.1.2.1, 2.1.2.15–2.1.2.18</span></h3>
+<ul class="pts">
+<li>в сырую погоду (туман, изморозь, снег, дождь до 3 мм/мин) можно работать штангами климатического исполнения УХЛ1.1 и Т1.1; на их изолирующей части укреплены изоляторы (юбки) конусной частью вверх;</li>
+<li>штанга должна позволять работать одному человеку, усилие на руку не более 160 Н;</li>
+<li>оперативные штанги и штанги заземлений выше 1000 В выдерживают разрыв 1000 Н в течение 1 минуты;</li>
+<li>прогиб: не более 10 % для штанг до 220 кВ, 20 % для более высоких напряжений.</li>
+</ul>
+<h3>Испытания <span class="src">п. 2.1.3, Приложение 10</span></h3>
+<ul class="pts">
+<li>до 1000 В: 2 кВ, 5 минут;</li>
+<li>от 1 до 35 кВ: трёхкратное линейное, но не менее 40 кВ, 5 минут;</li>
+<li>110 кВ и выше: трёхкратное фазное, 5 минут;</li>
+<li>периодичность: 1 раз в 24 месяца (измерительные штанги — 1 раз в 12 месяцев);</li>
+<li>механические испытания в эксплуатации не проводят; штанги заземлений без металлических звеньев электрически не испытывают.</li>
+</ul>
+</article>
+
+<article id="p-cl" hidden>
+<h2>Клещи электроизмерительные, индикаторы тока</h2>
+<p class="muted">СТО, раздел 2.4. Клещи измеряют ток, не разрывая цепь.</p>
+<div class="fig">
+<div class="chips" id="clChips"><button class="chip" data-t="lv" aria-pressed="true">До 1000 В</button><button class="chip" data-t="hv" aria-pressed="false">Выше 1000 В</button></div>
+<svg viewBox="0 0 560 250" id="clSvg" class="lv" role="img" aria-label="Работа электроизмерительных клещей">
+<line x1="20" y1="84" x2="540" y2="84" stroke="#b9651b" stroke-width="10" stroke-linecap="round"/>
+<path class="flow cur" d="M30 84 L530 84"/>
+<g id="clCore"><ellipse cx="280" cy="84" rx="62" ry="50" fill="none" stroke="#6d7886" stroke-width="16"/><path d="M262 38 L298 38" stroke="var(--bg)" stroke-width="8"/><ellipse class="fluxr" cx="280" cy="84" rx="62" ry="50" fill="none"/></g>
+<g class="lvg"><rect x="262" y="132" width="36" height="84" rx="10" fill="#44546a"/><text x="280" y="236" text-anchor="middle">корпус = изолирующая часть, упор, рукоятка</text></g>
+<g class="hvg"><rect x="268" y="132" width="24" height="52" fill="#e9dfa8" stroke="#a89a4f"/><rect x="256" y="180" width="48" height="8" rx="3" fill="#d9822b"/><rect x="266" y="188" width="28" height="42" rx="8" fill="#44546a"/><text x="280" y="246" text-anchor="middle">изолирующая часть ≥ 380 мм, рукоятка ≥ 130 мм</text></g>
+<g><rect x="420" y="150" width="110" height="66" rx="8" fill="var(--card)" stroke="currentColor"/><path d="M432 200 A44 44 0 0 1 518 200" fill="none" stroke="currentColor" opacity=".5"/><line id="clNeedle" x1="475" y1="205" x2="440" y2="178" stroke="#c4262e" stroke-width="3" stroke-linecap="round"/><text x="475" y="230" text-anchor="middle" style="font-size:11px">прибор</text></g>
+<path d="M342 84 C400 84 410 190 440 192" fill="none" stroke="#6d7886" stroke-width="2" stroke-dasharray="4 4" opacity=".8"/>
+<text x="32" y="64">проводник с током</text><text x="280" y="22" text-anchor="middle">магнитопровод охватывает проводник</text>
+</svg>
+<div class="bar"><button class="btn pri" id="clBtn">Подать ток</button></div>
+</div>
+<div class="info" id="clInfo"></div>
+<h3>Правила работы <span class="src">п. 2.4.5</span></h3>
+<ul class="pts">
+<li>клещами выше 1000 В работают в диэлектрических перчатках;</li>
+<li>клещи держат на весу, не наклоняются к прибору для отсчёта показаний;</li>
+<li>выше 1000 В нельзя применять выносные приборы и нельзя переключать пределы измерения, не сняв клещей с токоведущих частей;</li>
+<li>клещами до 1000 В нельзя работать, находясь на опоре ВЛ, если они для этого специально не предназначены.</li>
+</ul>
+<h3>Устройство и требования <span class="src">п. 2.4.2</span></h3>
+<ul class="pts">
+<li>выше 1000 В: рабочая часть (магнитопровод, обмотка, съёмный или встроенный прибор в электроизоляционном корпусе), изолирующая часть и рукоятка; длина изолирующей части не менее 380 мм, рукоятки не менее 130 мм;</li>
+<li>до 1000 В: рабочая часть и корпус, который одновременно является изолирующей частью с упором и рукояткой;</li>
+<li>должно быть действующее свидетельство об утверждении типа средств измерений;</li>
+<li>на клещи наносят инвентарный номер и отметку об эксплуатационных испытаниях.</li>
+</ul>
+<h3>Испытания <span class="src">п. 2.4.3, Приложение 10</span></h3>
+<ul class="pts">
+<li>до 1000 В — 2 кВ, 5 минут; выше 1 до 10 кВ — 40 кВ, 5 минут;</li>
+<li>периодичность — 1 раз в 24 месяца;</li>
+<li>напряжение прикладывают между магнитопроводом и временными электродами у ограничительных колец со стороны изолирующей части (выше 1000 В) или у основания рукоятки (до 1000 В).</li>
+</ul>
+<div class="note">Изолирующие клещи (для замены предохранителей) в СТО относятся к другому разделу и в это пособие не входят.</div>
+</article>
+
+<article id="p-ukz" hidden>
+<h2>Указатели напряжения до и выше 1000 В</h2>
+<p class="muted">СТО, раздел 2.5. Указатель определяет наличие или отсутствие напряжения (п. 2.5.1.1).</p>
+<h3>До 1000 В: как течёт ток через указатель <span class="src">п. 2.5.2.4–2.5.2.6, 2.5.6.3</span></h3>
+<div class="fig">
+<div class="chips" id="ukChips"><button class="chip" data-t="one" aria-pressed="true">Однополюсный</button><button class="chip" data-t="two" aria-pressed="false">Двухполюсный</button><button class="chip" id="ukGlove" aria-pressed="false">Диэлектрическая перчатка надета</button></div>
+<svg viewBox="0 0 560 280" id="ukSvg" class="one" role="img" aria-label="Путь тока через указатель напряжения">
+<line x1="40" y1="258" x2="520" y2="258" stroke="currentColor" stroke-width="3" opacity=".5"/><text x="530" y="262" text-anchor="end" style="font-size:11px">земля</text>
+<line x1="60" y1="40" x2="500" y2="40" stroke="#c4262e" stroke-width="7" stroke-linecap="round"/><text x="60" y="26">фаза</text>
+<g class="twog"><line x1="60" y1="84" x2="500" y2="84" stroke="#2f7fd0" stroke-width="7" stroke-linecap="round"/><text x="60" y="76">нулевой провод или земля</text></g>
+<g class="person"><circle cx="400" cy="120" r="16" fill="#8a93a0"/><rect x="386" y="138" width="28" height="64" rx="10" fill="#8a93a0"/><path d="M394 202 L388 258 M406 202 L412 258" stroke="#8a93a0" stroke-width="9" stroke-linecap="round"/><path d="M386 150 L330 142" stroke="#8a93a0" stroke-width="9" stroke-linecap="round"/></g>
+<g><rect x="230" y="126" width="110" height="26" rx="12" fill="#e9dfa8" stroke="#a89a4f"/><circle id="ukLamp" cx="250" cy="139" r="8" fill="#6d7886"/><circle id="ukGlow" cx="250" cy="139" r="18" fill="#ffd23f" opacity="0"/><rect x="226" y="132" width="8" height="14" fill="#9aa4b0"/><rect x="324" y="131" width="10" height="16" fill="#9aa4b0"/><text x="285" y="172" text-anchor="middle" style="font-size:11px">индикация</text></g>
+<line x1="226" y1="139" x2="226" y2="46" stroke="#9aa4b0" stroke-width="4"/>
+<g class="twog"><rect x="150" y="116" width="52" height="24" rx="10" fill="#e9dfa8" stroke="#a89a4f"/><line x1="150" y1="130" x2="130" y2="130" stroke="#9aa4b0" stroke-width="4"/><line x1="130" y1="130" x2="130" y2="90" stroke="#9aa4b0" stroke-width="4"/><path d="M202 128 C214 128 214 139 226 139" fill="none" stroke="#6d7886" stroke-width="3"/><text x="176" y="158" text-anchor="middle" style="font-size:11px">провод ≥ 1 м</text></g>
+<path class="flow cur1" d="M226 46 L226 139 L330 139 L396 142 L400 160 L400 200 L402 258"/>
+<path class="flow cur2" d="M226 46 L226 139 L202 128 L150 128 L130 130 L130 90"/>
+<g class="glove"><path d="M348 128 q-22 -6 -30 8 q-6 14 10 22 q22 8 40 -6 z" fill="#2f7fd0" stroke="#1a4f9c" stroke-width="2"/><text x="326" y="118" style="fill:#2f7fd0;font-weight:700;font-size:11px">перчатка</text></g>
+</svg>
+<p class="muted" style="margin:6px 0 0">Рисунок упрощённый: показывает, где замыкается цепь индикации.</p>
+</div>
+<div class="info" id="ukInfo"></div>
+<h3>Выше 1000 В: части указателя <span class="src">п. 2.5.2.9, 2.5.2.10</span></h3>
+<ul class="pts">
+<li><b>рабочая часть</b> — реагирует на напряжение; может иметь электрод-наконечник или быть бесконтактной; переключателей питания и диапазонов не содержит;</li>
+<li><b>индикаторная часть</b> — световая или светозвуковая индикация, звук не менее 70 дБ на расстоянии 1 м; может быть совмещена с рабочей;</li>
+<li><b>изолирующая часть</b> — из электроизоляционных материалов; может быть составной или телескопической;</li>
+<li><b>рукоятка</b>.</li>
+</ul>
+<h3>Размеры и срабатывание <span class="src">таблицы 6, 7, п. 2.5.2.13</span></h3>
+<p>Выберите напряжение электроустановки.</p>
+<div class="bar"><select id="ukV"></select></div>
+<div class="info" id="ukLen"></div>
+<h3>Как правильно проверять отсутствие напряжения <span class="src">п. 2.5.6</span></h3>
+<div class="chips" id="stepChips"></div>
+<div class="fig"><div class="ringbox"><svg viewBox="0 0 120 120" id="ringSvg" role="img" aria-label="Отсчёт 5 секунд контакта"><circle cx="60" cy="60" r="48" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="ringArc" cx="60" cy="60" r="48" fill="none" stroke="#1d7a46" stroke-width="10" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="301.6" stroke-dashoffset="301.6"/><text id="ringTxt" x="60" y="66" text-anchor="middle" style="font-size:22px;font-weight:700">0 с</text></svg><div><button class="btn pri" id="ringBtn">Приложить указатель к токоведущей части</button><div class="muted" id="ringMsg">Нажмите и следите: сигнала нет, а время контакта идёт.</div></div></div></div>
+<div class="info" id="stepInfo"></div>
+<h3>Испытания <span class="src">Приложение 10</span></h3>
+<ul class="pts">
+<li>выше 1000 В: изолирующая часть — от 40 кВ (до 10 кВ) до 380 кВ (выше 110 до 220 кВ), 5 минут; рабочая часть — 12, 24 или 42 кВ, 1 минута; напряжение индикации не более 25 % номинального;</li>
+<li>до 1000 В: изоляция корпусов 1 кВ (до 0,5 кВ) или 2 кВ (выше 0,5 до 1 кВ), 1 минута; ток через указатель не более 0,6 мА (однополюсные) и 10 мА (двухполюсные); напряжение индикации не выше 50 В;</li>
+<li>периодичность — 1 раз в 12 месяцев.</li>
+</ul>
+<div class="note">Указатели для проверки совпадения фаз (СТО п. 2.6) в это пособие не входят.</div>
+</article>
+
+<article id="p-ins" hidden>
+<h2>Ручной изолирующий инструмент</h2>
+<p class="muted">СТО, раздел 2.7. До и выше 1000 В.</p>
+<h3>Где и какой инструмент <span class="src">п. 2.7.1</span></h3>
+<ul class="pts">
+<li><b>До 1000 В:</b> в электроустановках до 1000 В переменного и 1500 В постоянного тока; в закрытых электроустановках, кроме особо сырых помещений, и в открытых в сухую погоду;</li>
+<li>к нему относят: гаечные ключи (всех видов), трещоточные ключи, плоскогубцы, пассатижи, круглогубцы, торцевые и боковые кусачки, монтерские ножи (не складные), ножницы для резки проводов и кабелей, отвёртки, молотки;</li>
+<li><b>Выше 1000 В:</b> применяют штанги-манипуляторы — оперативные (отсоединять и присоединять провода ВЛ к изоляторам), универсальные и штанги с крюком (операции со съёмными инструментами), штанги-ключи (гайки и болты на ВЛ), штанги для отвода провода от опор.</li>
+</ul>
+<h3>Отвёртка: что можно оставлять неизолированным <span class="src">п. 2.7.2.9, 2.7.2.10</span></h3>
+<div class="fig">
+<svg viewBox="0 0 560 150" id="sdSvg" role="img" aria-label="Отвёртка с изолированным стержнем">
+<rect x="20" y="52" width="150" height="46" rx="22" fill="#d9822b"/><rect x="30" y="60" width="130" height="30" rx="14" fill="#e8b04a" opacity=".55"/>
+<rect x="170" y="68" width="250" height="14" fill="#d9822b"/>
+<rect x="420" y="70" width="110" height="10" fill="#9aa4b0" id="sdBare"/>
+<path d="M530 70 l16 5 l-16 5z" fill="#9aa4b0"/>
+<g stroke="currentColor" fill="none" stroke-width="1.5"><line x1="420" y1="110" x2="530" y2="110"/><line x1="420" y1="104" x2="420" y2="116"/><line x1="530" y1="104" x2="530" y2="116"/></g>
+<text id="sdLbl" x="540" y="134" text-anchor="end" style="font-weight:700">неизолированный стержень</text>
+<text x="295" y="50" text-anchor="middle">изоляция рукоятки и стержня — неснимаемая</text>
+</svg>
+</div>
+<div class="bar"><label>Тип отвёртки <select id="sdType"><option value="15">Шлицевая (под плоский шлиц)</option><option value="18">Крестообразная, квадратная, шестигранная</option></select></label><label class="cntl">Неизолированная длина, мм <input type="number" id="sdLen" min="0" step="1" inputmode="numeric" placeholder="мм"></label><button class="btn pri" id="sdChk">Проверить</button></div>
+<div class="info" id="sdInfo">Допустимо: для шлицевых не более 15 мм, для остальных типов не более 18 мм. На расстоянии не менее 30 мм от неизолированной части толщина изоляции не должна превышать 2 мм.</div>
+<h3>Многослойная изоляция: что делать при повреждении <span class="src">п. 2.7.5.2</span></h3>
+<div class="fig">
+<div class="bar"><label>Слоёв изоляции <select id="lyN"><option value="2">Два слоя</option><option value="3">Три слоя</option></select></label></div>
+<div class="chips" id="lyChips"></div>
+<svg viewBox="0 0 220 150" id="lySvg" role="img" aria-label="Сечение изолированного стержня"></svg>
+</div>
+<div class="info" id="lyInfo"></div>
+<h3>Другие требования</h3>
+<ul class="pts">
+<li>изоляция неснимаемая, из влагостойкого, маслобензостойкого, нехрупкого материала; каждый слой многослойного покрытия окрашен в свой цвет (п. 2.7.2.4, 2.7.2.10);</li>
+<li>инструмент со сменными головками должен иметь блокирующее устройство против случайного разъединения (п. 2.7.2.7);</li>
+<li>на инструмент наносят «1000 В» (символы не менее 3 мм), инвентарный номер и отметку об испытаниях (п. 2.7.2.17);</li>
+<li>монтерские ножи: изолированная ручка не менее 100 мм, упор не менее 5 мм, изоляция от упора до неизолированной части не менее 12 мм, лезвие не более 65 мм (п. 2.7.2.14);</li>
+<li>условия применения: от минус 40 до плюс 40 °С (п. 2.7.2.15).</li>
+</ul>
+<div class="note">В п. 2.7.2.11 СТО сказано, что упор нужен у инструмента с рукоятками «не менее 400 мм», а в п. 2.7.2.13 — что при рукоятках «более 400 мм» упор не обязателен. Эти фразы противоречат друг другу в тексте документа. По смыслу упор нужен у коротких рукояток; размеры упора по п. 2.7.2.11: 10 мм по бокам, 5 мм сверху и снизу, изоляция от упора до неизолированной части не менее 12 мм. Точную формулировку проверьте по оригиналу.</div>
+<h3>Испытания <span class="src">п. 2.7.3, Приложение 10</span></h3>
+<ul class="pts">
+<li>однослойная изоляция: 2 кВ частотой 50 Гц, 60 секунд, 1 раз в 12 месяцев; ток утечки не измеряют;</li>
+<li>инструмент погружают изолированной частью в воду, не доходя до края изоляции 10 мм; один вывод трансформатора — на металлическую часть, второй — на ванну; допустимо испытывать на установке для диэлектрических перчаток;</li>
+<li>многослойная изоляция: осмотр не реже 1 раза в 6 месяцев, электрических испытаний нет;</li>
+<li>механические испытания в эксплуатации не проводят.</li>
+</ul>
+</article>
+
+<article id="p-gl" hidden>
+<h2>Перчатки электрические (диэлектрические)</h2>
+<p class="muted">СТО, раздел 4.1. Защищают от напряжения прикосновения (до 1000 В) и токов утечки при использовании других средств (выше 1000 В) — п. 4.1.1.1.</p>
+<h3>Проверка на проколы перед применением <span class="src">п. 4.1.5.3</span></h3>
+<div class="fig">
+<div class="chips" id="gtChips"><button class="chip" data-m="ok" aria-pressed="true">Исправная</button><button class="chip" data-m="bad" aria-pressed="false">С проколом</button></div>
+<svg viewBox="0 0 560 230" id="gtSvg" class="ok" role="img" aria-label="Проверка перчатки скручиванием">
+<g class="glv"><g class="fing"><rect x="190" y="30" width="26" height="90" rx="13" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/><rect x="220" y="14" width="26" height="106" rx="13" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/><rect x="250" y="20" width="26" height="100" rx="13" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/><rect x="280" y="40" width="26" height="80" rx="13" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/></g><g transform="rotate(-35 162 120)"><rect class="th" x="150" y="90" width="24" height="64" rx="12" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/></g><g class="fing2"></g>
+<rect x="180" y="100" width="136" height="80" rx="16" fill="#e9dfa8" stroke="#a89a4f" stroke-width="2"/>
+<g class="cuff"><rect x="190" y="176" width="116" height="40" rx="6" fill="#d9c97a" stroke="#a89a4f" stroke-width="2"/><path class="roll" d="M186 186 h124 M186 196 h124 M186 206 h124" stroke="#a89a4f" stroke-width="2"/></g>
+<circle class="hole" cx="262" cy="46" r="3.5" fill="#c4262e"/></g>
+<g class="air"><path class="flow leak" d="M262 40 q-8 -22 -26 -34" /><path class="flow leak" d="M266 40 q10 -24 28 -30" style="animation-delay:.2s"/></g>
+<text x="280" y="226" text-anchor="middle" id="gtTxt" style="font-weight:700;font-size:14px"></text>
+</svg>
+<div class="bar"><button class="btn pri" id="gtBtn">Скрутить в сторону пальцев</button><button class="btn" id="gtReset">Сначала</button></div>
+</div>
+<div class="info" id="gtInfo">Перед проверкой посмотрите штамп испытаний, повреждения, загрязнение и влажность. Затем скрутите перчатку от края в сторону пальцев: воздух запирается внутри, проколы выдают себя утечкой.</div>
+<h3>Как испытывают в эксплуатации <span class="src">п. 4.1.3, Приложение 10</span></h3>
+<div id="bathG"></div>
+<h3>Что должно быть у перчаток <span class="src">п. 4.1.2, 4.1.5</span></h3>
+<ul class="pts">
+<li>два вида: со швом (ТУ 38305-05-257-1989) и бесшовные латексные (ГОСТ 12.4.183); пятипалые или двупалые;</li>
+<li>маркировка по защитным свойствам: Эв (выше 1000 В) или Эн (до 1000 В); без неё в электроустановках применять нельзя;</li>
+<li>длина не менее 350 мм, ширина 135 мм, толщина не менее 1,3 мм; размер позволяет надеть под них трикотажные перчатки и натянуть край на рукав;</li>
+<li>можно применять только перчатки, изготовленные по техническим условиям и с заводским штампом; перчатки для химического производства, медицинские и другие не годятся;</li>
+<li>края не подвёртывать; для защиты от механических повреждений поверх надевают кожаные или брезентовые перчатки или рукавицы;</li>
+<li>при необходимости промывают содовым или мыльным раствором и сушат;</li>
+<li>беречь от солнца, масел, бензина, кислот, щелочей;</li>
+<li>отбракованные по результатам испытаний перчатки использовать категорически запрещено.</li>
+</ul>
+</article>
+
+<article id="p-bk" hidden>
+<h2>Боты диэлектрические и ковры диэлектрические</h2>
+<p class="muted">СТО, разделы 4.2 (обувь) и 2.10 (ковры и подставки). Галоши показаны рядом с ботами, чтобы увидеть различие.</p>
+<h3>Боты и галоши: испытание <span class="src">п. 4.2.3.4, Приложение 10</span></h3>
+<div class="chips" id="bkChips"><button class="chip" data-k="bot" aria-pressed="true">Боты</button><button class="chip" data-k="gal" aria-pressed="false">Галоши</button></div>
+<div id="bathB"></div>
+<h3>Что известно о ботах <span class="src">п. 4.2</span></h3>
+<ul class="pts">
+<li>изолируют от токопроводящих поверхностей (пола, земли), защищают от напряжения шага; применяют в закрытых электроустановках, а при отсутствии осадков — в открытых;</li>
+<li><b>боты — при всех напряжениях, галоши — до 1000 В</b>;</li>
+<li>резиновый верх, рифлёная подошва, текстильная подкладка (формовые боты могут быть без подкладки); у бот есть отвороты, высота не менее 160 мм; цвет светло-серый или бежевый;</li>
+<li>ток утечки: галоши не более 2,5 мА, боты не более 10 мА;</li>
+<li>защитные свойства: Эн — клеёные галоши, Эв — клеёные и формовые боты;</li>
+<li>средний календарный срок службы: клеёные боты 12 месяцев, формовые боты 18 месяцев, галоши 6 месяцев (п. 4.2.2.9);</li>
+<li>перед применением осматривают на отслоения облицовочных деталей и подкладки, посторонние жёсткие включения; электроустановки комплектуют обувью нескольких размеров; применяют при температуре от минус 30 до плюс 50 °С.</li>
+</ul>
+<div class="note">Сроки службы в п. 4.2.2.9 (6, 12 и 18 месяцев) и в Приложении 3 (годы) в тексте СТО приведены по-разному. Для учёбы запомните то, что указано в п. 4.2.2.9, а точные сроки уточняйте по паспорту изделия и оригиналу СТО.</div>
+<h3>Ковры и подставки <span class="src">п. 2.10</span></h3>
+<ul class="pts">
+<li>изолируют от токопроводящих поверхностей (пола, земли) в электроустановках до и выше 1000 В;</li>
+<li><b>ковры</b> — в закрытых электроустановках, кроме сырых помещений, и в открытых в сухую погоду;</li>
+<li><b>подставки (подмости)</b> — в сырых и подверженных загрязнению помещениях;</li>
+<li>две группы ковров: 1-я — от минус 15 до плюс 40 °С; 2-я — маслобензостойкая, от минус 50 до плюс 80 °С (при плюс 80 не более 3000 часов);</li>
+<li>размеры: длина от 500 до 8000 мм, ширина от 500 до 1200 мм, толщина 6±1 мм; рифлёная лицевая поверхность (рифы 1–3 мм), одноцветные;</li>
+<li><b>в эксплуатации ковры не испытывают</b>; входной контроль у потребителя: 20 кВ, ток утечки не более 160 мА/м;</li>
+<li>осмотр не реже 1 раза в 6 месяцев и перед применением; при механических дефектах ковры изымают и заменяют новыми, подставки отправляют в ремонт и после ремонта испытывают по нормам приёмо-сдаточных испытаний;</li>
+<li>инвентарный номер на ковры и подставки не наносится;</li>
+<li>хранение: от 0 до 30 °С, не ближе 1 м от отопительных приборов, без солнца, масел и бензина; ковры скатывают в рулон маркировкой наружу.</li>
+</ul>
+<h3>Подставки <span class="src">п. 2.10.2.15, 2.10.2.16, 2.10.3.5, 2.10.3.6</span></h3>
+<ul class="pts">
+<li>настил не менее 500×500 мм из просушенных строганых планок без сучков и косослоя, зазоры 10–30 мм, без металлических крепёжных деталей, окрашен со всех сторон;</li>
+<li>края настила не выступают за опорную поверхность изоляторов, чтобы подставка не опрокидывалась;</li>
+<li>испытания подставок: сжатие 3500 Н/м², устойчивость 800 Н на краю; для электроустановок до 10 кВ — 36 кВ, 1 минута.</li>
+</ul>
+<h3>Что можно применить в этой обстановке</h3>
+<p>Выберите условия: покажу, что из четырёх предметов подходит по СТО.</p>
+<div class="bar"><label>Место <select id="whP"><option value="cd">Закрытое сухое помещение</option><option value="cw">Закрытое сырое или загрязнённое помещение</option><option value="od">Открытая электроустановка, сухая погода</option><option value="or">Открытая электроустановка, идут осадки</option></select></label><label>Напряжение <select id="whV"><option value="lo">До 1000 В</option><option value="hi">Выше 1000 В</option></select></label></div>
+<div class="vlist" id="whOut"></div>
+</article>
+
+<article id="p-zem" hidden>
+<h2>Переносные защитные заземления</h2>
+<p class="muted">СТО, раздел 5.1. Защищают работающих на отключённых токоведущих частях от ошибочно поданного или наведённого напряжения (п. 5.1.1.1).</p>
+<h3>Из чего состоит штанговое заземление <span class="src">п. 5.1.2.3</span></h3>
+<div class="fig">
+<svg viewBox="0 0 560 210" id="zpSvg" role="img" aria-label="Устройство штангового переносного заземления">
+<line x1="40" y1="40" x2="520" y2="40" stroke="#b9651b" stroke-width="8" stroke-linecap="round"/><text x="520" y="24" text-anchor="end">шина или провод</text>
+<g class="pt" data-i="iz"><rect class="o" x="20" y="108" width="40" height="22" rx="10" fill="#44546a"/><rect class="o" x="60" y="112" width="190" height="14" fill="#e9dfa8"/><rect class="o" x="60" y="106" width="8" height="26" rx="3" fill="#d9822b"/></g>
+<g class="pt" data-i="ko"><rect class="o" x="250" y="106" width="36" height="18" fill="#9aa4b0"/><path class="o" d="M286 112 q20 -40 -4 -64" fill="none" stroke="#9aa4b0" stroke-width="10" stroke-linecap="round"/></g>
+<g class="pt" data-i="to"><path class="o" d="M268 124 C300 190 400 200 470 170" fill="none" stroke="#b9651b" stroke-width="7" stroke-linecap="round"/></g>
+<g class="pt" data-i="gz"><rect class="o" x="468" y="152" width="40" height="30" rx="5" fill="#9aa4b0"/></g>
+<text x="40" y="150" text-anchor="middle">рукоятка</text><text x="160" y="150" text-anchor="middle">изолирующая часть</text><text x="300" y="86">фазный зажим</text><text x="330" y="204" text-anchor="middle">гибкий провод</text><text x="488" y="200" text-anchor="middle" style="font-size:12px">заземл. зажим</text>
+</svg>
+</div>
+<div class="info" id="zpInfo"><b class="t">Выберите часть</b>Нажмите на часть заземления на рисунке.</div>
+<h3>Порядок установки и снятия <span class="src">приказ № 903н, п. 20.1–20.3</span></h3>
+<p class="muted">Последовательность в СТО не описана, она взята из приказа № 903н (п. 20.2). Из СТО — перчатки и штанга (п. 5.1.5.3).</p>
+<div class="fig">
+<div class="chips" id="zoMode"><button class="chip" data-m="on" aria-pressed="true">Установка</button><button class="chip" data-m="off" aria-pressed="false">Снятие</button></div>
+<svg viewBox="0 0 560 230" id="zoSvg" class="z0" role="img" aria-label="Последовательность установки заземления">
+<rect x="20" y="200" width="520" height="14" fill="#8a7a5a" opacity=".5"/>
+<g><rect x="60" y="150" width="10" height="60" fill="#6d7886"/><text x="65" y="226" text-anchor="middle" style="font-size:11px">заземлитель</text></g>
+<line x1="150" y1="50" x2="520" y2="50" stroke="#b9651b" stroke-width="8" stroke-linecap="round"/>
+<g class="vc"><rect x="370" y="62" width="160" height="26" rx="6" fill="#dff1e6" stroke="#1d7a46"/><text x="450" y="80" text-anchor="middle" style="fill:#1d7a46;font-weight:700;font-size:12px">напряжения нет — проверено</text></g>
+<path class="c0" d="M106 126 C130 110 220 150 300 120" fill="none" stroke="#b9651b" stroke-width="6" stroke-linecap="round"/><path class="c1" d="M66 150 C66 120 200 150 300 120" fill="none" stroke="#b9651b" stroke-width="6" stroke-linecap="round"/><path class="c3" d="M66 150 C66 150 180 175 300 70" fill="none" stroke="#b9651b" stroke-width="6" stroke-linecap="round"/>
+<g class="gcl"><rect x="56" y="144" width="20" height="14" rx="3" fill="#c4262e"/></g>
+<g class="hot"><rect x="290" y="108" width="60" height="22" rx="6" fill="#44546a"/><path class="hk" d="M335 108 q14 -24 -2 -50" fill="none" stroke="#9aa4b0" stroke-width="9" stroke-linecap="round"/></g>
+<text id="zoTxt" x="20" y="90" style="font-weight:700"></text>
+</svg>
+<div class="bar"><button class="btn" id="zoPrev">← Назад</button><button class="btn pri" id="zoNext">Далее →</button></div>
+</div>
+<div class="info" id="zoInfo"></div>
+<h3>Сечение провода и ток КЗ <span class="src">п. 5.1.2.13–5.1.2.17, таблицы 15–17</span></h3>
+<p>Введите ток короткого замыкания и время выдержки основной релейной защиты, программа покажет минимальное сечение по формуле СТО.</p>
+<div class="bar">
+<label>Материал <select id="zcM"><option value="250">Медь (C = 250)</option><option value="152">Алюминий (C = 152)</option></select></label>
+<label>Установка <select id="zcU"><option value="16">До 1000 В (не менее 16 мм²)</option><option value="25">Выше 1000 В (не менее 25 мм²)</option></select></label>
+<label class="cntl">Iуст, кА <input type="number" id="zcI" min="0" step="0.1" value="8" inputmode="decimal"></label>
+<label class="cntl">tв, с <input type="number" id="zcT" min="0" step="0.1" value="1" inputmode="decimal"></label>
+<button class="btn pri" id="zcB">Рассчитать</button></div>
+<div class="info" id="zcOut"></div>
+<h3>Требования <span class="src">п. 5.1.2, 5.1.5</span></h3>
+<ul class="pts">
+<li>сечение выбирают из стандартного ряда от 16 до 120 мм²; не менее 16 мм² до 1000 В и не менее 25 мм² выше 1000 В;</li>
+<li>формула: Sмин = Iуст · √tв / C (C = 250 для меди, 152 для алюминия); при больших токах допускается ставить несколько заземлений параллельно;</li>
+<li>динамическая устойчивость: iдин.мин = 2,55 · Iуст; значение iдин указывают в паспорте заземления;</li>
+<li>в системах с глухо заземлённой нейтралью сечение заземляющих проводов равно сечению закорачивающих;</li>
+<li>провод медный или алюминиевый, нормальной или повышенной гибкости, может иметь прозрачную оболочку;</li>
+<li>соединение провода с зажимом: болтами, гнездовым соединением, прижимной пластиной или запрессованным наконечником; пайка не допускается; сопротивление провод–струбцина не более 600 мкОм;</li>
+<li>для заземлений с гравитационными или пружинными зажимами усилие установки и снятия не более 100 Н, расцепляющая сила не менее 50 Н;</li>
+<li>диапазон температур от минус 45 до плюс 45 °С;</li>
+<li>на каждое заземление наносят маркировку изготовителя и инвентарный номер.</li>
+</ul>
+<h3>Эксплуатация <span class="src">п. 5.1.5, 5.1.3</span></h3>
+<ul class="pts">
+<li>места присоединения должны иметь свободный и безопасный доступ; заземляющий зажим на ВЛ присоединяют к металлоконструкциям опоры, заземляющему спуску деревянной опоры или временному заземлителю (штырю, забитому в землю);</li>
+<li>перед использованием осматривают соединения и поверхность контакта зажимов, контакт для заземляющего зажима очищают щёткой от отложений;</li>
+<li>установка и снятие — в диэлектрических перчатках, выше 1000 В с изолирующей штангой; зажимы закрепляют этой же штангой, заземляющий зажим — штангой или руками в перчатках;</li>
+<li>на ВЛ с наведённым напряжением применяют заземления с фазными зажимами, надёжно фиксирующимися на проводе и исключающими случайное падение;</li>
+<li>все установленные заземления учитывают в оперативной документации;</li>
+<li>осмотр — не реже 1 раза в 3 месяца и перед применением; изъять при механических дефектах контактных соединений, обрыве более 5 % проводников, расплавлении и после воздействия токов КЗ;</li>
+<li>механические испытания в эксплуатации не проводят; электрически испытывают только изолирующие части штанг с металлическими звеньями и гибкие изолирующие элементы бесштанговых заземлений (1 раз в 24 месяца).</li>
+</ul>
+<h3>Заземления для ВЛЗ 6–20 кВ <span class="src">п. 5.1.2.4–5.1.2.7</span></h3>
+<ul class="pts">
+<li>для установки заземлений применяют стационарно установленные прокалывающие зажимы на проводах;</li>
+<li>их ставят на каждую фазу: на первых, концевых, анкерных, отпаечных опорах и на промежуточных через каждые 200–1000 м;</li>
+<li>если стационарных зажимов нет: специальные штанговые заземления с прокалывающими линейными зажимами (три штанги, три линейных и один заземляющий зажим, соединённые медным проводом в прозрачной оболочке) или установка изолирующей штангой съёмных прокалывающих зажимов со скобой;</li>
+<li>после каждого применения таких заземлений на ВЛЗ выполняют мероприятия по восстановлению изоляции провода.</li>
+</ul>
+</article>
+
+<article id="p-nr" hidden>
+<h2>Нормы и сроки</h2>
+<p class="muted">Из Приложений 3 и 10 СТО. Выберите средство, чтобы увидеть всё по нему списком.</p>
+<div class="bar"><select id="nrSel"></select></div>
+<div class="info" id="nrOut"></div>
+<h3>Сводная таблица</h3>
+<div class="scroll"><table id="nrTab"><thead><tr><th>Средство</th><th>Электрические испытания</th><th>Осмотр</th><th>Гарантия, срок службы</th></tr></thead><tbody></tbody></table></div>
+<p class="muted">Сроки службы и гарантийные сроки — минимальные (Приложение 3, примечание 5): конкретные сроки указывает изготовитель, но они не меньше этих.</p>
+</article>
+
+<article id="p-tr" hidden>
+<h2>Тренажёр: можно ли применять</h2>
+<p class="muted">Ситуация из практики — выберите решение. После ответа показан пункт СТО. Решения, не названные в СТО прямо, помечены словом «вывод».</p>
+<div class="bar"><button class="btn pri" id="trNext">Следующая ситуация</button><span class="muted" id="trCount"></span></div>
+<div class="q" id="trQ"></div>
+</article>
+
+<article id="p-qz" hidden>
+<div class="bar">
+<select id="topic"><option value="0">Все темы</option></select>
+<select id="kind"><option value="all">Все типы вопросов</option><option value="s">Один верный ответ</option><option value="m">Несколько верных ответов</option><option value="x">Сопоставление</option></select>
+<label class="cntl">Вопросов: <input type="number" id="cnt" min="1" step="1" inputmode="numeric" placeholder="все"></label>
+<button class="btn pri" id="start">Начать</button>
+</div>
+<div class="bar" id="chips"><span class="muted">Быстрый выбор:</span><button class="chip" data-c="5">5</button><button class="chip" data-c="10">10</button><button class="chip" data-c="20">20</button><button class="chip" data-c="30">30</button><button class="chip" data-c="">Все</button><span class="muted" id="avail"></span></div>
+<p class="lead">Варианты ответов похожи и отличаются деталями. В вопросах «выберите все верные» засчитывается только точный выбор. Варианты перемешиваются при каждом запуске.</p>
+<div class="score" id="score" hidden></div>
+<div id="qs"></div>
+<div class="resf" id="final"></div>
+</article>
+
+</main>
+<script>
+(function(){
+function $(i){return document.getElementById(i)}
+function pr(el,on){el.setAttribute('aria-pressed',on)}
+/* вкладки */
+var PAGES=['ref','gen','shg','cl','ukz','ins','gl','bk','zem','nr','tr','qz'];
+var tabs=document.querySelectorAll('#tabs .chip');
+tabs.forEach(function(c){c.onclick=function(){tabs.forEach(function(x){pr(x,x===c)});PAGES.forEach(function(p){$('p-'+p).hidden=p!==c.dataset.p});document.querySelectorAll('details[open]').forEach(function(d){d.open=false});window.scrollTo(0,0)}});
+$('pauseAll').onclick=function(){document.body.classList.toggle('paused');this.textContent=document.body.classList.contains('paused')?'▶ Запустить анимацию':'⏸ Пауза анимации'};
+function chipGroup(box,fn){var cs=box.querySelectorAll('.chip');cs.forEach(function(c){c.onclick=function(){if(!c.dataset.t&&!c.dataset.m&&!c.dataset.s&&!c.dataset.k)return;cs.forEach(function(x){if(x.dataset.t||x.dataset.m||x.dataset.s||x.dataset.k)pr(x,x===c)});fn(c)}})}
+/* штамп */
+var ST={v:['<div class="sl">№ ______</div><div class="sl">Годно до ____ кВ</div><div class="sl">Дата следующего испытания «____» __________ 20__ г.</div><div class="sl">__________________ (наименование лаборатории)</div>','Для средств, применение которых зависит от напряжения электроустановки: в штампе указывают, до какого напряжения средство годно. Штамп ставят на изолирующей части около ограничительного кольца (упора).'],
+n:['<div class="sl">№ ______</div><div class="sl">Дата следующего испытания «____» __________ 20__ г.</div><div class="sl">__________________ (наименование лаборатории)</div>','Для перчаток, галош, бот и т. п. напряжение в штампе не указывают. Штамп ставят у края резинового изделия. Если заводская маркировка утрачена, при испытании наносят защитные свойства Эв или Эн. На не выдержавших испытание штамп перечёркивают красной краской, средство изымают.']};
+chipGroup($('stChips'),function(c){var d=ST[c.dataset.s];$('stamp').innerHTML=d[0];$('stInfo').innerHTML=d[1]});
+$('stamp').innerHTML=ST.v[0];$('stInfo').innerHTML=ST.v[1];
+/* штанга */
+var SH={rk:['Рукоятка','За неё держат штангу. Рукоятка и изолирующая часть разделены ограничительным кольцом (п. 2.1.2.2). Она может быть единым целым с изолирующей частью или отдельным звеном (п. 2.1.2.8). Минимальная длина — по таблице 1.'],
+kol:['Ограничительное кольцо','Разделяет рукоятку и изолирующую часть, изготовлено из электроизоляционного материала (п. 2.1.2.2). Прикасаться к изолирующей части за кольцом нельзя (п. 1.3.9). Его длина входит в длину изолирующей части (примечание к таблицам 1 и 2). У кольца ставят штамп (п. 1.7.5) и при испытании устанавливают накладной электрод (п. 2.1.3.7).'],
+iz:['Изолирующая часть','Из электроизоляционных материалов с устойчивыми диэлектрическими и механическими свойствами; поверхность гладкая, без трещин, расслоений и царапин (п. 2.1.2.9). Может быть составной из звеньев, допускается телескопическая конструкция с надёжной фиксацией (п. 2.1.2.7). Именно её испытывают повышенным напряжением.'],
+rb:['Рабочая часть','Выполняет операцию. У оперативных штанг рабочий инструмент несъёмный, из металла или диэлектрика; у универсальных есть адаптер М14 для насадок (п. 2.1.1.1). Конструкция не должна допускать междуфазного замыкания и замыкания на землю (п. 2.1.2.12). Размеры рабочей части не нормируются.']};
+function selPart(svg,info,D,i){svg.querySelectorAll('.pt').forEach(function(x){x.classList.toggle('sel',x.dataset.i===i)});info.innerHTML='<b class="t">'+D[i][0]+'</b>'+D[i][1]}
+document.querySelectorAll('#shSvg .pt').forEach(function(g){g.onclick=function(){selPart($('shSvg'),$('shInfo'),SH,g.dataset.i)}});
+$('shTest').onclick=function(){var s=$('shSvg'),on=!s.classList.contains('t');s.classList.toggle('t',on);s.classList.remove('b');$('shBreak').disabled=!on;this.textContent=on?'Убрать испытание':'Показать испытание';$('shHint').textContent=on?'Напряжение подают на рабочую часть и накладной электрод у кольца со стороны изолирующей части (п. 2.1.3.7).':''};
+$('shBreak').onclick=function(){var s=$('shSvg'),on=!s.classList.contains('b');s.classList.toggle('b',on);this.textContent=on?'Убрать перекрытие':'Показать перекрытие';$('shHint').textContent=on?'Перекрытие по поверхности: штанга бракуется (п. 2.1.3.8, 1.8.14).':'Напряжение подают на рабочую часть и накладной электрод у кольца со стороны изолирующей части (п. 2.1.3.7).'};
+var T1=[['До 1 кВ','Длина изолирующей части и рукоятки не нормируется, определяется удобством пользования. Для штанг до 1 кВ, предназначенных для работы на ВЛ, изолирующая часть не менее 0,6 м.'],['От 2 до 15 кВ','Изолирующая часть не менее 700 мм, рукоятка не менее 300 мм.'],['Свыше 15 до 35 кВ','Изолирующая часть не менее 1100 мм, рукоятка не менее 400 мм.'],['Свыше 35 до 110 кВ','Изолирующая часть не менее 1400 мм, рукоятка не менее 600 мм.'],['150 кВ','Изолирующая часть не менее 2000 мм, рукоятка не менее 800 мм.'],['220 кВ','Изолирующая часть не менее 2500 мм, рукоятка не менее 800 мм.'],['330 кВ','Изолирующая часть не менее 3000 мм, рукоятка не менее 800 мм.'],['Свыше 330 до 500 кВ','Изолирующая часть не менее 4000 мм, рукоятка не менее 1000 мм.']];
+function fillSel(id,L,fn){var s=$(id);L.forEach(function(r,i){var o=document.createElement('option');o.value=i;o.textContent=r[0];s.appendChild(o)});s.onchange=function(){fn(+s.value)};fn(0)}
+fillSel('shV',T1,function(i){$('shLen').innerHTML='<b class="t">'+T1[i][0]+'</b>'+T1[i][1]+' <span class="src">таблица 1</span>'});
+/* клещи */
+var CL={lv:'До 1000 В. Корпус клещей одновременно служит изолирующей частью с упором и рукояткой (п. 2.4.2.3). Измеряют ток, напряжение и мощность в электроустановках до 1 кВ без нарушения целостности цепи.',hv:'Выше 1000 В. Клещи состоят из рабочей части, изолирующей части (не менее 380 мм) и рукоятки (не менее 130 мм) (п. 2.4.2.2). Измеряют ток в цепях до 10 кВ. Работать только в диэлектрических перчатках, без выносных приборов (п. 2.4.5).'};
+var clOn=false,clType='lv';
+function clUpd(){var s=$('clSvg');s.setAttribute('class',clType+(clOn?' on':''));$('clInfo').innerHTML=CL[clType]+(clOn?'<br><span class="muted">Ток в проводнике создаёт магнитный поток в разъёмном магнитопроводе, во вторичной обмотке получается пропорциональный ток, его показывает прибор. По п. 2.4.1.1 клещи — это трансформатор тока. Подробности про поток — пояснение, не текст СТО.</span>':'');$('clBtn').textContent=clOn?'Отключить ток':'Подать ток'}
+chipGroup($('clChips'),function(c){clType=c.dataset.t;clUpd()});
+$('clBtn').onclick=function(){clOn=!clOn;clUpd()};clUpd();
+/* указатель до 1000 В */
+var ukT='one',ukG=false;
+function ukUpd(){var s=$('ukSvg');s.setAttribute('class',ukT+(ukG?' gl':''));var lit=(ukT==='two')||!ukG;$('ukLamp').setAttribute('fill',lit?'#ffd23f':'#6d7886');$('ukGlow').setAttribute('opacity',lit?.7:0);
+ var t;if(ukT==='one')t=ukG?'<b class="t">Лампа не горит</b>Перчатка не даёт руке коснуться контакта на корпусе, цепь через тело не замыкается. Именно поэтому п. 2.5.6.3 запрещает пользоваться однополюсным указателем до 1000 В в диэлектрических перчатках. Вывод: исправный указатель в перчатках не покажет напряжение, которое есть.':'<b class="t">Лампа горит</b>Цепь: фаза → указатель → рука → тело → земля. Это ёмкостный ток через тело оператора (п. 2.5.2.4). Поэтому рука должна касаться контакта на корпусе (п. 2.5.6.3).';
+ else t='<b class="t">Лампа горит</b>Ток идёт между двумя щупами через указатель — это активный ток (п. 2.5.2.4), тело оператора в цепь не входит. Два корпуса соединены гибким проводом не короче 1 м (п. 2.5.2.6).'+(ukG?' Запрет на перчатки в п. 2.5.6.3 относится к однополюсным указателям; для двухполюсных такого запрета в СТО нет.':'');
+ $('ukInfo').innerHTML=t;pr($('ukGlove'),ukG)}
+chipGroup($('ukChips'),function(c){ukT=c.dataset.t;ukUpd()});
+$('ukGlove').onclick=function(){ukG=!ukG;ukUpd()};ukUpd();
+/* указатель выше 1000 В: размеры */
+var T6=[['До 1 кВ','Размеры изолирующей части и рукоятки не нормируются. Напряжение индикации не выше 50 В (п. 2.5.2.7).'],['Св. 1 до 10 кВ','Изолирующая часть не менее 230 мм, рукоятка не менее 110 мм. Не должен срабатывать от соседних цепей на расстоянии 150 мм (1–6 кВ) и 220 мм (6–10 кВ). Напряжение индикации не более 25 % номинального (для 10 кВ — не более 2,5 кВ).'],['Св. 10 до 20 кВ','Изолирующая часть не менее 320 мм, рукоятка не менее 110 мм. Не срабатывает от соседних цепей на расстоянии 500 мм (10–35 кВ). Напряжение индикации не более 25 % номинального (для 20 кВ — не более 5 кВ).'],['35 кВ','Изолирующая часть не менее 510 мм, рукоятка не менее 120 мм. Не срабатывает от соседних цепей на расстоянии 500 мм. Напряжение индикации не более 25 % (не более 8,75 кВ).'],['110 кВ','Изолирующая часть не менее 1400 мм, рукоятка не менее 600 мм. Не срабатывает от соседних цепей на расстоянии 1500 мм. Напряжение индикации не более 25 % (не более 27,5 кВ).'],['Св. 110 до 220 кВ','Изолирующая часть не менее 2500 мм, рукоятка не менее 800 мм. Не срабатывает от соседних цепей на расстоянии 1800 мм (150 кВ) и 2500 мм (220 кВ).']];
+fillSel('ukV',T6,function(i){$('ukLen').innerHTML='<b class="t">'+T6[i][0]+'</b>'+T6[i][1]+' <span class="src">таблицы 6, 7, п. 2.5.2.7, 2.5.2.13</span>'});
+/* порядок проверки */
+var STP=[['1. Исправность перед работой','Эксплуатируют указатель по паспорту (инструкции); перед началом работы проверяют его исправность (п. 2.5.6.1).'],['2. Как проверить исправность','Встроенным органом контроля, если он есть. Если нет — специальным приспособлением (малогабаритный источник повышенного напряжения). Если и его нет — кратковременным прикосновением электродом-наконечником к токоведущим частям, заведомо находящимся под напряжением (п. 2.5.6.2).'],['3. Перчатки','Выше 1000 В указателем пользуются в диэлектрических перчатках (п. 2.5.6.5). Однополюсным указателем до 1000 В перчатки применять нельзя (п. 2.5.6.3).'],['4. Контакт не менее 5 секунд','При проверке отсутствия напряжения рабочая часть касается токоведущих частей не менее 5 с при отсутствии сигнала. Хотя некоторые указатели подают сигнал на расстоянии, непосредственный контакт обязателен (п. 2.5.6.4). Нажмите кнопку на рисунке.']];
+var stc=$('stepChips');STP.forEach(function(s,i){var b=document.createElement('button');b.className='chip';b.textContent=s[0];b.onclick=function(){stc.querySelectorAll('.chip').forEach(function(x){pr(x,x===b)});$('stepInfo').innerHTML='<b class="t">'+s[0]+'</b>'+s[1]};stc.appendChild(b)});
+stc.firstChild.click();
+var ringT=null;
+$('ringBtn').onclick=function(){if(ringT)return;var t=0,arc=$('ringArc');$('ringMsg').textContent='Контакт, сигнала нет...';ringT=setInterval(function(){t+=.1;arc.setAttribute('stroke-dashoffset',(301.6*(1-Math.min(t,5)/5)).toFixed(1));$('ringTxt').textContent=Math.min(t,5).toFixed(1).replace('.0','')+' с';if(t>=5){clearInterval(ringT);ringT=null;$('ringMsg').textContent='Прошло 5 секунд, сигнала нет: время контакта по п. 2.5.6.4 выдержано.'}},100)};
+/* отвёртка */
+$('sdChk').onclick=function(){var lim=+$('sdType').value,v=parseFloat($('sdLen').value),o=$('sdInfo');if(isNaN(v)){o.className='info';o.textContent='Введите длину неизолированной части в миллиметрах.';return}
+ var ok=v<=lim;o.className='info '+(ok?'ok':'bad');o.innerHTML=(ok?'<b class="t">Допустимо.</b> ':'<b class="t">Недопустимо.</b> ')+'Для этого типа неизолированный стержень не более '+lim+' мм, вы ввели '+v+' мм (п. 2.7.2.9).';
+ $('sdBare').setAttribute('width',Math.max(10,Math.min(110,v*110/20)));};
+/* слои изоляции */
+var LY={2:{c:['#d9822b','#f0c040'],r:[56,38],st:[['Целая изоляция',null,'ok','Покрытие целое, слои не нарушены. Перед каждым применением всё равно осматривают инструмент (п. 2.7.5.1).'],['Нарушен верхний слой, виден другой цвет',[2,38,56,'#f0c040'],'bad','Если покрытие двухслойное и нарушен верхний слой, появилось покрытие другого цвета — инструмент должен быть заменён (п. 2.7.5.2).']]},
+3:{c:['#d9822b','#f0c040','#2f7fd0'],r:[58,46,34],st:[['Целая изоляция',null,'ok','Покрытие целое. Каждый слой окрашен в свой цвет, поэтому глубину повреждения видно по цвету (п. 2.7.2.10).'],['Потёртость внешнего слоя',[3,52,58,'#f2a65a'],'mid','Если покрытие трёхслойное и повреждён внешний слой (трещины, потёртости), инструмент можно оставить в эксплуатации, но применять осторожно и при первой возможности сдать в ремонт (п. 2.7.5.2).'],['Виден средний слой',[2,46,58,'#f0c040'],'mid','Этот случай в СТО прямо не назван. Названы только повреждение внешнего слоя (можно с осторожностью) и появление нижнего слоя, примыкающего к корпусу (изъять). Решение — по паспорту и указанию ответственного.'],['Виден нижний слой у корпуса',[1,34,58,'#2f7fd0'],'bad','Если появился нижний слой изоляции, примыкающий к корпусу, инструмент должен быть изъят из применения (п. 2.7.5.2).']]}};
+function pol(r,a){var x=110+r*Math.cos(a*Math.PI/180),y=75+r*Math.sin(a*Math.PI/180);return x.toFixed(1)+' '+y.toFixed(1)}
+function sector(r1,r2,a1,a2,col){return '<path d="M'+pol(r2,a1)+' A'+r2+' '+r2+' 0 0 1 '+pol(r2,a2)+' L'+pol(r1,a2)+' A'+r1+' '+r1+' 0 0 0 '+pol(r1,a1)+' Z" fill="'+col+'" stroke="#fff" stroke-width="1"/>'}
+function lyDraw(n,k){var L=LY[n],h='';L.r.forEach(function(r,i){h+='<circle cx="110" cy="75" r="'+r+'" fill="'+L.c[i]+'" stroke="rgba(0,0,0,.25)"/>'});h+='<circle cx="110" cy="75" r="'+(n===3?22:24)+'" fill="#9aa4b0" stroke="rgba(0,0,0,.35)"/>';
+ var st=L.st[k];if(st[1]){var d=st[1];h+=sector(d[1],d[2],-70,-20,d[3])}
+ $('lySvg').innerHTML=h;var i=$('lyInfo');i.className='info '+st[2];i.innerHTML='<b class="t">'+st[0]+'</b>'+st[3]}
+function lyBuild(){var n=+$('lyN').value,box=$('lyChips');box.innerHTML='';LY[n].st.forEach(function(s,k){var b=document.createElement('button');b.className='chip';b.textContent=s[0];b.onclick=function(){box.querySelectorAll('.chip').forEach(function(x){pr(x,x===b)});lyDraw(n,k)};box.appendChild(b)});box.firstChild.click()}
+$('lyN').onchange=lyBuild;lyBuild();
+/* стенд испытаний перчаток, бот, галош */
+var ITEM={glove:'<path d="M180 62 h72 v96 q0 24 -18 36 v26 h-36 v-26 q-18 -12 -18 -36 z" id="itm"/>',boot:'<path d="M190 62 h62 v96 h50 q22 0 22 22 v18 h-134 z" id="itm"/>'};
+function bath(box,C){
+ var h='<div class="fig"><svg viewBox="0 0 560 300" class="bth" role="img" aria-label="Схема испытания"><defs><clipPath id="cp'+C.id+'">'+ITEM[C.item].replace(' id="itm"','')+'</clipPath></defs>'
+ +'<rect x="70" y="150" width="300" height="130" rx="6" fill="#9fc3d1" opacity=".55"/><rect x="70" y="120" width="300" height="160" rx="6" fill="none" stroke="#6d7886" stroke-width="5"/>'
+ +'<g fill="#e9dfa8" stroke="#a89a4f" stroke-width="3">'+ITEM[C.item].replace(' id="itm"','')+'</g>'
+ +'<g clip-path="url(#cp'+C.id+')"><rect x="150" y="150" width="200" height="140" fill="#9fc3d1" opacity=".8"/></g>'
+ +'<line x1="70" y1="150" x2="370" y2="150" stroke="#2f86e8" stroke-width="2" stroke-dasharray="6 4"/>'
+ +'<g stroke="currentColor" stroke-width="1.5" fill="none"><line x1="150" y1="62" x2="150" y2="150"/><line x1="144" y1="62" x2="156" y2="62"/><line x1="144" y1="150" x2="156" y2="150"/></g><text x="140" y="110" text-anchor="end" style="font-size:12px">'+C.level+'</text>'
+ +'<line x1="215" y1="32" x2="215" y2="196" stroke="#44546a" stroke-width="4"/><circle cx="215" cy="196" r="8" fill="#44546a"/>'
+ +'<circle cx="60" cy="36" r="20" fill="var(--card)" stroke="currentColor"/><text x="60" y="41" text-anchor="middle" style="font-size:16px;font-weight:700">~</text><text x="60" y="76" text-anchor="middle" style="font-size:11px">транс-</text><text x="60" y="88" text-anchor="middle" style="font-size:11px">форматор</text>'
+ +'<line x1="80" y1="36" x2="130" y2="36" stroke="currentColor" stroke-width="2"/><circle cx="150" cy="36" r="20" fill="var(--card)" stroke="currentColor"/><text x="150" y="40" text-anchor="middle" style="font-size:12px;font-weight:700">мА</text><line x1="170" y1="36" x2="215" y2="36" stroke="currentColor" stroke-width="2"/>'
+ +'<path d="M60 56 L60 100 L40 100 L40 270 L70 270" fill="none" stroke="currentColor" stroke-width="2"/>'
+ +'<path class="flow f1" d="M82 36 L215 36 L215 192"/><path class="flow f2" d="M215 196 L300 210 L350 210 L350 290 L30 290 L30 100 L60 100 L60 58"/>'
+ +'<g class="boom"><path d="M200 120 l-10 18 l16 0 l-12 22" fill="none" stroke="#c4262e" stroke-width="4"/></g>'
+ +'<g class="rdout"><rect x="400" y="30" width="150" height="150" rx="10" fill="var(--card)" stroke="var(--line)"/><text x="475" y="54" text-anchor="middle" style="font-size:12px" class="muted">напряжение</text><text x="475" y="84" text-anchor="middle" class="kv" style="font-size:26px;font-weight:700">0,0 кВ</text><text x="475" y="112" text-anchor="middle" style="font-size:12px" class="muted">ток (условно)</text><text x="475" y="140" text-anchor="middle" class="ma" style="font-size:22px;font-weight:700">0,0 мА</text><text x="475" y="168" text-anchor="middle" class="st" style="font-size:12px;font-weight:700"></text></g>'
+ +'<text x="215" y="22" text-anchor="middle" style="font-size:11px">электрод</text>'
+ +'</svg><div class="bar"><button class="btn pri b-ok">Испытать исправное изделие</button><button class="btn b-bad">Испытать дефектное</button></div></div>'
+ +'<div class="info"><b class="t">Нормы</b>Испытательное напряжение '+C.kv+' кВ, выдержка 1 минута, ток через изделие не более '+C.ma+' мА, '+C.per+'. '+C.how+' Значения на экране на рисунке условные: показан принцип.</div>';
+ box.innerHTML=h;var svg=box.querySelector('svg'),run=null,kvT=svg.querySelector('.kv'),maT=svg.querySelector('.ma'),stT=svg.querySelector('.st');
+ function stop(){if(run){clearInterval(run);run=null}}
+ function go(bad){stop();svg.setAttribute('class','bth run');var t=0,N=60,hold=40,n=0;stT.textContent='';stT.setAttribute('style','font-size:12px;font-weight:700');
+  run=setInterval(function(){n++;var kv,ma,msg='';
+   if(n<=N){kv=C.kv*n/N;ma=C.ma*.6*(n/N)+(Math.random()*.15);if(bad&&n>N*.75){stop();svg.setAttribute('class','bth run brk');kvT.textContent=(C.kv*.75).toFixed(1).replace('.',',')+' кВ';maT.textContent=(C.ma*3).toFixed(1).replace('.',',')+' мА';stT.textContent='ПРОБОЙ — БРАК';stT.style.fill='#c4262e';return}}
+   else{kv=C.kv;ma=C.ma*.6+(Math.random()*.2);msg='выдержка '+Math.min(60,Math.round((n-N)/hold*60))+' с'}
+   kvT.textContent=kv.toFixed(1).replace('.',',')+' кВ';maT.textContent=ma.toFixed(1).replace('.',',')+' мА';stT.textContent=msg;stT.style.fill='currentColor';
+   if(n>=N+hold){stop();svg.setAttribute('class','bth');stT.textContent='ГОДНО: ток не выше '+C.ma+' мА';stT.style.fill='#1d7a46'}},80)}
+ box.querySelector('.b-ok').onclick=function(){go(false)};box.querySelector('.b-bad').onclick=function(){go(true)};
+ return {stop:stop}}
+var bathGlove=bath($('bathG'),{id:'g',item:'glove',kv:9,ma:9,per:'1 раз в 6 месяцев',level:'45–55 мм',how:'Воду наливают и снаружи, и внутрь; края перчаток остаются сухими; напряжение подают между корпусом ванны и электродом внутри перчатки (п. 4.1.3.1).'});
+var BK={bot:{id:'b',item:'boot',kv:15,ma:10,per:'1 раз в 36 месяцев',level:'45–55 мм',how:'Уровень воды снаружи и внутри на 45–55 мм ниже края спущенных отворотов бот (п. 4.2.3.4).'},gal:{id:'l',item:'boot',kv:3.5,ma:2.5,per:'1 раз в 12 месяцев',level:'15–25 мм',how:'Уровень воды снаружи и внутри на 15–25 мм ниже бортов галош (п. 4.2.3.4); галоши применяют до 1000 В.'}};
+var bathB=bath($('bathB'),BK.bot);
+chipGroup($('bkChips'),function(c){bathB.stop();bathB=bath($('bathB'),BK[c.dataset.k])});
+/* перчатка: скручивание */
+var gm='ok',gs=0;
+function gtUpd(){var s=$('gtSvg');s.setAttribute('class',gm+(gs?' tw':''));$('gtTxt').textContent=gs?(gm==='ok'?'Воздух остаётся внутри':'Воздух выходит через прокол'):'';$('gtBtn').textContent=gs?'Отпустить':'Скрутить в сторону пальцев';
+ $('gtInfo').innerHTML=gs?(gm==='ok'?'Пальцы надуты и не сдуваются: проколов нет.':'Пальцы сдуваются, из места прокола идёт воздух. Перчатка непригодна; проверка проколов скручиванием — по п. 4.1.5.3.'):'Перед проверкой посмотрите штамп испытаний, повреждения, загрязнение и влажность. Затем скрутите перчатку от края в сторону пальцев: воздух запирается внутри, проколы выдают себя утечкой.'}
+chipGroup($('gtChips'),function(c){gm=c.dataset.m;gs=0;gtUpd()});$('gtBtn').onclick=function(){gs=gs?0:1;gtUpd()};$('gtReset').onclick=function(){gs=0;gtUpd()};gtUpd();
+/* где применять */
+function whUpd(){var p=$('whP').value,v=$('whV').value,o=[];
+ var closedDry=p==='cd',closedWet=p==='cw',openDry=p==='od',rain=p==='or',closed=closedDry||closedWet;
+ o.push(['Ковёр диэлектрический',(closedDry||openDry)?['ok','Можно: закрытые электроустановки (кроме сырых помещений) и открытые в сухую погоду (п. 2.10.1.1).']:['no',closedWet?'Нельзя: ковры не применяют в сырых помещениях (п. 2.10.1.1).':'Нельзя: в открытых электроустановках ковры применяют только в сухую погоду (п. 2.10.1.1).']]);
+ o.push(['Изолирующая подставка',closedWet?['ok','Можно: подставки применяют в сырых и подверженных загрязнению помещениях (п. 2.10.1.1).']:['mid','В СТО подставки названы для сырых и загрязнённых помещений; для этой обстановки прямо не указано (п. 2.10.1.1).']]);
+ o.push(['Боты диэлектрические',(closed||openDry)?['ok','Можно при любом напряжении: закрытые электроустановки; открытые — при отсутствии осадков (п. 4.2.1.1).']:['no','Нельзя: в открытых электроустановках обувь применяют только при отсутствии осадков (п. 4.2.1.1).']]);
+ o.push(['Галоши диэлектрические',v==='hi'?['no','Нельзя: галоши применяют только в электроустановках до 1000 В (п. 4.2.1.1).']:((closed||openDry)?['ok','Можно: до 1000 В; закрытые электроустановки, открытые — при отсутствии осадков (п. 4.2.1.1).']:['no','Нельзя: в открытых электроустановках обувь применяют только при отсутствии осадков (п. 4.2.1.1).'])]);
+ $('whOut').innerHTML=o.map(function(r){return '<div class="vi '+r[1][0]+'"><b>'+(r[1][0]==='ok'?'✓ ':r[1][0]==='no'?'✗ ':'? ')+r[0]+'</b><span>'+r[1][1]+'</span></div>'}).join('')}
+$('whP').onchange=whUpd;$('whV').onchange=whUpd;whUpd();
+/* заземления: части */
+var ZP={iz:['Изолирующая часть','Съёмная или несъёмная штанга из диэлектрического материала (одна или несколько) с рукояткой (п. 5.1.2.3). Устанавливают заземление выше 1000 В этой штангой; зажимы закрепляют ею же (п. 5.1.5.3).'],ko:['Контактная часть (фазный зажим)','Фазные (линейные) зажимы, наконечники, струбцины (п. 5.1.2.3). Зажим должен удобно накладываться на токоведущие части; усилие зажатия обеспечивает надёжный контакт (п. 5.1.2.22). На ВЛ с наведённым напряжением — зажимы с надёжной фиксацией на проводе, исключающей падение (п. 5.1.5.4).'],to:['Токопроводящая часть','Гибкий провод медный или алюминиевый (п. 5.1.2.3, 5.1.2.12); может иметь прозрачную оболочку для наблюдения за целостностью жил. Сечение не менее 16 мм² до 1000 В и не менее 25 мм² выше 1000 В (п. 5.1.2.14). Пайка соединения не допускается, сопротивление провод–струбцина не более 600 мкОм (п. 5.1.2.19).'],gz:['Заземляющий зажим','Присоединяется к заземляющему устройству: металлоконструкциям опоры, заземляющему спуску деревянной опоры или временному заземлителю — штырю, забитому в землю (п. 5.1.5.1). Контакт очищают щёткой от отложений (п. 5.1.5.2). Закрепляют штангой или руками в диэлектрических перчатках (п. 5.1.5.3).']};
+document.querySelectorAll('#zpSvg .pt').forEach(function(g){g.onclick=function(){selPart($('zpSvg'),$('zpInfo'),ZP,g.dataset.i)}});
+/* заземления: порядок */
+var ZM={on:[{s:0,t:'Заземление не наложено'},{s:1,t:'1. Присоединено к заземлителю'},{s:2,t:'2. Проверено отсутствие напряжения'},{s:3,t:'3. Наложено на токоведущие части'}],off:[{s:3,t:'Заземление наложено'},{s:2,t:'1. Снято с токоведущих частей'},{s:0,t:'2. Отсоединено от заземлителя'}]};
+var ZI={on:['Работать в диэлектрических перчатках; выше 1000 В — с изолирующей штангой (п. 5.1.5.3 СТО). Перед использованием осмотрите контактные части (п. 5.1.5.2).','Сначала заземление присоединяют к заземляющему устройству (приказ № 903н, п. 20.2).','Проверка отсутствия напряжения — указателем (раздел «Указатели напряжения»).','Устанавливать на токоведущие части нужно непосредственно после проверки отсутствия напряжения (приказ № 903н, п. 20.1, 20.2).'],off:['Установленное заземление. Снимать его нужно в обратной последовательности (приказ № 903н, п. 20.2); в диэлектрических перчатках, выше 1000 В — штангой.','Сначала заземление снимают с токоведущих частей.','Затем отсоединяют от заземляющего устройства. Установленные заземления учитывают в оперативной документации (п. 5.1.5.5 СТО).']};
+var zm='on',zi=0;
+function zoUpd(){var L=ZM[zm];zi=Math.max(0,Math.min(L.length-1,zi));$('zoSvg').setAttribute('class','z'+L[zi].s);$('zoTxt').textContent=L[zi].t;$('zoInfo').innerHTML=ZI[zm][zi];$('zoPrev').disabled=zi===0;$('zoNext').disabled=zi===L.length-1}
+chipGroup($('zoMode'),function(c){zm=c.dataset.m;zi=0;zoUpd()});$('zoPrev').onclick=function(){zi--;zoUpd()};$('zoNext').onclick=function(){zi++;zoUpd()};zoUpd();
+/* заземления: расчёт */
+var TC={250:{16:[5.6,4.0,2.3],25:[8.8,6.3,3.6],35:[12.4,8.8,5.1],50:[17.7,12.5,7.2],70:[24.7,17.5,10.1],95:[33.6,23.8,13.7]},152:{16:[3.4,2.4,1.4],25:[5.4,3.8,2.2],35:[7.5,5.3,3.1],50:[10.7,7.6,4.4],70:[15.0,10.7,6.2],95:[20.4,14.4,8.4]}};
+function f1(x){return x.toFixed(1).replace('.',',')}
+$('zcB').onclick=function(){var C=+$('zcM').value,mn=+$('zcU').value,I=parseFloat($('zcI').value),t=parseFloat($('zcT').value),o=$('zcOut');
+ if(!(I>0)||!(t>0)){o.className='info';o.textContent='Введите ток и время больше нуля.';return}
+ var S=I*1000*Math.sqrt(t)/C,need=Math.max(S,mn),ser=[16,25,35,50,70,95,120],pick=null;for(var i=0;i<ser.length;i++)if(ser[i]>=need){pick=ser[i];break}
+ var h='<b class="t">Результат</b>Минимальное сечение по формуле: '+f1(S)+' мм². Ограничение для этой установки: не менее '+mn+' мм².<br>';
+ if(pick){h+='Подходит сечение из ряда: <b>'+pick+' мм²</b>.';var row=TC[C][pick],ti=t===.5?0:t===1?1:t===3?2:-1;if(row&&ti>=0)h+=' По таблице '+(C===250?'15':'16')+' допустимый ток КЗ для такого сечения при '+f1(t)+' с — '+f1(row[ti])+' кА.';o.className='info ok'}
+ else{h+='Больше 120 мм²: стандартного сечения не хватает, при больших токах КЗ допускается ставить несколько заземлений параллельно (п. 5.1.2.15).';o.className='info mid'}
+ h+='<br>Минимальный ток динамической устойчивости: iдин.мин = 2,55 · '+f1(I)+' = '+f1(2.55*I)+' кА (п. 5.1.2.16); это значение указывают в паспорте заземления.';o.innerHTML=h};
+$('zcB').click();
+/* нормы и сроки */
+var NR=[
+['Штанги изолирующие оперативные',[['Испытательное напряжение','до 1 кВ — 2 кВ; до 35 кВ — трёхкратное линейное, но не менее 40 кВ; 110 кВ и выше — трёхкратное фазное'],['Выдержка','5 минут'],['Периодичность испытаний','1 раз в 24 месяца'],['Осмотр','не реже 1 раза в 6 месяцев и перед применением'],['Гарантия / срок службы','18 мес. / 15 лет']],['2 кВ; 40 кВ и более; 5 мин; 1 раз в 24 мес.','1 раз в 6 мес.','18 мес. / 15 лет'],'Измерительные штанги испытывают 1 раз в 12 месяцев.'],
+['Клещи электроизмерительные, индикаторы тока',[['Испытательное напряжение','до 1 кВ — 2 кВ; выше 1 до 10 кВ — 40 кВ'],['Выдержка','5 минут'],['Периодичность испытаний','1 раз в 24 месяца'],['Осмотр','не реже 1 раза в 6 месяцев и перед применением'],['Гарантия / срок службы','36 мес. / 5 лет']],['2 или 40 кВ; 5 мин; 1 раз в 24 мес.','1 раз в 6 мес.','36 мес. / 5 лет']],
+['Указатели напряжения выше 1000 В',[['Изолирующая часть','до 10 кВ — 40 кВ; выше 10 до 20 — 60; выше 20 до 35 — 105; 110 кВ — 190; выше 110 до 220 — 380 кВ; 5 минут'],['Рабочая часть','до 10 кВ — 12 кВ; выше 10 до 20 — 24; 35 кВ — 42 кВ; 1 минута'],['Напряжение индикации','не более 25 % номинального напряжения электроустановки'],['Периодичность испытаний','1 раз в 12 месяцев'],['Осмотр','не реже 1 раза в 6 месяцев и перед применением'],['Гарантия / срок службы','12 мес. / 5 лет']],['40–380 кВ (изолирующая часть); 5 мин; 1 раз в 12 мес.','1 раз в 6 мес.','12 мес. / 5 лет']],
+['Указатели напряжения до 1000 В',[['Изоляция корпусов','до 0,5 кВ — 1 кВ; выше 0,5 до 1 кВ — 2 кВ; 1 минута'],['Проверка повышенным напряжением','1,1 от наибольшего рабочего напряжения (п. 2.5.3.5), 1 минута'],['Ток через указатель','однополюсные — не более 0,6 мА; двухполюсные — не более 10 мА'],['Напряжение индикации','не выше 50 В'],['Периодичность испытаний','1 раз в 12 месяцев'],['Гарантия / срок службы','12 мес. / 5 лет']],['1 или 2 кВ; 1 мин; 1 раз в 12 мес.','1 раз в 6 мес.','12 мес. / 5 лет'],'В таблице Приложения 10 для «проверки повышенным напряжением» стоит число 1,1 в столбце киловольт; п. 2.5.3.5 поясняет, что это на 10 % выше наибольшего рабочего напряжения указателя.'],
+['Ручной изолирующий инструмент до 1000 В',[['Однослойная изоляция','2 кВ, 1 минута (60 с), 1 раз в 12 месяцев'],['Многослойная изоляция','электрических испытаний нет; осмотр не реже 1 раза в 6 месяцев'],['Перед применением','осмотр каждый раз'],['Гарантия / срок службы','12 мес. / 3 года']],['2 кВ; 1 мин; 1 раз в 12 мес. (однослойная)','1 раз в 6 мес. (многослойная — только осмотр)','12 мес. / 3 года']],
+['Перчатки диэлектрические',[['Испытательное напряжение','9 кВ (все напряжения)'],['Выдержка','1 минута'],['Ток через изделие','не более 9 мА'],['Периодичность испытаний','1 раз в 6 месяцев'],['Хранение / гарантия / срок службы','12 мес. / 12 мес. / 2 года']],['9 кВ; 1 мин; ≤ 9 мА; 1 раз в 6 мес.','перед применением','12 мес. / 2 года']],
+['Боты диэлектрические',[['Испытательное напряжение','15 кВ (все напряжения)'],['Выдержка','1 минута'],['Ток через изделие','не более 10 мА'],['Периодичность испытаний','1 раз в 36 месяцев'],['Срок службы по п. 4.2.2.9','клеёные боты — 12 мес., формовые — 18 мес.']],['15 кВ; 1 мин; ≤ 10 мА; 1 раз в 36 мес.','перед применением','см. примечание'],'Для галош: до 1 кВ, 3,5 кВ, 1 минута, не более 2,5 мА, 1 раз в 12 месяцев. Сроки службы в п. 4.2.2.9 и в Приложении 3 приведены в тексте СТО по-разному.'],
+['Ковры диэлектрические',[['Эксплуатационные испытания','не проводятся'],['Осмотр','не реже 1 раза в 6 месяцев и перед применением'],['Входной контроль','20 кВ переменного тока 50 Гц, ток утечки не более 160 мА/м'],['Хранение / гарантия / срок службы','36 мес. / 36 мес. / 5 лет']],['не испытывают','1 раз в 6 мес.','36 мес. / 5 лет'],'Подставки: 36 кВ, 1 минута (до 10 кВ) — при приёмке; в эксплуатации тоже не испытывают, только осматривают.'],
+['Переносные защитные заземления',[['Изолирующие части штанг с металлическими звеньями','6–10 кВ — 40 кВ; 110–220 — 50; 330–500 — 100; 750 — 150; 1150 кВ — 200; 5 минут; 1 раз в 24 месяца'],['Изолирующие гибкие элементы бесштанговых','500 кВ — 100; 750 — 150; 1150 кВ — 200; 5 минут; 1 раз в 24 месяца'],['Остальные заземления','электрических и механических испытаний в эксплуатации нет'],['Осмотр','не реже 1 раза в 3 месяца и перед применением'],['Гарантия / срок службы','24 мес. / 8 лет']],['только изолирующие части (40–200 кВ; 5 мин; 1 раз в 24 мес.)','1 раз в 3 мес.','24 мес. / 8 лет']]];
+var ns=$('nrSel'),nb=$('nrTab').querySelector('tbody');
+NR.forEach(function(r,i){var o=document.createElement('option');o.value=i;o.textContent=r[0];ns.appendChild(o);var tr=document.createElement('tr');tr.innerHTML='<td>'+r[0]+'</td><td>'+r[2][0]+'</td><td>'+r[2][1]+'</td><td>'+r[2][2]+'</td>';nb.appendChild(tr)});
+function nrUpd(){var r=NR[+ns.value];$('nrOut').innerHTML='<b class="t">'+r[0]+'</b><ul class="pts">'+r[1].map(function(x){return '<li><b>'+x[0]+':</b> '+x[1]+'</li>'}).join('')+'</ul>'+(r[3]?'<div class="muted">'+r[3]+'</div>':'')+'<span class="src">Приложения 3 и 10</span>'}
+ns.onchange=nrUpd;nrUpd();
+/* тренажёр */
+var SC=[
+['Перчатки диэлектрические. По штампу дата следующего испытания истекла месяц назад. Внешне перчатки целые.',['Применять','Не применять, изъять из использования'],1,'Использование электрозащитного средства с истёкшим сроком эксплуатационных испытаний запрещено (п. 1.3.8). Хранить их вместе с пригодными нельзя (п. 1.7.5).'],
+['Перчатки диэлектрические со штампом в сроке. При скручивании в сторону пальцев воздух выходит.',['Применять','Не применять: есть прокол'],1,'Перед применением перчатки проверяют на проколы скручиванием в сторону пальцев (п. 4.1.5.3). Вывод: перчатку с проколом применять нельзя.'],
+['Работник надел резиновые хозяйственные перчатки для химических работ, чтобы взять указатель напряжения выше 1000 В.',['Допустимо','Недопустимо'],1,'Перчатки, предназначенные для других целей (химического производства, медицинские и др.), в качестве средств защиты применять не допускается (п. 4.1.5.1).'],
+['Перчатки с маркировкой Эн нужны для работы с указателем напряжения 10 кВ.',['Подходят','Не подходят: нужна маркировка Эв'],1,'Эн — защита от тока напряжением до 1000 В, Эв — выше 1000 В (п. 4.1.2.7). Средства применяют в электроустановках напряжением не выше того, на которое они рассчитаны (п. 1.3.7).'],
+['Отвёртка с двухслойной изоляцией: в месте потёртости виден жёлтый нижний слой, хотя верхний слой оранжевый.',['Заменить инструмент','Оставить в работе','Применять с осторожностью'],0,'При двухслойном покрытии и появлении слоя другого цвета при нарушении верхнего слоя инструмент заменяют (п. 2.7.5.2).'],
+['Монтажный нож с трёхслойной изоляцией: на внешнем слое трещины и потёртости, средний слой не виден.',['Изъять немедленно','Оставить, применять осторожно, при первой возможности сдать в ремонт','Применять без ограничений'],1,'Трёхслойное покрытие: при повреждении внешнего слоя (трещины, потёртости) инструмент можно оставить, но применять осторожно и при первой возможности сдать в ремонт (п. 2.7.5.2).'],
+['Плоскогубцы с трёхслойной изоляцией: у губок виден нижний слой, примыкающий к металлу.',['Оставить в работе','Изъять из применения'],1,'При появлении нижнего слоя, примыкающего к корпусу, инструмент изымают (п. 2.7.5.2).'],
+['На штанге штамп перечёркнут красной краской.',['Применять только до 1000 В','Не применять, изъять из эксплуатации'],1,'На не выдержавших испытания средствах штамп перечёркивают красной краской, их изымают (п. 1.7.5).'],
+['Штанга со съёмной рабочей частью: резьбовое соединение при свинчивании-развинчивании заклинивает.',['Работать, приложив усилие','Не применять: перед работой нужно убедиться в отсутствии заклинивания'],1,'Перед работой необходимо убедиться в отсутствии заклинивания резьбы (п. 2.1.5.1). Вывод: при заклинивании штанга для работы не годна.'],
+['Диэлектрический ковёр без инвентарного номера.',['Нельзя: нет номера','Можно: ковры инвентарного номера не требуют'],1,'Инвентарный номер не наносят на диэлектрические ковры и изолирующие подставки (п. 1.7.1). Ковёр осматривают не реже 1 раза в 6 месяцев (п. 2.10.5.2).'],
+['На диэлектрическом ковре обнаружены механические дефекты.',['Отправить в ремонт','Изъять и заменить новым','Испытать напряжением 20 кВ и применять'],1,'При механических дефектах ковры изымают и заменяют новыми, в эксплуатации их не испытывают (п. 2.10.5.2). Подставки в такой ситуации отправляют в ремонт.'],
+['Переносное заземление: оборвано более 5 % проводников.',['Применять','Изъять из эксплуатации'],1,'Заземления изымают при обрыве более 5 % проводников (п. 5.1.5.6).'],
+['Переносное заземление, через которое протекал ток короткого замыкания.',['Продолжить применять после осмотра','Изъять из эксплуатации'],1,'После воздействия токов КЗ заземление изымают из эксплуатации (п. 5.1.5.6).'],
+['Заземляющий зажим: контактная поверхность загрязнена отложениями.',['Применять как есть','Очистить контакт щёткой, осмотреть соединения и применять'],1,'Контакт для присоединения заземляющего зажима очищают щёткой от отложений, перед использованием осматривают надёжность соединений (п. 5.1.5.2).'],
+['Указатель напряжения без встроенного органа контроля и без специального приспособления. Нужно убедиться в его исправности.',['Считать исправным по паспорту','Кратковременно прикоснуться к частям, заведомо находящимся под напряжением','Проверить мегаомметром'],1,'Если нет ни встроенного контроля, ни специального приспособления, исправность проверяют кратковременным прикосновением электродом-наконечником к частям, заведомо находящимся под напряжением (п. 2.5.6.2).'],
+['Работник проверяет отсутствие напряжения однополюсным указателем до 1000 В в диэлектрических перчатках.',['Допустимо','Недопустимо'],1,'При пользовании однополюсными указателями до 1000 В нужен контакт руки с корпусом; применение диэлектрических перчаток не допускается (п. 2.5.6.3).'],
+['Проверка отсутствия напряжения: указатель касается токоведущей части 2 секунды, сигнала нет.',['Достаточно','Недостаточно: контакт не менее 5 секунд'],1,'Время контакта рабочей части с токоведущими частями при отсутствии сигнала не менее 5 с (п. 2.5.6.4).'],
+['Измерение клещами в электроустановке выше 1000 В: нужно переключить предел измерения прямо на токоведущих частях.',['Можно, если надеты перчатки','Нельзя: сначала снять клещи с токоведущих частей'],1,'Выше 1000 В нельзя переключать пределы измерения, не сняв клещей с токоведущих частей (п. 2.4.5.3).'],
+['Боты в хорошем состоянии, по штампу испытание нужно через месяц.',['Применять','Не применять'],0,'Срок испытаний не просрочен, повреждений нет: перед применением боты осматривают (п. 4.2.5.4, 1.3.8).'],
+['Средство, которое должно испытываться, не имеет штампа об эксплуатационных испытаниях.',['Применять: внешне целое','Не применять'],1,'При работах используют только средства с маркировкой изготовителя и отметкой об эксплуатационных испытаниях (п. 1.3.3).']];
+var trOrder=[],trI=0;
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function trShow(){if(!trOrder.length||trI>=trOrder.length){trOrder=shuf(SC.map(function(x,i){return i}));trI=0}
+ var s=SC[trOrder[trI]];$('trCount').textContent='Ситуация '+(trI+1)+' из '+SC.length;var q=$('trQ');q.className='q';
+ q.innerHTML='<div class="meta">Ситуация</div><p class="t"></p><div class="opts"></div><div class="exp"></div>';q.querySelector('.t').textContent=s[0];var o=q.querySelector('.opts');
+ s[1].forEach(function(t,k){var b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=function(){if(q.classList.contains('done'))return;[].forEach.call(o.children,function(x,j){if(j===s[2])x.classList.add('ok')});if(k!==s[2])b.classList.add('bad');q.classList.add('done');q.querySelector('.exp').innerHTML='<div class="verdict '+(k===s[2]?'v-ok':'v-bad')+'">'+(k===s[2]?'Верно.':'Неверно.')+'</div>'+s[3]};o.appendChild(b)});trI++}
+$('trNext').onclick=trShow;trShow();
+})();
+
+</script>
+<script>var $=function(i){return document.getElementById(i)};
+var $=function(i){return document.getElementById(i)};
+/* ===== тест ===== */
+var KIND={s:'Один верный ответ',m:'Несколько верных ответов',x:'Сопоставление'};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var total,done,right;
+function qupd(){$('score').textContent='Отвечено: '+done+' из '+total+'. Верно: '+right;if(done===total)$('final').textContent='Итог: '+right+' из '+total+' ('+Math.round(100*right/total)+' %)'}
+function qfinish(box,ok,q){box.classList.add('done');done++;if(ok)right++;
+ var e=box.querySelector('.exp');e.innerHTML='<div class="verdict '+(ok?'v-ok':'v-bad')+'">'+(ok?'Верно.':'Неверно.')+'</div>'+q.e;qupd()}
+function filt(){var tp=+$('topic').value,kd=$('kind').value;return Q.filter(function(q){return (!tp||q.n===tp)&&(kd==='all'||q.t===kd)})}
+function avail(){var n=filt().length,c=$('cnt');c.max=n;$('avail').textContent='Доступно по выбранным условиям: '+n;var vv=c.value;document.querySelectorAll('#chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.c===vv)})}
+function buildQuiz(){
+ var cn=Math.max(0,Math.floor(+$('cnt').value)||0);var L=filt();L=cn&&cn<L.length?shuf(L).slice(0,cn):shuf(L);
+ var box=$('qs');box.innerHTML='';$('final').textContent='';total=L.length;done=0;right=0;$('score').hidden=false;
+ if(!L.length){$('score').textContent='По выбранным условиям вопросов нет.';return}
+ L.forEach(function(q,i){var d=document.createElement('div');d.className='q';
+  d.innerHTML='<div class="meta">Вопрос '+(i+1)+' · '+KIND[q.t]+'</div><p class="t"></p>';d.querySelector('.t').textContent=q.q;
+  var o=document.createElement('div');o.className='opts';d.appendChild(o);var ex=document.createElement('div');ex.className='exp';
+  if(q.t==='s'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var b=document.createElement('button');b.className='opt';b.textContent=q.o[k];b.dataset.k=k;
+    b.onclick=function(){if(d.classList.contains('done'))return;[].forEach.call(o.children,function(x){if(+x.dataset.k===q.a)x.classList.add('ok')});if(k!==q.a)b.classList.add('bad');qfinish(d,k===q.a,q)};o.appendChild(b)});d.appendChild(ex)}
+  if(q.t==='m'){shuf(q.o.map(function(t,k){return k})).forEach(function(k){var l=document.createElement('label');l.className='opt';l.dataset.k=k;l.innerHTML='<input type="checkbox"><span></span>';l.querySelector('span').textContent=q.o[k];o.appendChild(l)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(l){var k=+l.dataset.k,on=l.querySelector('input').checked,should=q.a.indexOf(k)>=0;l.querySelector('input').disabled=true;
+     if(should&&on)l.classList.add('ok');else if(should&&!on){l.classList.add('miss');ok=false}else if(!should&&on){l.classList.add('bad');ok=false}});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  if(q.t==='x'){var ro=shuf(q.r.map(function(t,k){return k}));q.l.forEach(function(lt){var r=document.createElement('div');r.className='mrow';r.innerHTML='<span></span><select><option value="">выберите</option></select>';r.firstChild.textContent=lt;var s=r.lastChild;ro.forEach(function(k){var op=document.createElement('option');op.value=k;op.textContent=q.r[k];s.appendChild(op)});o.appendChild(r)});
+   var bt=document.createElement('button');bt.className='btn pri';bt.style.marginTop='10px';bt.textContent='Проверить';
+   bt.onclick=function(){if(d.classList.contains('done'))return;var ok=true;[].forEach.call(o.children,function(r,li){var s=r.querySelector('select'),good=s.value!==''&&q.r[+s.value]===q.r[q.a[li]];r.classList.add(good?'ok':'bad');if(!good){ok=false;r.querySelector('span').textContent=q.l[li]+' → верно: '+q.r[q.a[li]]}s.disabled=true});bt.remove();qfinish(d,ok,q)};
+   d.appendChild(bt);d.appendChild(ex)}
+  box.appendChild(d)});qupd();$('score').scrollIntoView({block:'start'})}
+function initQuiz(TOPICS){var sel=$('topic');TOPICS.forEach(function(t){var o=document.createElement('option');o.value=t[0];o.textContent=t[0]+'. '+t[1];sel.appendChild(o)});
+ document.querySelectorAll('#chips .chip').forEach(function(b){b.onclick=function(){$('cnt').value=b.dataset.c;avail()}});
+ ['topic','kind'].forEach(function(i){$(i).onchange=avail});$('cnt').oninput=avail;avail();$('start').onclick=buildQuiz}
+
+
+var Q=[
+{t:'m',n:1,q:'Что работник обязан проверить перед каждым применением электрозащитного средства? Выберите все верные варианты.',o:['Исправность средства','Отсутствие внешних повреждений и загрязнений','По штампу — что дата следующего испытания не просрочена','Что средство записано в журнале выдачи у руководителя','Что со средством проводились механические испытания в последний месяц'],a:[0,1,2],e:'П. 1.3.8: исправность, отсутствие внешних повреждений и загрязнений, дата следующего испытания по штампу. Механические испытания в эксплуатации, как правило, не проводят.'},
+{t:'s',n:1,q:'Что делают со средством, которое не выдержало испытание?',o:['Штамп перечёркивают красной краской, средство изымают из эксплуатации','Используют только в электроустановках до 1000 В','Закрашивают штамп и хранят вместе с исправными','Продлевают срок испытаний на месяц и применяют'],a:0,e:'П. 1.7.5. Хранить такие средства вместе с пригодными запрещено.'},
+{t:'s',n:1,q:'Как часто проводят периодический осмотр электрозащитных средств?',o:['Не реже 1 раза в 6 месяцев, переносных заземлений — не реже 1 раза в 3 месяца','Не реже 1 раза в год, заземлений — раз в 6 месяцев','Раз в 3 месяца для всех средств','Только перед испытаниями'],a:0,e:'П. 1.7.3. Кроме того, осмотр проводят непосредственно перед применением.'},
+{t:'s',n:1,q:'Кто отвечает за комплектование, учёт, осмотры и испытания электрозащитных средств?',o:['Лицо, ответственное за электрохозяйство, либо иное лицо с группой не ниже IV, назначенное распорядительным документом','Любой работник с III группой, назначенный устно','Каждый работник бригады за все средства бригады','Работник охраны труда независимо от группы'],a:0,e:'П. 1.3.6.'},
+{t:'x',n:1,q:'Сопоставьте вид средства и содержание штампа об испытаниях (п. 1.7.5).',l:['Штанга, указатель напряжения','Перчатки, боты, галоши'],r:['Номер, «Годно до … кВ», дата следующего испытания, лаборатория','Номер, дата следующего испытания, лаборатория (без указания напряжения)','Только дата изготовления','Фамилия получившего работника и дата выдачи'],a:[0,1],e:'Если применение зависит от напряжения установки — в штампе указывают «Годно до … кВ». У перчаток, бот, галош напряжение не указывают.'},
+{t:'m',n:1,q:'Когда проводят внеочередные испытания электрозащитных средств? Выберите все верные варианты.',o:['После падения','После ремонта','После замены каких-либо деталей','При наличии признаков неисправности','По просьбе заказчика работ','При каждой смене ответственного за электрохозяйство'],a:[0,1,2,3],e:'П. 1.8.5.'},
+{t:'m',n:1,q:'Что служит основанием забраковать средство при электрическом испытании? Выберите все верные варианты.',o:['Пробой','Перекрытие или разряды по поверхности','Увеличение тока через изделие выше нормы','Местные нагревы из-за диэлектрических потерь','Потемнение цвета изоляции без других признаков'],a:[0,1,2,3],e:'П. 1.8.13, 1.8.14.'},
+{t:'s',n:1,q:'Какая длительность приложения полного испытательного напряжения указана как общая (п. 1.8.10)?',o:['1 минута для изолирующих средств до 1000 В и из эластичных материалов, 5 минут для слоистых диэлектриков','5 минут для всех средств','1 минута для всех средств','10 минут для эластичных материалов'],a:0,e:'П. 1.8.10; для конкретных средств длительность дана в Приложениях 8 и 10.'},
+{t:'m',n:1,q:'Что верно об отметках на электрозащитных средствах в эксплуатации? Выберите все верные варианты.',o:['Инвентарный номер не наносят на диэлектрические ковры и подставки','Если средство из нескольких разъёмных частей, общий номер ставят на каждую часть','Штамп ставят у ограничительного кольца или у края резиновых изделий','Если частей несколько, штамп ставят на каждой части','Инвентарный номер наносят на ковры, но не на перчатки'],a:[0,1,2],e:'П. 1.7.1, 1.7.5. Штамп ставят только на одной части, если частей несколько.'},
+{t:'m',n:2,q:'Из каких частей состоит изолирующая штанга (п. 2.1.2.2)? Выберите все верные варианты.',o:['Рабочая часть','Изолирующая часть','Рукоятка','Индикаторная часть','Токопроводящая часть'],a:[0,1,2],e:'Штанга состоит из рабочей, изолирующей частей и рукоятки; их разделяет ограничительное кольцо.'},
+{t:'s',n:2,q:'Что разделяет рукоятку и изолирующую часть штанги?',o:['Ограничительное кольцо из электроизоляционного материала','Металлическая муфта','Воздушный зазор','Они ничем не разделяются'],a:0,e:'П. 2.1.2.2.'},
+{t:'x',n:2,q:'Сопоставьте напряжение электроустановки и минимальную длину изолирующей части оперативной штанги (таблица 1).',l:['От 2 до 15 кВ','Свыше 15 до 35 кВ','Свыше 35 до 110 кВ','220 кВ'],r:['700 мм','1100 мм','1400 мм','2500 мм','3000 мм'],a:[0,1,2,3],e:'Таблица 1: 700, 1100, 1400, 2500 мм. 3000 мм — для 330 кВ.'},
+{t:'s',n:2,q:'Какое испытательное напряжение для оперативных изолирующих штанг до 1000 В?',o:['2 кВ, 5 минут','2 кВ, 1 минута','1 кВ, 5 минут','5 кВ, 1 минута'],a:0,e:'П. 2.1.3.4 и Приложение 10.'},
+{t:'s',n:2,q:'Какое напряжение прикладывают при испытании штанг на 6–10 кВ?',o:['Трёхкратное линейное, но не менее 40 кВ, 5 минут','Трёхкратное фазное, 1 минута','Двукратное линейное, 5 минут','Равное 1,1 номинального, 1 минута'],a:0,e:'П. 2.1.3.5: от 1 до 35 кВ — трёхкратное линейное, но не менее 40 кВ; 110 кВ и выше — трёхкратное фазное.'},
+{t:'s',n:2,q:'Как часто электрически испытывают оперативные изолирующие штанги?',o:['1 раз в 24 месяца','1 раз в 12 месяцев','1 раз в 6 месяцев','1 раз в 36 месяцев'],a:0,e:'Приложение 10. Измерительные штанги — 1 раз в 12 месяцев.'},
+{t:'s',n:2,q:'Что нужно сделать перед работой со штангой, у которой съёмная рабочая часть?',o:['Убедиться в отсутствии заклинивания резьбы однократным свинчиванием-развинчиванием','Проверить штангу испытанием на разрыв 1000 Н','Смазать резьбу','Проверить штангу мегаомметром'],a:0,e:'П. 2.1.5.1. То же — для каждого резьбового соединения звеньев.'},
+{t:'s',n:2,q:'Как подниматься на конструкцию или телескопическую вышку при работе с изолирующей штангой?',o:['Без штанги, штанга подаётся отдельно','Со штангой в руке','Со штангой на плече','Со штангой, закреплённой на поясе'],a:0,e:'П. 2.1.5.2.'},
+{t:'m',n:2,q:'Какие утверждения о штангах верны? Выберите все верные варианты.',o:['В электроустановках выше 1000 В штангой пользуются в диэлектрических перчатках','Механические испытания штанг в эксплуатации не проводят','Штанги заземлений без металлических звеньев электрически в эксплуатации не испытывают','Хранят штанги так, чтобы они не прогибались и не касались стен','Штангами исполнения УХЛ1.1 и Т1.1 нельзя работать в сырую погоду','Размеры рабочей части штанги нормируются таблицей 1'],a:[0,1,2,3],e:'П. 2.1.5.3, 2.1.3.2, 2.1.3.3, 2.1.4.2. Штангами УХЛ1.1 и Т1.1 в сырую погоду работать допускается (п. 2.1.2.1); размеры рабочей части не нормируют (примечание 2).'},
+{t:'s',n:2,q:'Какой штангой допускается работать в сырую погоду (дождь до 3 мм/мин)?',o:['Климатического исполнения УХЛ1.1 или Т1.1 с юбками конусной частью вверх','Любой изолирующей штангой','Только штангой с металлической рабочей частью','Только штангой на 110 кВ и выше'],a:0,e:'П. 2.1.2.1.'},
+{t:'s',n:2,q:'Какая штанга предназначена для контрольного разряда конденсаторных установок 0,23–10 кВ?',o:['Штанга с ограничительным резистором (сопротивление цепи электрод–струбцина 10–15 Ом)','Штанга с дугогасителем','Штанга для переноса потенциала','Универсальная штанга с адаптером М14'],a:0,e:'П. 2.1.1.1, 2.1.2.5. Дугогасящая штанга — для снятия наведённого потенциала с проводов ВЛ.'},
+{t:'s',n:3,q:'Что представляют собой электроизмерительные клещи по п. 2.4.1.1?',o:['Трансформатор тока с разъёмным магнитопроводом','Делитель напряжения','Индикатор электрического поля','Токоприёмник с шунтом'],a:0,e:'Первичная обмотка — проводник с измеряемым током, вторичная замкнута на измерительный прибор.'},
+{t:'m',n:3,q:'Что требуется при работе с электроизмерительными клещами выше 1000 В? Выберите все верные варианты.',o:['Диэлектрические перчатки','Держать клещи на весу, не наклоняясь к прибору','Не применять выносные приборы','Не переключать пределы измерения, не сняв клещей с токоведущих частей','Переключать пределы, если надеты перчатки','Применять выносной прибор, если провод длиннее 1 м'],a:[0,1,2,3],e:'П. 2.4.5.1–2.4.5.3.'},
+{t:'s',n:3,q:'Как часто электрически испытывают электроизмерительные клещи?',o:['1 раз в 24 месяца','1 раз в 12 месяцев','1 раз в 6 месяцев','1 раз в 36 месяцев'],a:0,e:'Приложение 10: до 1 кВ — 2 кВ, выше 1 до 10 кВ — 40 кВ, 5 минут.'},
+{t:'s',n:3,q:'Чем отличаются однополюсные указатели до 1000 В от двухполюсных?',o:['Однополюсные работают при ёмкостном токе через тело оператора, двухполюсные — при активном токе','Однополюсные работают при активном токе, двухполюсные — при ёмкостном','Однополюсные для постоянного тока, двухполюсные для переменного','Однополюсные имеют звуковую индикацию, двухполюсные — только световую'],a:0,e:'П. 2.5.2.4.'},
+{t:'s',n:3,q:'Можно ли пользоваться однополюсным указателем до 1000 В в диэлектрических перчатках?',o:['Нельзя: нужен контакт руки с электродом на корпусе, перчатки не допускаются','Можно, это обязательно','Можно только перчатками Эн','Нельзя, нужны только диэлектрические галоши'],a:0,e:'П. 2.5.6.3. В электроустановках выше 1000 В указателем, напротив, пользуются в перчатках (п. 2.5.6.5).'},
+{t:'s',n:3,q:'Какое минимальное время контакта рабочей части указателя с токоведущей частью при проверке отсутствия напряжения?',o:['Не менее 5 секунд','Не менее 1 секунды','Не менее 10 секунд','Не менее 30 секунд'],a:0,e:'П. 2.5.6.4; непосредственный контакт обязателен, даже если указатель подаёт сигнал на расстоянии.'},
+{t:'m',n:3,q:'Какими способами проверяют исправность указателя напряжения перед работой (п. 2.5.6.2)? Выберите все верные варианты.',o:['Встроенным органом контроля, если он есть','Специальным приспособлением — малогабаритным источником повышенного напряжения','Кратковременным прикосновением к частям, заведомо находящимся под напряжением','Мегаомметром','Считают исправным по записи в паспорте'],a:[0,1,2],e:'Способы идут по порядку: встроенный контроль, приспособление, прикосновение к частям под напряжением.'},
+{t:'s',n:3,q:'Какое напряжение индикации у указателя выше 1000 В?',o:['Не более 25 % номинального напряжения электроустановки','Не менее 50 % номинального','Не более 50 В','Не менее 25 % номинального'],a:0,e:'П. 2.5.2.13. 50 В — предел для указателей до 1000 В (п. 2.5.2.7).'},
+{t:'s',n:3,q:'Какое напряжение индикации допускается у указателей напряжения до 1000 В?',o:['Не выше 50 В','Не выше 25 % номинального','Не выше 12 В','Не ниже 100 В'],a:0,e:'П. 2.5.2.7. 12 В — это предел на контактах в режиме проверки целостности цепей (п. 2.5.2.8).'},
+{t:'m',n:3,q:'Из каких частей состоит указатель напряжения выше 1000 В (п. 2.5.2.9)? Выберите все верные варианты.',o:['Рабочая часть','Индикаторная часть','Изолирующая часть','Рукоятка','Дугогасительная часть'],a:[0,1,2,3],e:'Индикаторная часть может быть совмещена с рабочей.'},
+{t:'x',n:3,q:'Сопоставьте напряжение электроустановки и минимальную длину изолирующей части указателя (таблица 6).',l:['Св. 1 до 10 кВ','Св. 10 до 20 кВ','35 кВ','110 кВ'],r:['230 мм','320 мм','510 мм','1400 мм','2500 мм'],a:[0,1,2,3],e:'Таблица 6; 2500 мм — свыше 110 до 220 кВ.'},
+{t:'s',n:3,q:'Как часто испытывают указатели напряжения?',o:['1 раз в 12 месяцев','1 раз в 24 месяца','1 раз в 6 месяцев','1 раз в 36 месяцев'],a:0,e:'Приложение 10.'},
+{t:'s',n:3,q:'Какой должна быть неизолированная часть электрода-наконечника указателя до 1000 В для РУ и цепей вторичной коммутации?',o:['Не более 7 мм','Не более 15 мм','Не более 3 мм','Не нормируется'],a:0,e:'П. 2.5.2.6, 2.5.5.1. Ограничительные упоры со стороны наконечников — высотой не менее 3 мм.'},
+{t:'m',n:4,q:'Что относится к ручному изолирующему инструменту (п. 2.7.1.1)? Выберите все верные варианты.',o:['Гаечные ключи всех видов','Отвёртки','Молотки','Монтерские ножи (не складные)','Боковые кусачки','Складные ножи','Ножовки по металлу'],a:[0,1,2,3,4],e:'П. 2.7.1.1. Монтерские ножи — только нескладные.'},
+{t:'s',n:4,q:'Какова максимальная длина неизолированного стержня отвёртки для винтов со шлицевой головкой?',o:['15 мм','18 мм','10 мм','30 мм'],a:0,e:'П. 2.7.2.9. Для других типов (крестообразные, квадратные, шестигранные шлицы) — 18 мм.'},
+{t:'s',n:4,q:'Какова максимальная длина неизолированного стержня отвёртки для крестообразных, квадратных и шестигранных шлицев?',o:['18 мм','15 мм','12 мм','20 мм'],a:0,e:'П. 2.7.2.9.'},
+{t:'s',n:4,q:'Для какого напряжения применяют ручной изолирующий инструмент?',o:['До 1000 В переменного и 1500 В постоянного тока','До 1000 В любого рода тока','До 10 кВ','До 380 В'],a:0,e:'П. 2.7.1.1. Выше 1000 В применяют штанги-манипуляторы.'},
+{t:'s',n:4,q:'Двухслойное покрытие: нарушен верхний слой, видно покрытие другого цвета. Что делать?',o:['Заменить инструмент','Обмотать изолентой и применять','Применять осторожно','Сдать в ремонт и продолжать применять'],a:0,e:'П. 2.7.5.2.'},
+{t:'s',n:4,q:'Трёхслойное покрытие: повреждён внешний слой (трещины, потёртости), нижний слой не виден. Что делать?',o:['Можно оставить с осторожностью и при первой возможности сдать в ремонт','Немедленно изъять','Заменить новым','Применять без ограничений'],a:0,e:'П. 2.7.5.2. Если виден нижний слой, примыкающий к корпусу, — изъять.'},
+{t:'s',n:4,q:'Как испытывают инструмент с однослойной изоляцией?',o:['2 кВ, 60 секунд, 1 раз в 12 месяцев','2 кВ, 5 минут, 1 раз в 24 месяца','1 кВ, 1 минута, 1 раз в 6 месяцев','Не испытывают'],a:0,e:'П. 2.7.3.3, Приложение 10.'},
+{t:'s',n:4,q:'Что делают с инструментом с многослойной изоляцией в эксплуатации?',o:['Осматривают не реже 1 раза в 6 месяцев, электрических испытаний не проводят','Испытывают 2 кВ ежегодно','Испытывают 2 кВ каждые 6 месяцев','Заменяют ежегодно'],a:0,e:'П. 2.7.3.5.'},
+{t:'s',n:4,q:'Что применяют для операций в электроустановках выше 1000 В вместо ручного инструмента?',o:['Штанги-манипуляторы (оперативные, универсальные, с крюком, штанги-ключи)','Обычные отвёртки с усиленной изоляцией','Ручной инструмент в диэлектрических перчатках','Изолирующие накладки'],a:0,e:'П. 2.7.1.2.'},
+{t:'m',n:5,q:'Что проверяют при осмотре диэлектрических перчаток перед применением (п. 4.1.5.3)? Выберите все верные варианты.',o:['Штамп испытаний','Отсутствие механических повреждений','Отсутствие загрязнения и увлажнения','Отсутствие проколов скручиванием','Наличие ремешка для крепления на запястье'],a:[0,1,2,3],e:'Скручивают в сторону пальцев.'},
+{t:'s',n:5,q:'В какую сторону скручивают перчатки для проверки на проколы?',o:['В сторону пальцев','В сторону манжеты','Не скручивают, а надувают ртом','Сжимают на ладони'],a:0,e:'П. 4.1.5.3.'},
+{t:'x',n:5,q:'Сопоставьте средство и нормы электрических испытаний (Приложение 10).',l:['Перчатки диэлектрические','Боты диэлектрические','Галоши диэлектрические'],r:['9 кВ, 1 мин, не более 9 мА, 1 раз в 6 мес.','15 кВ, 1 мин, не более 10 мА, 1 раз в 36 мес.','3,5 кВ, 1 мин, не более 2,5 мА, 1 раз в 12 мес.','2 кВ, 1 мин, 1 раз в 12 мес.'],a:[0,1,2],e:'Приложение 10.'},
+{t:'s',n:5,q:'Что означает маркировка Эв и Эн на диэлектрических перчатках?',o:['Эв — защита от тока выше 1000 В, Эн — до 1000 В','Эн — защита от тока выше 1000 В, Эв — до 1000 В','Эв — влагостойкие, Эн — нормальные','Эв — для внутренней установки, Эн — для наружной'],a:0,e:'П. 4.1.2.7. Без такой маркировки применять перчатки в электроустановках нельзя.'},
+{t:'s',n:5,q:'Как должен стоять уровень воды при испытании перчаток?',o:['На 45–55 мм ниже краёв снаружи и внутри, края сухие','До самых краёв','На 10 мм ниже краёв','На 15–25 мм ниже краёв'],a:0,e:'П. 4.1.3.1. Уровень 15–25 мм ниже бортов — для галош.'},
+{t:'s',n:5,q:'Где применяют боты и галоши (п. 4.2.1.1)?',o:['Галоши — до 1000 В, боты — при всех напряжениях','Боты — до 1000 В, галоши — при всех напряжениях','Оба — только до 1000 В','Оба — только выше 1000 В'],a:0,e:'Обувь применяют в закрытых электроустановках, а в открытых — при отсутствии осадков.'},
+{t:'m',n:5,q:'Для чего предназначена специальная диэлектрическая обувь? Выберите все верные варианты.',o:['Изоляция от токопроводящих поверхностей (пола, земли)','Защита от напряжения шага','Работа в закрытых электроустановках','Работа в открытых электроустановках при отсутствии осадков','Замена диэлектрических перчаток при работе с указателем'],a:[0,1,2,3],e:'П. 4.2.1.1.'},
+{t:'s',n:5,q:'Что запрещено в отношении отбракованных по результатам испытаний перчаток?',o:['Их использование (категорически запрещено)','Их использование выше 1000 В','Их использование без второй пары','Их промывка'],a:0,e:'П. 4.1.3.5.'},
+{t:'s',n:5,q:'Испытывают ли диэлектрические ковры в эксплуатации?',o:['Нет, их осматривают не реже 1 раза в 6 месяцев и перед применением','Да, 20 кВ раз в 12 месяцев','Да, как боты — раз в 36 месяцев','Да, но только раз в 5 лет'],a:0,e:'П. 2.10.5.2, 2.10.3.3. Входной контроль у потребителя — 20 кВ, ток утечки не более 160 мА/м.'},
+{t:'s',n:5,q:'Где применяют диэлектрические ковры?',o:['В закрытых электроустановках, кроме сырых помещений, и в открытых в сухую погоду','В любых помещениях, включая сырые','Только в открытых электроустановках','Только в электроустановках выше 1000 В'],a:0,e:'П. 2.10.1.1.'},
+{t:'s',n:5,q:'Что применяют в сырых и подверженных загрязнению помещениях?',o:['Изолирующие подставки (подмости)','Диэлектрические ковры','Галоши','Ничего не применяют'],a:0,e:'П. 2.10.1.1.'},
+{t:'s',n:5,q:'Что делают, если на диэлектрическом ковре обнаружены механические дефекты?',o:['Изымают и заменяют новым','Ремонтируют и испытывают 20 кВ','Применяют только до 1000 В','Применяют, если дефект на нелицевой стороне'],a:0,e:'П. 2.10.5.2. Подставки при дефектах направляют в ремонт и после ремонта испытывают.'},
+{t:'m',n:6,q:'Для чего предназначены переносные защитные заземления (п. 5.1.1.1)? Выберите все верные варианты.',o:['Защита работающих на отключённых токоведущих частях от ошибочно поданного напряжения','Защита от наведённого напряжения','Применяют при отсутствии стационарных заземляющих ножей','Защита от перенапряжений при коммутациях','Замена изолирующих штанг'],a:[0,1,2],e:'П. 5.1.1.1.'},
+{t:'s',n:6,q:'Какие конструктивные виды переносных заземлений названы в СТО?',o:['Штанговые, штанговые с металлическими звеньями и бесштанговые','Только штанговые','Одно- и трёхфазные','Стационарные и подвесные'],a:0,e:'П. 5.1.2.2.'},
+{t:'x',n:6,q:'Сопоставьте часть штангового переносного заземления и её исполнение (п. 5.1.2.3).',l:['Изолирующая часть','Токопроводящая часть','Контактная часть'],r:['Штанга из диэлектрика с рукояткой, съёмная или несъёмная','Гибкий провод','Фазные (линейные) зажимы, наконечники, струбцины','Прокалывающий зажим со скобой'],a:[0,1,2],e:'П. 5.1.2.3.'},
+{t:'s',n:6,q:'Какое минимальное сечение провода переносного заземления?',o:['16 мм² до 1000 В и 25 мм² выше 1000 В','25 мм² до 1000 В и 35 мм² выше 1000 В','10 мм² до 1000 В и 16 мм² выше 1000 В','4 мм² для любых установок'],a:0,e:'П. 5.1.2.14. Стандартный ряд — от 16 до 120 мм².'},
+{t:'s',n:6,q:'Какой максимальный ток КЗ допускается для заземления с медным проводом 25 мм² при времени выдержки релейной защиты 1,0 с (таблица 15)?',o:['6,3 кА','8,8 кА','4,0 кА','3,6 кА'],a:0,e:'Таблица 15: для 25 мм² — 8,8 кА при 0,5 с; 6,3 кА при 1,0 с; 3,6 кА при 3,0 с.'},
+{t:'s',n:6,q:'Как определяют минимальный ток динамической устойчивости заземления?',o:['iдин.мин = 2,55 · Iуст','iдин.мин = 1,41 · Iуст','iдин.мин = 1,8 · Iуст','iдин.мин = 3 · Iуст'],a:0,e:'П. 5.1.2.16; значение указывают в паспорте заземления.'},
+{t:'s',n:6,q:'Каково максимально допустимое сопротивление соединения «провод–струбцина»?',o:['600 мкОм, пайка не допускается','600 мОм','60 мкОм','6 мОм, пайка допускается'],a:0,e:'П. 5.1.2.19.'},
+{t:'s',n:6,q:'Как часто осматривают переносные заземления?',o:['Не реже 1 раза в 3 месяца и перед применением','Не реже 1 раза в 6 месяцев','Не реже 1 раза в год','Только перед применением'],a:0,e:'П. 5.1.5.6, 1.7.3.'},
+{t:'m',n:6,q:'В каких случаях переносное заземление изымают из эксплуатации (п. 5.1.5.6)? Выберите все верные варианты.',o:['Механические дефекты контактных соединений','Обрыв более 5 % проводников','Расплавление','После воздействия токов короткого замыкания','Потемнение провода','Истёк один год с начала эксплуатации'],a:[0,1,2,3],e:'П. 5.1.5.6.'},
+{t:'s',n:6,q:'Как выполняют установку и снятие переносных заземлений (п. 5.1.5.3)?',o:['В диэлектрических перчатках; выше 1000 В — с изолирующей штангой','Без перчаток, штангой','В перчатках, штанга только до 1000 В','Руками, если заземление наложено на шину'],a:0,e:'Зажимы закрепляют этой же штангой, заземляющий зажим — штангой или руками в диэлектрических перчатках.'},
+{t:'s',n:6,q:'В каком порядке накладывают переносное заземление (приказ № 903н, п. 20.2, не СТО)?',o:['Сначала присоединяют к заземляющему устройству, затем после проверки отсутствия напряжения устанавливают на токоведущие части','Сначала накладывают на токоведущие части, затем присоединяют к заземлителю','Порядок не имеет значения','Сначала на токоведущие части, потом проверяют отсутствие напряжения'],a:0,e:'Снимают в обратной последовательности: сначала с токоведущих частей, затем отсоединяют от заземляющего устройства.'},
+{t:'s',n:6,q:'Какие электрические испытания проводят у переносных заземлений в эксплуатации?',o:['Только изолирующих частей штанг с металлическими звеньями и гибких изолирующих элементов бесштанговых','Всех заземлений, 40 кВ ежегодно','Механические — ежегодно','Никаких, даже изолирующих частей'],a:0,e:'П. 5.1.3.1–5.1.3.3, 5.1.3.2: механические не проводят.'},
+{t:'s',n:6,q:'Какое минимальное сечение медных проводов заземлений для снятия остаточного заряда при испытаниях?',o:['4 мм²','10 мм²','16 мм²','25 мм²'],a:0,e:'П. 5.1.2.24. Для заземления троса, передвижных установок и грузоподъёмных машин — 10 мм².'},
+{t:'s',n:6,q:'Какое максимальное усилие установки и снятия допускается у заземлений с гравитационными или пружинными зажимами?',o:['Не свыше 100 Н (расцепляющая сила не менее 50 Н)','Не свыше 160 Н','Не свыше 50 Н','Не свыше 1000 Н'],a:0,e:'П. 5.1.2.22. 160 Н — предельное усилие на руку для штанг (п. 2.1.2.15).'},
+{t:'x',n:7,q:'Сопоставьте средство и периодичность электрических испытаний (Приложение 10).',l:['Штанги изолирующие оперативные','Клещи электроизмерительные','Указатели напряжения','Перчатки диэлектрические','Боты диэлектрические','Инструмент с однослойной изоляцией'],r:['24 месяца','12 месяцев','6 месяцев','36 месяцев'],a:[0,0,1,2,3,1],e:'Штанги и клещи — 24 мес., указатели и инструмент — 12 мес., перчатки — 6 мес., боты — 36 мес.'},
+{t:'s',n:7,q:'Каков минимальный срок службы переносных заземлений по Приложению 3?',o:['8 лет','5 лет','15 лет','2 года'],a:0,e:'Гарантийный срок — 24 месяца.'},
+{t:'s',n:7,q:'Каков минимальный срок службы штанг изолирующих по Приложению 3?',o:['15 лет','8 лет','5 лет','10 лет'],a:0,e:'Гарантийный срок — 18 месяцев.'},
+{t:'s',n:7,q:'Каков минимальный срок службы диэлектрических перчаток по Приложению 3?',o:['2 года','5 лет','8 лет','12 месяцев'],a:0,e:'Срок хранения 12 месяцев, гарантийный срок 12 месяцев, срок службы 2 года.'}
+];
+initQuiz([[1,'Общие правила, учёт, штамп'],[2,'Штанги изолирующие'],[3,'Клещи и указатели напряжения'],[4,'Ручной изолирующий инструмент'],[5,'Перчатки, боты, ковры'],[6,'Переносные заземления'],[7,'Нормы и сроки']]);
+
+</script>
+<style>
+details[open]>summary{position:sticky;top:0;z-index:4;background:var(--card,var(--surface,#fff))}
+.closeb{display:block;margin:12px 0 0 auto;border:1px solid var(--line,#ccc);background:var(--chip,var(--surface2,#eee));color:var(--fg,var(--ink,#111));border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#floatClose{position:fixed;right:14px;bottom:14px;z-index:50;border:0;border-radius:999px;padding:12px 18px;background:#1a5fb4;color:#fff;font:600 15px/1 system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+#floatClose[hidden]{display:none}
+</style>
+<div id="pageVersion" style="text-align:center;font:12px system-ui,sans-serif;color:#888;padding:18px 0 70px">Версия страницы: 10.11.2026, со сворачиванием</div>
+<button id="floatClose" type="button" hidden>▲ Свернуть открытое</button>
+<script>
+(function(){
+ var fb=document.getElementById('floatClose');
+ function opened(){return [].slice.call(document.querySelectorAll('details[open]'))}
+ function upd(){fb.hidden=!opened().length}
+ document.querySelectorAll('details').forEach(function(d){
+  if(!d.querySelector(':scope>.closeb,:scope>.in>.closeb')){var b=document.createElement('button');b.type='button';b.className='closeb';b.textContent='▲ Свернуть';d.appendChild(b)}
+  d.addEventListener('toggle',upd)});
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.closeb');if(!b)return;var d=b.closest('details');if(d){d.open=false;d.scrollIntoView({block:'nearest'});upd()}});
+ fb.addEventListener('click',function(){var h=window.innerHeight,list=opened(),vis=list.filter(function(d){var r=d.getBoundingClientRect();return r.bottom>0&&r.top<h});
+  if(!vis.length)vis=list.slice(-1);
+  vis.forEach(function(d){d.open=false});
+  if(vis[0])vis[0].scrollIntoView({block:'nearest'});upd()});
+ upd();
+})();
+</script>
+</body>
+</html>
