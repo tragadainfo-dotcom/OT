@@ -5,8 +5,8 @@
 <meta name="theme-color" content="#d9480f"><meta name="description" content="Тренажёр запоминания вопросов по охране труда, пожарной безопасности и эксплуатации электроустановок.">
 <title>Тренажёр — Охрана труда</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="trainer.css?v=2"><link rel="stylesheet" href="../site-nav.css?v=1">
-<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=2" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=2" defer></script>
+<link rel="stylesheet" href="trainer.css?v=3"><link rel="stylesheet" href="../site-nav.css?v=1">
+<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=3" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=3" defer></script>
 </head>
 <body>
 <main>
@@ -28,8 +28,8 @@
 </section>
 <section id="study" hidden aria-label="Темы изучения">
  <div class="section-heading"><h2>Изучение по темам и НТД</h2><button class="home-button">← К режимам</button></div>
- <p class="muted">Выберите тему или нормативный документ из вопросов. В занятии будут только вопросы выбранной группы.</p>
- <div id="study-groups"></div><button id="study-all">Изучать весь банк</button>
+ <p class="muted">Выберите тему или нормативный документ из вопросов. В занятии будут только новые и ошибочные вопросы выбранной группы. Верно отвеченные не повторяются до нажатия «Изучить заново».</p>
+ <div id="study-groups"></div><button id="study-all">Изучать весь банк</button> <button id="study-all-restart">Изучить весь банк заново</button>
 </section>
 <section id="practice" hidden aria-label="Тренировка">
  <div class="practice-top"><button id="exit">← Завершить</button><span id="mode-name" class="tag"></span><span id="position"></span></div>
@@ -43,7 +43,7 @@
  <div class="question-tools"><button id="previous">← Исправить последний ответ</button><button id="hard" aria-pressed="false">☆ Сложный</button></div>
  <a id="source" class="source" target="_blank" rel="noopener">Сверить с PDF →</a>
 </section>
-<section id="finished" class="panel" hidden><span class="eyebrow">ЕЩЁ ОДИН ШАГ К УВЕРЕННОСТИ</span><h2>Занятие завершено</h2><p id="session-result"></p><p class="muted">Для устойчивого запоминания возвращайтесь после перерыва.</p><button id="again" class="primary">Продолжить подготовку</button><button id="to-home">К режимам</button></section>
+<section id="finished" class="panel" hidden><span class="eyebrow">ЕЩЁ ОДИН ШАГ К УВЕРЕННОСТИ</span><h2>Занятие завершено</h2><p id="session-result"></p><p class="muted">Для устойчивого запоминания возвращайтесь после перерыва.</p><button id="again" class="primary">Продолжить подготовку</button><button id="study-restart" hidden>Изучить заново</button><button id="to-home">К режимам</button></section>
 <section id="stats" hidden><div class="section-heading"><h2>Ваш прогресс</h2><button class="home-button">← К режимам</button></div><dl id="metrics" class="metrics"></dl><div class="panel"><h3>Резервная копия</h3><p class="muted">Экспортируйте прогресс перед сменой устройства или очисткой браузера. Импорт заменяет текущие результаты только после подтверждения.</p><div class="toolbar"><button id="export">Скачать прогресс</button><label class="button" for="import">Загрузить копию</label><input id="import" type="file" accept="application/json,.json" hidden></div><button id="reset" class="danger">Сбросить результаты…</button></div></section>
 <section id="settings" hidden><div class="section-heading"><h2>Настройки</h2><button class="home-button">← К режимам</button></div><form id="settings-form" class="panel settings">
 <label>Порядок вопросов<select name="questionOrder"><option value="random">Случайный</option><option value="original">Как в PDF</option></select></label>

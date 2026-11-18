@@ -71,3 +71,23 @@ test('study topics and explicit NTD groups cover the bank exactly once',()=>{
  }
  assert.equal(E.documentGroup({text:'Вопрос без ссылки'}).id,'unspecified');
 });
+test('study excludes 18 correct answers from the next batch of 20, retains errors and unseen',()=>{
+ const s=E.fresh(),scope=bank.slice(0,20),a={mode:'study',day:0,order:scope.map(q=>q.id),seen:[]};
+ for(let i=0;i<20;i++)E.record(s,scope[i],i<18?scope[i].correct:[],1000,'batch1',100000+i,'study');
+ assert.equal(scope.filter(q=>E.studyPassed(s.questions[q.id])).length,18);
+ assert.equal(E.pick(bank,s,a),scope[18].id);a.seen.push(scope[18].id);
+ assert.equal(E.pick(bank,s,a),scope[19].id);a.seen.push(scope[19].id);assert.equal(E.pick(bank,s,a),null);
+ E.record(s,scope[18],scope[18].correct,1000,'batch2',200000,'study');a.seen=[];
+ assert.equal(E.pick(bank,s,a),scope[19].id);
+ E.record(s,scope[0],[],1000,'other',300000,'reinforce');assert(E.studyPassed(s.questions[scope[0].id]));
+ const before=structuredClone(s.questions[scope[0].id]);E.resetStudy(s,[scope[0].id]);
+ assert.equal(E.studyPassed(s.questions[scope[0].id]),false);assert.equal(s.questions[scope[0].id].correct,before.correct);assert.equal(s.questions[scope[0].id].errors,before.errors);
+ assert(E.studyPassed(s.questions[scope[1].id]));assert.equal(E.pick(bank,s,a),scope[0].id);
+ const restored=E.validateProgress(JSON.parse(JSON.stringify(s)));assert.equal(restored.questions[scope[0].id].studyPassed,false);
+});
+test('existing correct answers migrate without resetting statistics; other modes do not pass new study questions',()=>{
+ const s=E.fresh();s.questions[q.id]={...E.empty(),shows:1,correct:1,streak:1};delete s.questions[q.id].studyPassed;
+ assert(E.studyPassed(s.questions[q.id]));const imported=E.validateProgress(JSON.parse(JSON.stringify(s)));assert(imported.questions[q.id].studyPassed);
+ const before=structuredClone(s.questions[q.id]);E.record(s,q,[],1000,'a',100000,'study');s.questions[q.id]=before;assert(E.studyPassed(s.questions[q.id]));
+ const other=E.fresh();E.record(other,q,q.correct,1000,'a',100000,'reinforce');assert(!E.studyPassed(other.questions[q.id]));
+});

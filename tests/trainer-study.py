@@ -31,7 +31,8 @@ with sync_playwright() as p:
   expect(page.locator('#feedback')).to_contain_text('Верно')
   page.locator('#next').click()
  expect(page.locator('#finished')).to_be_visible()
- page.locator('#again').click();expect(page.locator('#practice')).to_be_visible()
+ expect(page.locator('#again')).to_be_hidden()
+ page.locator('#study-restart').click();expect(page.locator('#practice')).to_be_visible()
  assert page.evaluate('TrainerStorage.load().then(s=>s.active.order.length)')==11
  assert page.evaluate('TrainerStorage.load().then(s=>Object.values(s.questions).reduce((n,q)=>n+q.shows,0))')==11
  assert not errors,errors

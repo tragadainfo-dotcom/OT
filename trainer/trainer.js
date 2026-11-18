@@ -29,10 +29,13 @@ function showStudy(){
  function groupButton(label,ids,theme=false){
   const b=document.createElement('button');b.className=theme?'study-theme':'study-document';b.type='button';
   const name=document.createElement('b');name.textContent=theme?'Вся тема':label;
-  const note=document.createElement('span');const done=ids.filter(id=>state.questions[id]?.shows).length;
+  const note=document.createElement('span');const done=ids.filter(id=>E.studyPassed(state.questions[id])).length;
   const hard=ids.filter(id=>E.level(state.questions[id])==='hard').length;
-  note.textContent=`Пройдено ${done} из ${ids.length}`+(hard?` · Сложных ${hard}`:'');
-  b.append(name,note);b.onclick=()=>start('study',0,ids,label);return b;
+  note.textContent=`Верно ${done} из ${ids.length} · Осталось ${ids.length-done}`;
+  b.append(name,note);b.onclick=()=>start('study',0,ids,label);
+  const wrapper=document.createElement('div');wrapper.className='study-group';wrapper.append(b);
+  if(done){const reset=document.createElement('button');reset.className='study-group-restart';reset.textContent='Изучить заново';reset.onclick=()=>start('study',0,ids,label,true);wrapper.append(reset);}
+  return wrapper;
  }
  for(const topic of E.studyGroups(bank)){
   const panel=document.createElement('section');panel.className='panel study-topic';
@@ -43,26 +46,30 @@ function showStudy(){
   panel.append(list);$('#study-groups').append(panel);
  }
 }
-async function start(mode,day=0,filterIds=null,studyLabel=""){
+async function start(mode,day=0,filterIds=null,studyLabel="",restart=false){
  if(busy)return;
- if(state.active&&!confirm('Начать новое занятие? Все ответы сохранятся, но текущая очередь будет заменена.'))return;
+ if(restart&&!confirm('Изучить выбранную группу заново? Верно отвеченные вопросы снова появятся в изучении. Общая статистика и другие режимы сохранятся.'))return;
+ if(!restart&&state.active&&!confirm('Начать новое занятие? Все ответы сохранятся, но текущая очередь будет заменена.'))return;
  busy=true;const backup=structuredClone(state);say('');lastMode=mode;lastDay=day;
  let order=filterIds?filterIds.filter(id=>byId.has(id)):bank.map(q=>q.id);if(state.settings.questionOrder==='random')order=E.shuffle(order);
- state.active={id:crypto.randomUUID(),mode,day,order,studyLabel,seen:[],history:[],current:null};
+ if(restart)E.resetStudy(state,order);
+ const limit=Math.min(state.settings.sessionSize,mode==='study'?order.filter(id=>!E.studyPassed(state.questions[id])).length:order.length);
+ state.active={id:crypto.randomUUID(),mode,day,order,studyLabel,limit,seen:[],history:[],current:null};
  const saved=await persist();if(!saved)state=backup;busy=false;if(saved)await advance();
 }
+function sessionLimit(a){return a.limit??Math.min(state.settings.sessionSize,a.mode==='study'?a.seen.length+a.order.filter(id=>!a.seen.includes(id)&&!E.studyPassed(state.questions[id])).length:a.order.length);}
 function setCurrent(id){state.questions[id]||=E.empty();state.questions[id].presentations++;const q=byId.get(id);let optionIds=q.options.map(o=>o.id);if(state.settings.answerOrder==='random')optionIds=E.shuffle(optionIds);state.active.current={id,optionIds,shownAt:Date.now(),elapsed:0,selected:[],answered:false,right:false};}
 async function advance(){
  if(busy||!state.active)return;
  busy=true;cancelTimer();const a=state.active;
- if(a.seen.length>=Math.min(state.settings.sessionSize,a.order.length)){busy=false;finish();return;}
+ if(a.seen.length>=sessionLimit(a)){busy=false;finish();return;}
  const id=E.pick(bank,state,a);
  if(!id){busy=false;finish();return;}
  const backup=structuredClone(state);setCurrent(id);if(!await persist())state=backup;busy=false;renderQuestion(true);
 }
 function renderQuestion(focus=false){
  const a=state.active,c=a?.current;if(!c||!byId.has(c.id)){home();return;}
- view('practice');const q=byId.get(c.id),sessionSize=Math.min(state.settings.sessionSize,a.order.length);
+ view('practice');const q=byId.get(c.id),sessionSize=sessionLimit(a);
  $('#mode-name').textContent=a.day?`День ${a.day} · ${dayNames[a.day-1]}`:labels[a.mode];
  $('#position').textContent=`${a.seen.length+(c.answered?0:1)} / ${sessionSize}`;
  $('#session-progress').max=sessionSize;$('#session-progress').value=a.seen.length;
@@ -110,7 +117,9 @@ async function answer(){
 }
 function finish(){
  const a=state.active;view('finished');
- $('#session-result').textContent=`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
+ const remaining=a.order.filter(id=>!E.studyPassed(state.questions[id])).length;
+ $('#again').hidden=a.mode==='study'&&!remaining;$('#study-restart').hidden=a.mode!=='study';
+ $('#session-result').textContent=a.mode==='study'?`Ответов в занятии: ${a.seen.length}. ${remaining?'Осталось в группе: '+remaining+'. Верно отвеченные вопросы больше не появятся.':'Все вопросы группы изучены. Они появятся снова только после «Изучить заново». '}`:`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
  // Keep the last answer available for undo via Resume, even after completion.
 }
 async function undo(){
@@ -134,6 +143,8 @@ function exportProgress(){
 async function bind(){
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>b.dataset.mode==='study'?showStudy():start(b.dataset.mode)));
  $('#study-all').onclick=()=>start('study');
+ $('#study-all-restart').onclick=()=>start('study',0,null,'',true);
+ $('#study-restart').onclick=()=>start('study',0,[...state.active.order],state.active.studyLabel||'',true);
  $('#resume').onclick=async()=>{if(!state.active.current)await advance();else{state.active.current.shownAt=Date.now();renderQuestion();}};
  $('#confirm-answer').onclick=answer;$('#next').onclick=advance;$('#previous').onclick=undo;
  $('#hard').onclick=async()=>{if(busy)return;const q=state.active.current.id;state.questions[q]||=E.empty();const s=state.questions[q];s.manual=!s.manual;if(s.manual){s.mastered=false;s.dueStep=state.sequence+state.settings.gap;s.dueAt=Date.now()+5*60000;}await persist();renderQuestion();};
@@ -177,7 +188,7 @@ try{
  if(data.schemaVersion!==1||!bank.length)throw Error('Неподдерживаемая база вопросов');
  if(saved&&saved.schemaVersion!==1)throw Error('Эта версия сайта не поддерживает сохранённый прогресс. Данные оставлены без изменений.');
  state=saved||E.fresh();state.settings={...E.defaults,...state.settings};state.bankVersion=data.version;
- if(state.active){state.active.order=state.active.order.filter(id=>byId.has(id));if(state.active.current&&!byId.has(state.active.current.id))state.active.current=null;}
+ if(state.active){state.active.order=state.active.order.filter(id=>byId.has(id));if(state.active.current&&(!byId.has(state.active.current.id)||(state.active.mode==='study'&&!state.active.current.answered&&E.studyPassed(state.questions[state.active.current.id]))))state.active.current=null;}
  await bind();$('#loading').hidden=true;$('#app').hidden=false;home();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:'./'}).then(async registration=>{
   await navigator.serviceWorker.ready;
