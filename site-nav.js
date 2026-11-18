@@ -19,7 +19,8 @@ var sections=[
 ['12-pozharnaya-bezopasnost','Пожарная безопасность','пожар огнетушитель тушение'],
 ['13-elektrozashchitnye-sredstva','Электрозащитные средства','перчатки штанги боты указатель испытания'],
 ['14-trebovaniya-v-gruppa','Требования к V группе по электробезопасности','пятая группа 5 стаж знания'],
-['15-pervaya-pomoshch','Оказание первой помощи','слр реанимация обморожение перегрев электротравма вынос']
+['15-pervaya-pomoshch','Оказание первой помощи','слр реанимация обморожение перегрев электротравма вынос'],
+['trainer','Тренажёр','экзамен подготовка вопросы запоминание повторение ошибки автоматизм']
 ];
 function icon(name){var paths={menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'};return '<svg viewBox="0 0 24 24" aria-hidden="true">'+paths[name]+'</svg>';}
 var root=document.createElement('div');root.id='ot-site-nav';
