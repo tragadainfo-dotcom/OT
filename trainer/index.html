@@ -5,8 +5,8 @@
 <meta name="theme-color" content="#d9480f"><meta name="description" content="Тренажёр запоминания вопросов по охране труда, пожарной безопасности и эксплуатации электроустановок.">
 <title>Тренажёр — Охрана труда</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="trainer.css"><link rel="stylesheet" href="../site-nav.css?v=1">
-<script src="../site-nav.js?v=2" defer></script><script src="engine.js" defer></script><script src="storage.js" defer></script><script src="trainer.js" defer></script>
+<link rel="stylesheet" href="trainer.css?v=2"><link rel="stylesheet" href="../site-nav.css?v=1">
+<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=2" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=2" defer></script>
 </head>
 <body>
 <main>
@@ -18,13 +18,18 @@
  <div class="overview"><div><strong id="known">0</strong><span>из <b class="bank-total">675</b> освоено</span></div><progress id="mastery" max="675" value="0" aria-label="Освоено вопросов"></progress><p class="muted" id="overview-note"></p></div>
  <button id="resume" class="primary wide" hidden>Продолжить занятие</button>
  <div class="mode-grid">
-  <button class="mode-card" data-mode="study"><span class="mode-number">01</span><b>Изучение</b><span>Пройдите банк и найдите пробелы</span><span class="arrow" aria-hidden="true">→</span></button>
+  <button class="mode-card" data-mode="study"><span class="mode-number">01</span><b>Изучение</b><span>Выберите тему и нормативный документ</span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="reinforce"><span class="mode-number">02</span><b>Закрепление</b><span>Ошибки возвращаются через несколько вопросов</span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="automatic"><span class="mode-number">03</span><b>Автоматизм</b><span>Точное узнавание без таймера и спешки</span><span class="arrow" aria-hidden="true">→</span></button>
  </div>
  <section class="panel plan"><div class="section-heading"><h2>Подготовка за 4 дня</h2><span class="tag">В своём темпе</span></div><p class="muted">Четыре этапа, а не даты. Каждый доступен в любое время.</p><div id="days" class="days"></div><p id="plan-remaining" class="muted"></p></section>
  <div class="toolbar"><button id="stats-open">Статистика</button><button id="settings-open">Настройки</button></div>
  <p class="footnote">Только подтверждённые вопросы из PDF. <a href="import-report.html">Отчёт импорта</a>. Прогресс хранится в этом браузере — сохраняйте резервную копию.</p>
+</section>
+<section id="study" hidden aria-label="Темы изучения">
+ <div class="section-heading"><h2>Изучение по темам и НТД</h2><button class="home-button">← К режимам</button></div>
+ <p class="muted">Выберите тему или нормативный документ из вопросов. В занятии будут только вопросы выбранной группы.</p>
+ <div id="study-groups"></div><button id="study-all">Изучать весь банк</button>
 </section>
 <section id="practice" hidden aria-label="Тренировка">
  <div class="practice-top"><button id="exit">← Завершить</button><span id="mode-name" class="tag"></span><span id="position"></span></div>

@@ -35,7 +35,7 @@ with sync_playwright() as p:
     page=context.new_page();errors=[]
     page.on('pageerror',lambda error:errors.append(str(error)))
     page.goto(URL);ready(page);configure(page)
-    page.locator('[data-mode=study]').click()
+    page.locator('[data-mode=study]').click();page.locator('#study-all').click()
     q=BANK[0];expect(page.locator('#question')).to_have_text(q['text'])
     wrong=next(o['id'] for o in q['options'] if o['id'] not in q['correct'])
     page.locator(f'[data-answer-id="{wrong}"]').click()
@@ -74,7 +74,7 @@ with sync_playwright() as p:
     install_fixture(page,multi_index)
     # Shuffle options independently and verify evaluation by answer IDs.
     page.locator('#settings-open').click();page.locator('[name=answerOrder]').select_option('random');page.locator('#settings-form button').click()
-    page.locator('[data-mode=study]').click()
+    page.locator('[data-mode=study]').click();page.locator('#study-all').click()
     multi=BANK[multi_index];expect(page.locator('#question')).to_have_text(multi['text'])
     page.locator(f'[data-answer-id="{multi["correct"][0]}"]').click()
     expect(page.locator('#feedback')).to_have_text('')
@@ -107,7 +107,7 @@ with sync_playwright() as p:
     # Auto transition is enabled only with configured pauses; mistakes default to manual.
     install_fixture(page)
     page.locator('#settings-open').click();page.locator('[name=successPause]').fill('300');page.locator('#settings-form button').click()
-    page.locator('[data-mode=study]').click()
+    page.locator('[data-mode=study]').click();page.locator('#study-all').click()
     page.locator(f'[data-answer-id="{BANK[0]["correct"][0]}"]').click()
     expect(page.locator('#question')).not_to_have_text(BANK[0]['text'])
     print('PASS automatic next question after a correct answer')
@@ -120,7 +120,7 @@ with sync_playwright() as p:
     page.locator('#exit').click()
     page.evaluate('navigator.serviceWorker.ready.then(()=>true)')
     page.wait_for_function('navigator.serviceWorker.controller !== null')
-    page.wait_for_function("caches.open('ot-trainer-v1').then(c=>c.match('../site-nav.js?v=2')).then(Boolean)")
+    page.wait_for_function("caches.open('ot-trainer-v2').then(c=>c.match('../site-nav.js?v=2')).then(Boolean)")
     context.set_offline(True);page.reload();ready(page)
     page.locator('#resume').click();expect(page.locator('#options button').first).to_be_visible()
     assert page.locator('.ot-bar').is_visible()
@@ -147,7 +147,7 @@ with sync_playwright() as p:
     context=browser.new_context(service_workers='block')
     page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(URL);ready(page);install_fixture(page)
-    page.locator('[data-mode=study]').click()
+    page.locator('[data-mode=study]').click();page.locator('#study-all').click()
     expect(page.locator('#question')).to_have_text(BANK[0]['text'])
     page.evaluate("()=>{window.originalSave=TrainerStorage.save;TrainerStorage.save=async()=>{throw Error('Test storage failure')}}")
     page.locator(f'[data-answer-id="{BANK[0]["correct"][0]}"]').click()
@@ -165,7 +165,7 @@ with sync_playwright() as p:
     page.reload();ready(page)
     assert read_state(page)['questions'][BANK[0]['id']]==saved_question
     page.on('dialog',lambda d:d.accept())
-    page.locator('[data-mode=study]').click()
+    page.locator('[data-mode=study]').click();page.locator('#study-all').click()
     for i in range(5):
         page.wait_for_function('TrainerStorage.load().then(s=>!!s.active?.current&&!s.active.current.answered)')
         active=read_state(page)['active'];current=next(q for q in BANK if q['id']==active['current']['id'])

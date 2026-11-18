@@ -24,30 +24,49 @@ function refreshHome(){
  $('#plan-remaining').textContent=`Осталось изучить: ${s.total-s.seen}. Требуют закрепления: ${s.seen-s.mastered}. Этап выполнен после охвата всего банка; освоение оценивается отдельно.`;
 }
 function home(){view('home');refreshHome();}
-async function start(mode,day=0){
+function showStudy(){
+ view('study');$('#study-groups').replaceChildren();
+ function groupButton(label,ids,theme=false){
+  const b=document.createElement('button');b.className=theme?'study-theme':'study-document';b.type='button';
+  const name=document.createElement('b');name.textContent=theme?'Вся тема':label;
+  const note=document.createElement('span');const done=ids.filter(id=>state.questions[id]?.shows).length;
+  const hard=ids.filter(id=>E.level(state.questions[id])==='hard').length;
+  note.textContent=`Пройдено ${done} из ${ids.length}`+(hard?` · Сложных ${hard}`:'');
+  b.append(name,note);b.onclick=()=>start('study',0,ids,label);return b;
+ }
+ for(const topic of E.studyGroups(bank)){
+  const panel=document.createElement('section');panel.className='panel study-topic';
+  const heading=document.createElement('h3');heading.textContent=topic.label;panel.append(heading);
+  panel.append(groupButton(topic.label,topic.ids,true));
+  const list=document.createElement('div');list.className='study-documents';
+  for(const doc of topic.documents)list.append(groupButton(doc.label,doc.ids));
+  panel.append(list);$('#study-groups').append(panel);
+ }
+}
+async function start(mode,day=0,filterIds=null,studyLabel=""){
  if(busy)return;
  if(state.active&&!confirm('Начать новое занятие? Все ответы сохранятся, но текущая очередь будет заменена.'))return;
  busy=true;const backup=structuredClone(state);say('');lastMode=mode;lastDay=day;
- let order=bank.map(q=>q.id);if(state.settings.questionOrder==='random')order=E.shuffle(order);
- state.active={id:crypto.randomUUID(),mode,day,order,seen:[],history:[],current:null};
+ let order=filterIds?filterIds.filter(id=>byId.has(id)):bank.map(q=>q.id);if(state.settings.questionOrder==='random')order=E.shuffle(order);
+ state.active={id:crypto.randomUUID(),mode,day,order,studyLabel,seen:[],history:[],current:null};
  const saved=await persist();if(!saved)state=backup;busy=false;if(saved)await advance();
 }
 function setCurrent(id){state.questions[id]||=E.empty();state.questions[id].presentations++;const q=byId.get(id);let optionIds=q.options.map(o=>o.id);if(state.settings.answerOrder==='random')optionIds=E.shuffle(optionIds);state.active.current={id,optionIds,shownAt:Date.now(),elapsed:0,selected:[],answered:false,right:false};}
 async function advance(){
  if(busy||!state.active)return;
  busy=true;cancelTimer();const a=state.active;
- if(a.seen.length>=state.settings.sessionSize){busy=false;finish();return;}
+ if(a.seen.length>=Math.min(state.settings.sessionSize,a.order.length)){busy=false;finish();return;}
  const id=E.pick(bank,state,a);
  if(!id){busy=false;finish();return;}
  const backup=structuredClone(state);setCurrent(id);if(!await persist())state=backup;busy=false;renderQuestion(true);
 }
 function renderQuestion(focus=false){
  const a=state.active,c=a?.current;if(!c||!byId.has(c.id)){home();return;}
- view('practice');const q=byId.get(c.id);
+ view('practice');const q=byId.get(c.id),sessionSize=Math.min(state.settings.sessionSize,a.order.length);
  $('#mode-name').textContent=a.day?`День ${a.day} · ${dayNames[a.day-1]}`:labels[a.mode];
- $('#position').textContent=`${a.seen.length+(c.answered?0:1)} / ${state.settings.sessionSize}`;
- $('#session-progress').max=state.settings.sessionSize;$('#session-progress').value=a.seen.length;
- $('#topic').textContent=q.topic;$('#question-level').textContent=levels[E.level(state.questions[q.id])];
+ $('#position').textContent=`${a.seen.length+(c.answered?0:1)} / ${sessionSize}`;
+ $('#session-progress').max=sessionSize;$('#session-progress').value=a.seen.length;
+ $('#topic').textContent=a.studyLabel||q.topic;$('#question-level').textContent=levels[E.level(state.questions[q.id])];
  $('#question').textContent=q.text;
  $('#multi-note').textContent=q.correct.length>1?`Выберите несколько вариантов (${q.correct.length}), затем подтвердите.`:'Выберите один ответ.';
  $('#options').replaceChildren();
@@ -113,12 +132,13 @@ function exportProgress(){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ot-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function bind(){
- document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>start(b.dataset.mode)));
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>b.dataset.mode==='study'?showStudy():start(b.dataset.mode)));
+ $('#study-all').onclick=()=>start('study');
  $('#resume').onclick=async()=>{if(!state.active.current)await advance();else{state.active.current.shownAt=Date.now();renderQuestion();}};
  $('#confirm-answer').onclick=answer;$('#next').onclick=advance;$('#previous').onclick=undo;
  $('#hard').onclick=async()=>{if(busy)return;const q=state.active.current.id;state.questions[q]||=E.empty();const s=state.questions[q];s.manual=!s.manual;if(s.manual){s.mastered=false;s.dueStep=state.sequence+state.settings.gap;s.dueAt=Date.now()+5*60000;}await persist();renderQuestion();};
  $('#exit').onclick=async()=>{if(busy)return;cancelTimer();const c=state.active?.current;if(c&&!c.answered){c.elapsed+=Math.max(0,Date.now()-c.shownAt);c.shownAt=Date.now();}await persist();home();};
- $('#again').onclick=async()=>{lastMode=state.active.mode;lastDay=state.active.day;state.active=null;await start(lastMode,lastDay);};$('#to-home').onclick=home;
+ $('#again').onclick=async()=>{lastMode=state.active.mode;lastDay=state.active.day;const ids=[...state.active.order],label=state.active.studyLabel||'';state.active=null;await start(lastMode,lastDay,ids,label);};$('#to-home').onclick=home;
  $('#stats-open').onclick=statistics;document.querySelectorAll('.home-button').forEach(b=>b.onclick=home);
  $('#settings-open').onclick=()=>{view('settings');for(const [name,value] of Object.entries(state.settings))if($('#settings-form').elements[name])$('#settings-form').elements[name].value=value;};
  $('#settings-form').onsubmit=async event=>{

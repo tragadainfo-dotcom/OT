@@ -84,3 +84,23 @@ function validateProgress(data){
 const api={defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
 if(typeof module==='object'&&module.exports)module.exports=api;else root.TrainerEngine=api;
 })(typeof globalThis==='object'?globalThis:this);
+
+/* Classification uses only an explicit NTD citation in the source wording. */
+(function(){
+const E=typeof module==='object'&&module.exports?module.exports:globalThis.TrainerEngine;
+const documents=[
+ ['pue','ПУЭ — Правила устройства электроустановок',/\(ПУЭ[,\s]/i],
+ ['personnel','Работа с персоналом — приказ Минэнерго № 796',/Правила работы с персоналом/i],
+ ['emergency','Противоаварийные тренировки — приказ Минэнерго № 27',/Правила проведения противоаварийных тренировок/i],
+ ['fire','Противопожарный режим — ПП РФ № 1479',/Правила противопожарного режима/i],
+ ['fire-training','Противопожарные инструктажи — приказ МЧС № 806',/18\.11\.2021\s*(?:г\.?\s*)?[№N]\s*806/i],
+ ['electrical-safety','Охрана труда в электроустановках — приказ № 903н',/Правила по охране труда при эксплуатации электроустановок/i],
+ ['height','Работа на высоте — СТО 34.01-30-001.16-2021',/СТО\s*34\.01-30-001\.16-2021/i],
+ ['protective','Применение электрозащитных средств — СТО «Россети»',/Стандарт организации\s*[«"]Порядок применения электрозащитных средств/i],
+ ['training','Обучение по охране труда — ПП РФ № 2464',/24\.12\.2021\s*(?:г\.?\s*)?[№N]\s*2464/i],
+ ['labour','Трудовой кодекс РФ',/\(Трудовой кодекс РФ/i],
+ ['first-aid','Первая помощь — ИОПП',/\(ИОПП[,\s]/i]
+];
+E.documentGroup=function(q){const matches=documents.filter(row=>row[2].test(q.text));return matches.length===1?{id:matches[0][0],label:matches[0][1]}:{id:'unspecified',label:matches.length?'Несколько НТД — сверить формулировку':'НТД в вопросе не указан'};};
+E.studyGroups=function(bank){const topics=new Map();for(const q of bank){if(!topics.has(q.topic))topics.set(q.topic,{label:q.topic,ids:[],documents:new Map()});const topic=topics.get(q.topic),doc=E.documentGroup(q);topic.ids.push(q.id);if(!topic.documents.has(doc.id))topic.documents.set(doc.id,{...doc,ids:[]});topic.documents.get(doc.id).ids.push(q.id);}return [...topics.values()].map(t=>({...t,documents:[...t.documents.values()]}));};
+})();

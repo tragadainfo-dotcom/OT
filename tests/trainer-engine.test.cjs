@@ -60,3 +60,14 @@ test('day 3 mixes uncovered questions and lengthens successful intervals',()=>{
  E.record(normal,q,q.correct,1000,'a',100000,'reinforce');E.record(mixed,q,q.correct,1000,'a',100000,'consolidate');
  assert(mixed.questions[q.id].dueStep>normal.questions[q.id].dueStep);
 });
+test('study topics and explicit NTD groups cover the bank exactly once',()=>{
+ const topics=E.studyGroups(bank);assert.deepEqual(topics.map(t=>t.ids.length),[92,133,450]);
+ const all=topics.flatMap(t=>t.documents.flatMap(d=>d.ids));assert.equal(all.length,675);assert.equal(new Set(all).size,675);
+ assert.equal(topics[0].documents.find(d=>d.id==='unspecified').ids.length,11);
+ for(const t of topics)for(const d of t.documents){
+  const session={mode:'study',day:0,order:d.ids,seen:[]},state=E.fresh();
+  while(true){const id=E.pick(bank,state,session);if(!id)break;assert(d.ids.includes(id));session.seen.push(id);}
+  assert.equal(session.seen.length,d.ids.length);
+ }
+ assert.equal(E.documentGroup({text:'Вопрос без ссылки'}).id,'unspecified');
+});
