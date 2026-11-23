@@ -70,7 +70,7 @@ async function start(mode,day=0,filterIds=null,studyLabel="",restart=false){
  const saved=await persist();if(!saved)state=backup;busy=false;if(saved)await advance();
 }
 function sessionLimit(a){const available=E.roundMode(a.mode)?a.seen.length+a.order.filter(id=>!a.seen.includes(id)&&E.roundPending(a.mode,state.questions[id])).length:a.order.length;return Math.min(a.limit??state.settings.sessionSize,available);}
-function setCurrent(id){state.questions[id]||=E.empty();state.questions[id].presentations++;const q=byId.get(id);let optionIds=q.options.map(o=>o.id);if(state.settings.answerOrder==='random')optionIds=E.shuffle(optionIds);state.active.current={id,optionIds,shownAt:Date.now(),elapsed:0,selected:[],answered:false,right:false};}
+function setCurrent(id){state.questions[id]||=E.empty();state.questions[id].presentations++;const q=byId.get(id);let optionIds=q.options.map(o=>o.id);if(state.settings.answerOrder==='random')optionIds=E.shuffledAnswers(optionIds,state.questions[id].lastOptionIds||optionIds);state.questions[id].lastOptionIds=[...optionIds];state.active.current={id,optionIds,shownAt:Date.now(),elapsed:0,selected:[],answered:false,right:false};}
 async function advance(){
  if(busy||!state.active)return;
  busy=true;cancelTimer();const a=state.active;
@@ -203,8 +203,9 @@ try{
  const data=await response.json();bank=data.questions;byId=new Map(bank.map(q=>[q.id,q]));
  if(data.schemaVersion!==1||!bank.length)throw Error('Неподдерживаемая база вопросов');
  if(saved&&saved.schemaVersion!==1)throw Error('Эта версия сайта не поддерживает сохранённый прогресс. Данные оставлены без изменений.');
- state=saved||E.fresh();state.settings={...E.defaults,...state.settings};state.bankVersion=data.version;
+ state=saved||E.fresh();const shuffleUpgraded=E.upgradeAnswerOrder(state);state.bankVersion=data.version;
  if(state.active){state.active.order=state.active.order.filter(id=>byId.has(id));if(state.active.current&&(!byId.has(state.active.current.id)||(E.roundMode(state.active.mode)&&!state.active.current.answered&&!E.roundPending(state.active.mode,state.questions[state.active.current.id]))))state.active.current=null;}
+ if(shuffleUpgraded){const c=state.active?.current;if(c&&!c.answered){c.optionIds=E.shuffledAnswers(c.optionIds,c.optionIds);if(state.questions[c.id])state.questions[c.id].lastOptionIds=[...c.optionIds];}await persist();}
  await bind();$('#loading').hidden=true;$('#app').hidden=false;home();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:'./'}).then(async registration=>{
   await navigator.serviceWorker.ready;

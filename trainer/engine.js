@@ -1,8 +1,8 @@
 /* Pure scheduling and progress rules, shared by the browser and node tests. */
 (function(root){
 'use strict';
-const defaults={questionOrder:'random',answerOrder:'original',gap:7,successGap:18,errorPause:0,successPause:900,sessionSize:20};
-function fresh(){return {schemaVersion:1,questions:{},settings:{...defaults},sequence:0,days:{1:[],2:[],3:[],4:[]},active:null};}
+const defaults={questionOrder:'random',answerOrder:'random',gap:7,successGap:18,errorPause:0,successPause:900,sessionSize:20};
+function fresh(){return {schemaVersion:1,answerShuffleVersion:1,questions:{},settings:{...defaults},sequence:0,days:{1:[],2:[],3:[],4:[]},active:null};}
 function empty(){return {mistakePassed:false,focusPassed:false,mistakeReviews:0,studyErrors:0,studyPassed:false,presentations:0,shows:0,correct:0,errors:0,streak:0,lastAt:0,lastMs:0,totalMs:0,fastStreak:0,manual:false,mastered:false,sessions:[],delayedSuccess:0,dueAt:0,dueStep:0};}
 function studyErrors(s){return s?.studyErrors??s?.errors??0;}
 function studyPassed(s){return typeof s?.studyPassed==='boolean'?s.studyPassed:(s?.correct||0)>0;}
@@ -39,6 +39,8 @@ function record(state,q,selected,elapsed,sessionId,now,mode){
  s.sessions=s.sessions.slice(-16);state.questions[q.id]=s;return right;
 }
 function shuffle(list,random=Math.random){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function upgradeAnswerOrder(state){state.settings={...defaults,...state.settings};if(state.answerShuffleVersion===1)return false;state.settings.answerOrder='random';state.answerShuffleVersion=1;return true;}
+function shuffledAnswers(ids,previous=ids){const result=shuffle(ids);if(result.length>1&&result.every((id,i)=>id===previous?.[i]))[result[0],result[1]]=[result[1],result[0]];return result;}
 function pick(bank,state,session,now=Date.now()){
  const byId=new Map(bank.map(q=>[q.id,q]));
  const ordered=session.order.filter(id=>byId.has(id));
@@ -94,6 +96,7 @@ function validateProgress(data){
   if(value.studyErrors!==undefined&&(!Number.isSafeInteger(value.studyErrors)||value.studyErrors<0||value.studyErrors>s.errors))throw Error('Повреждена история ошибок изучения');s.studyErrors=studyErrors(value);
   if(value.mistakeReviews!==undefined&&(!Number.isSafeInteger(value.mistakeReviews)||value.mistakeReviews<0||value.mistakeReviews>s.shows))throw Error('Повреждён счётчик повторения ошибок');s.mistakeReviews=value.mistakeReviews||0;
   for(const key of ['mistakePassed','focusPassed']){if(value[key]!==undefined&&typeof value[key]!=='boolean')throw Error('Повреждён прогресс проработки');s[key]=value[key]===true;}
+  if(value.lastOptionIds!==undefined){if(!Array.isArray(value.lastOptionIds)||value.lastOptionIds.length>100||value.lastOptionIds.some(id=>typeof id!=='string')||new Set(value.lastOptionIds).size!==value.lastOptionIds.length)throw Error('Повреждён порядок вариантов');s.lastOptionIds=[...value.lastOptionIds];}
   s.manual=value.manual;s.mastered=value.mastered;s.sessions=value.sessions.slice(-16);clean.questions[id]=s;
  }
  const settings=data.settings||{};
@@ -102,9 +105,10 @@ function validateProgress(data){
   if(settings[k]!==undefined){if(!Number.isFinite(settings[k])||settings[k]<min||settings[k]>max)throw Error('Неверная настройка '+k);clean.settings[k]=settings[k];}
  }
  for(let day=1;day<=4;day++){const ids=data.days?.[day]||[];if(!Array.isArray(ids)||ids.some(id=>!/^q-\d+$/.test(id)))throw Error('Повреждены этапы');clean.days[day]=[...new Set(ids)];}
+ clean.answerShuffleVersion=data.answerShuffleVersion===1?1:0;upgradeAnswerOrder(clean);
  return clean;
 }
-const api={roundMode,roundIncluded,roundPassed,roundPending,resetRound,studyErrors,studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
+const api={upgradeAnswerOrder,shuffledAnswers,roundMode,roundIncluded,roundPassed,roundPending,resetRound,studyErrors,studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
 if(typeof module==='object'&&module.exports)module.exports=api;else root.TrainerEngine=api;
 })(typeof globalThis==='object'?globalThis:this);
 

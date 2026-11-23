@@ -6,7 +6,7 @@
 <title>Тренажёр — Охрана труда</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="trainer.css?v=5"><link rel="stylesheet" href="../site-nav.css?v=1">
-<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=5" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=5" defer></script>
+<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=6" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=6" defer></script>
 </head>
 <body>
 <main>
@@ -49,7 +49,7 @@
 <section id="stats" hidden><div class="section-heading"><h2>Ваш прогресс</h2><button class="home-button">← К режимам</button></div><dl id="metrics" class="metrics"></dl><div class="panel"><h3>Резервная копия</h3><p class="muted">Экспортируйте прогресс перед сменой устройства или очисткой браузера. Импорт заменяет текущие результаты только после подтверждения.</p><div class="toolbar"><button id="export">Скачать прогресс</button><label class="button" for="import">Загрузить копию</label><input id="import" type="file" accept="application/json,.json" hidden></div><button id="reset" class="danger">Сбросить результаты…</button></div></section>
 <section id="settings" hidden><div class="section-heading"><h2>Настройки</h2><button class="home-button">← К режимам</button></div><form id="settings-form" class="panel settings">
 <label>Порядок вопросов<select name="questionOrder"><option value="random">Случайный</option><option value="original">Как в PDF</option></select></label>
-<label>Порядок вариантов<select name="answerOrder"><option value="original">Как в PDF</option><option value="random">Перемешивать</option></select></label>
+<label>Порядок вариантов<select name="answerOrder"><option value="random">Перемешивать</option><option value="original">Как в PDF</option></select></label>
 <label>После ошибки — других вопросов<input name="gap" type="number" min="1" max="30" required></label>
 <label>После верного ответа — начальный интервал<input name="successGap" type="number" min="2" max="250" required></label>
 <label>Пауза после ошибки, секунд<input name="errorPause" type="number" min="0" max="30" required><small>0 — переход только вручную</small></label>

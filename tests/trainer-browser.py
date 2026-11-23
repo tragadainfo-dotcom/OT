@@ -120,7 +120,7 @@ with sync_playwright() as p:
     page.locator('#exit').click()
     page.evaluate('navigator.serviceWorker.ready.then(()=>true)')
     page.wait_for_function('navigator.serviceWorker.controller !== null')
-    page.wait_for_function("caches.open('ot-trainer-v5').then(c=>c.match('../site-nav.js?v=2')).then(Boolean)")
+    page.wait_for_function("caches.open('ot-trainer-v6').then(c=>c.match('../site-nav.js?v=2')).then(Boolean)")
     context.set_offline(True);page.reload();ready(page)
     page.locator('#resume').click();expect(page.locator('#options button').first).to_be_visible()
     assert page.locator('.ot-bar').is_visible()

@@ -154,3 +154,13 @@ test('18 correct mistake answers stay out while 2 failed questions remain across
  E.resetRound(saved,[scope[0].id],'mistakes');assert.equal(scope.filter(q=>E.roundPending('mistakes',saved.questions[q.id])).length,3);
  assert.equal(saved.questions[scope[0].id].errors,s.questions[scope[0].id].errors);
 });
+test('answers shuffle by default, upgrade existing settings once, and differ on repeated displays',()=>{
+ assert.equal(E.fresh().settings.answerOrder,'random');
+ const legacy=E.fresh();delete legacy.answerShuffleVersion;legacy.settings.answerOrder='original';
+ assert(E.upgradeAnswerOrder(legacy));assert.equal(legacy.settings.answerOrder,'random');
+ legacy.settings.answerOrder='original';assert(!E.upgradeAnswerOrder(legacy));assert.equal(legacy.settings.answerOrder,'original');
+ let previous=['1','2','3'];for(let i=0;i<30;i++){const next=E.shuffledAnswers(['1','2','3'],previous);assert.notDeepEqual(next,previous);assert.deepEqual([...next].sort(),['1','2','3']);previous=next;}
+ assert.deepEqual(E.shuffledAnswers(['1']),['1']);
+ const backup=E.fresh();delete backup.answerShuffleVersion;backup.settings.answerOrder='original';
+ assert.equal(E.validateProgress(backup).settings.answerOrder,'random');
+});
