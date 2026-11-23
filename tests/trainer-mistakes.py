@@ -22,7 +22,7 @@ with sync_playwright() as p:
   TrainerEngine.record(s,others[3],[],1000,'legacy',100004,'study');delete s.questions[others[3].id].studyErrors;
   ids.push(others[3].id);await TrainerStorage.save(s);return {ids,excluded:others.slice(0,3).map(q=>q.id)};
  }''')
- page.reload();expect(page.locator('#mistakes-count')).to_have_text('Вопросов с ошибками: 4')
+ page.reload();expect(page.locator('#mistakes-count')).to_have_text('Осталось: 4 из 4')
  page.locator('[data-mode=mistakes]').click()
  expect(page.locator('#catalogue-title')).to_have_text('Работа над ошибками')
  expect(page.locator('.study-topic')).to_have_count(3)
@@ -45,11 +45,11 @@ with sync_playwright() as p:
   for aid in q['correct']:page.locator(f'[data-answer-id="{aid}"]').click()
   if len(q['correct'])>1:page.locator('#confirm-answer').click()
   expect(page.locator('#feedback')).to_contain_text('Верно');page.locator('#next').click()
- expect(page.locator('#finished')).to_be_visible();expect(page.locator('#again')).to_have_text('Повторить ошибки ещё раз')
- page.locator('#again').click();expect(page.locator('#position')).to_have_text('1 / 4')
+ expect(page.locator('#finished')).to_be_visible();expect(page.locator('#again')).to_be_hidden();expect(page.locator('#study-restart')).to_be_visible()
+ page.locator('#study-restart').click();expect(page.locator('#position')).to_have_text('1 / 4')
  page.reload();page.locator('#resume').click();expect(page.locator('#mode-name')).to_have_text('Работа над ошибками')
  assert set(page.evaluate('TrainerStorage.load().then(s=>s.active.order)'))==set(fixture['ids'])
- page.locator('#exit').click();expect(page.locator('#mistakes-count')).to_have_text('Вопросов с ошибками: 4')
+ page.locator('#exit').click();expect(page.locator('#mistakes-count')).to_have_text('Осталось: 4 из 4')
  page.locator('#stats-open').click()
  with page.expect_download() as download:page.locator('#export').click()
  import json

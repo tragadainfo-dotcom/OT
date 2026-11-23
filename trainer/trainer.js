@@ -2,7 +2,7 @@
 'use strict';
 const E=TrainerEngine,S=TrainerStorage,$=s=>document.querySelector(s);
 let state,bank,byId,timer,busy=false,lastMode='study',lastDay=0,pausedAt=0,catalogueMode='study';
-const labels={mistakes:'Работа над ошибками',study:'Изучение',reinforce:'Закрепление',automatic:'Автоматизм'};
+const labels={focus:'Дополнительная проработка',mistakes:'Работа над ошибками',study:'Изучение',reinforce:'Закрепление',automatic:'Автоматизм'};
 const levels={new:'Новый',learning:'Изучается',hard:'Сложный',mastered:'Освоен'};
 const dayNames=['Знакомство','Запоминание','Закрепление','Автоматизм'];
 function say(message){$('#notice').textContent=message;}
@@ -13,7 +13,8 @@ function refreshHome(){
  const s=E.summary(bank,state);$('.bank-total').textContent=s.total;$('#known').textContent=s.mastered;$('#mastery').max=s.total;$('#mastery').value=s.mastered;
  $('#overview-note').textContent=`Изучено ${s.seen} · Сложных ${s.hard} · Пора повторить ${s.due}`;
  $('#resume').hidden=!state.active;
- $('#mistakes-count').textContent='Вопросов с ошибками: '+bank.filter(q=>E.studyErrors(state.questions[q.id])>0).length;
+ $('#mistakes-count').textContent='Осталось: '+bank.filter(q=>E.roundPending('mistakes',state.questions[q.id])).length+' из '+bank.filter(q=>E.studyErrors(state.questions[q.id])>0).length;
+ $('#focus-count').textContent='Осталось: '+bank.filter(q=>E.roundPending('focus',state.questions[q.id])).length+' из '+bank.filter(q=>state.questions[q.id]?.manual).length;
  $('#days').replaceChildren();dayNames.forEach((name,i)=>{
   const day=i+1,done=state.days[day].filter(id=>byId.has(id)).length;
   const b=document.createElement('button');b.className='day';b.type='button';
@@ -26,23 +27,25 @@ function refreshHome(){
 }
 function home(){view('home');refreshHome();}
 function showStudy(mode='study'){
- catalogueMode=mode;const mistakes=mode==='mistakes';
+ catalogueMode=mode;const filtered=mode!=='study';
  view('study');
- $('#catalogue-title').textContent=mistakes?'Работа над ошибками':'Изучение по темам и НТД';
- $('#catalogue-description').textContent=mistakes?'Только вопросы, в которых вы ошибались при изучении. Они остаются здесь после верного ответа — повторяйте столько, сколько нужно. Ранее сохранённые ошибки также включены: в старой версии режим ошибки не записывался.':'Выберите тему или нормативный документ. Верно отвеченные вопросы не повторяются до нажатия «Изучить заново».';
- $('#study-all').textContent=mistakes?'Повторить все ошибки':'Изучать весь банк';
- $('#study-all').disabled=mistakes&&!bank.some(q=>E.studyErrors(state.questions[q.id])>0);
- $('#study-all-restart').hidden=mistakes;$('#study-groups').replaceChildren();
+ $('#catalogue-title').textContent=mode==='study'?'Изучение по темам и НТД':labels[mode];
+ $('#catalogue-description').textContent=mode==='mistakes'?'Только ошибки из изучения. Верно отвеченные больше не повторяются до «Пройти заново». Старые ошибки также включены: их режим раньше не записывался.':mode==='focus'?'Вопросы, которые вы сами отметили кнопкой «На проработку». Верно отвеченные исключаются до «Пройти заново». Снять отметку можно прямо у вопроса.':'Выберите тему или нормативный документ. Верно отвеченные вопросы не повторяются до нажатия «Изучить заново».';
+ const scope=bank.filter(q=>E.roundIncluded(mode,state.questions[q.id]));
+ $('#study-all').textContent=mode==='mistakes'?'Продолжить работу над всеми ошибками':mode==='focus'?'Пройти все отмеченные вопросы':'Изучать весь банк';
+ $('#study-all').disabled=filtered&&!scope.length;
+ $('#study-all-restart').hidden=filtered&&!scope.some(q=>E.roundPassed(mode,state.questions[q.id]));
+ $('#study-all-restart').textContent=mode==='study'?'Изучить весь банк заново':'Пройти всю подборку заново';
+ $('#study-groups').replaceChildren();
  function groupButton(label,ids,theme=false){
-  if(mistakes)ids=ids.filter(id=>E.studyErrors(state.questions[id])>0);
+  ids=ids.filter(id=>E.roundIncluded(mode,state.questions[id]));
   const b=document.createElement('button');b.className=theme?'study-theme':'study-document';b.type='button';
   const name=document.createElement('b');name.textContent=theme?'Вся тема':label;
-  const note=document.createElement('span');const done=ids.filter(id=>E.studyPassed(state.questions[id])).length;
-  const reviewed=ids.filter(id=>(state.questions[id]?.mistakeReviews||0)>0).length;
-  note.textContent=mistakes?(ids.length?'Вопросов с ошибками: '+ids.length+' · Повторяли: '+reviewed:'Ошибок в этой группе пока нет'):`Верно ${done} из ${ids.length} · Осталось ${ids.length-done}`;
-  b.append(name,note);b.disabled=mistakes&&!ids.length;b.onclick=()=>start(mode,0,ids,label);
+  const done=ids.filter(id=>E.roundPassed(mode,state.questions[id])).length;
+  const note=document.createElement('span');note.textContent=filtered&&!ids.length?(mode==='focus'?'Нет отмеченных вопросов':'Ошибок в этой группе пока нет'):`Верно ${done} из ${ids.length} · Осталось ${ids.length-done}`;
+  b.append(name,note);b.disabled=filtered&&!ids.length;b.onclick=()=>start(mode,0,ids,label);
   const wrapper=document.createElement('div');wrapper.className='study-group';wrapper.append(b);
-  if(!mistakes&&done){const reset=document.createElement('button');reset.className='study-group-restart';reset.textContent='Изучить заново';reset.onclick=()=>start('study',0,ids,label,true);wrapper.append(reset);}
+  if(done){const reset=document.createElement('button');reset.className='study-group-restart';reset.textContent=mode==='study'?'Изучить заново':'Пройти заново';reset.onclick=()=>start(mode,0,ids,label,true);wrapper.append(reset);}
   return wrapper;
  }
  for(const topic of E.studyGroups(bank)){
@@ -56,17 +59,17 @@ function showStudy(mode='study'){
 }
 async function start(mode,day=0,filterIds=null,studyLabel="",restart=false){
  if(busy)return;
- if(restart&&!confirm('Изучить выбранную группу заново? Верно отвеченные вопросы снова появятся в изучении. Общая статистика и другие режимы сохранятся.'))return;
+ if(restart&&!confirm('Пройти выбранную группу заново? Верно отвеченные вопросы снова появятся в этом режиме. Общая статистика, отметки и другие режимы сохранятся.'))return;
  if(!restart&&state.active&&!confirm('Начать новое занятие? Все ответы сохранятся, но текущая очередь будет заменена.'))return;
  busy=true;const backup=structuredClone(state);say('');lastMode=mode;lastDay=day;
  let order=filterIds?filterIds.filter(id=>byId.has(id)):bank.map(q=>q.id);if(state.settings.questionOrder==='random')order=E.shuffle(order);
- if(mode==='mistakes')order=order.filter(id=>E.studyErrors(state.questions[id])>0);
- if(restart)E.resetStudy(state,order);
- const limit=Math.min(state.settings.sessionSize,mode==='study'?order.filter(id=>!E.studyPassed(state.questions[id])).length:order.length);
+ if(E.roundMode(mode))order=order.filter(id=>E.roundIncluded(mode,state.questions[id]));
+ if(restart)E.resetRound(state,order,mode);
+ const limit=Math.min(state.settings.sessionSize,E.roundMode(mode)?order.filter(id=>E.roundPending(mode,state.questions[id])).length:order.length);
  state.active={id:crypto.randomUUID(),mode,day,order,studyLabel,limit,seen:[],history:[],current:null};
  const saved=await persist();if(!saved)state=backup;busy=false;if(saved)await advance();
 }
-function sessionLimit(a){return a.limit??Math.min(state.settings.sessionSize,a.mode==='study'?a.seen.length+a.order.filter(id=>!a.seen.includes(id)&&!E.studyPassed(state.questions[id])).length:a.order.length);}
+function sessionLimit(a){const available=E.roundMode(a.mode)?a.seen.length+a.order.filter(id=>!a.seen.includes(id)&&E.roundPending(a.mode,state.questions[id])).length:a.order.length;return Math.min(a.limit??state.settings.sessionSize,available);}
 function setCurrent(id){state.questions[id]||=E.empty();state.questions[id].presentations++;const q=byId.get(id);let optionIds=q.options.map(o=>o.id);if(state.settings.answerOrder==='random')optionIds=E.shuffle(optionIds);state.active.current={id,optionIds,shownAt:Date.now(),elapsed:0,selected:[],answered:false,right:false};}
 async function advance(){
  if(busy||!state.active)return;
@@ -101,7 +104,7 @@ function renderQuestion(focus=false){
  });
  $('#confirm-answer').hidden=q.correct.length===1||c.answered;$('#confirm-answer').disabled=!c.selected.length||busy;
  $('#next').hidden=!c.answered;$('#previous').disabled=!a.history.length||busy;
- const stat=state.questions[q.id];$('#hard').setAttribute('aria-pressed',String(!!stat?.manual));$('#hard').textContent=stat?.manual?'★ Сложный':'☆ Сложный';
+ const stat=state.questions[q.id];$('#hard').setAttribute('aria-pressed',String(!!stat?.manual));$('#hard').textContent=stat?.manual?'★ На проработке':'☆ На проработку';
  $('#feedback').className=c.answered?(c.right?'right':'wrong'):'';
  $('#feedback').textContent=c.answered?(c.right?'✓ Верно. Ответ сохранён.':'✕ Не совсем. Запомните все варианты с отметкой «✓ Верно».'):'';
  const source=q.sources[0];$('#source').href=`sources/${source.file}#page=${source.page}`;$('#source').textContent=`PDF ${source.file} · вопрос № ${source.number} · стр. ${source.page} →`;
@@ -126,16 +129,19 @@ async function answer(){
 }
 function finish(){
  const a=state.active;view('finished');
- const remaining=a.order.filter(id=>!E.studyPassed(state.questions[id])).length;
- $('#again').textContent=a.mode==='mistakes'?'Повторить ошибки ещё раз':'Продолжить подготовку';
- $('#again').hidden=(a.mode==='study'&&!remaining)||(a.mode==='mistakes'&&!a.order.length);$('#study-restart').hidden=a.mode!=='study';
- $('#session-result').textContent=a.mode==='mistakes'?`Ответов в занятии: ${a.seen.length}. В выбранной группе ${a.order.length} вопросов с ошибками из изучения. Они остаются доступными для повторения.`:a.mode==='study'?`Ответов в занятии: ${a.seen.length}. ${remaining?'Осталось в группе: '+remaining+'. Верно отвеченные вопросы больше не появятся.':'Все вопросы группы изучены. Они появятся снова только после «Изучить заново». '}`:`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
+ const round=E.roundMode(a.mode),remaining=a.order.filter(id=>E.roundPending(a.mode,state.questions[id])).length;
+ $('#again').textContent='Продолжить подготовку';$('#again').hidden=round&&!remaining;
+ $('#study-restart').hidden=!round||!a.order.some(id=>E.roundPassed(a.mode,state.questions[id]));
+ $('#study-restart').textContent=a.mode==='study'?'Изучить заново':'Пройти заново';
+ $('#session-result').textContent=round?`Ответов в занятии: ${a.seen.length}. ${remaining?'Осталось в группе: '+remaining+'. Верно отвеченные вопросы больше не появятся.':'Все вопросы группы пройдены. Начать новый круг можно кнопкой «'+(a.mode==='study'?'Изучить заново':'Пройти заново')+'». '}`:`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
  // Keep the last answer available for undo via Resume, even after completion.
 }
 async function undo(){
  if(busy||!state.active?.history.length)return;
  busy=true;cancelTimer();const backup=structuredClone(state),a=state.active,h=a.history.pop();
- if(h.stat)state.questions[h.question.id]=h.stat;else delete state.questions[h.question.id];state.sequence=h.sequence;
+ const manual=!!state.questions[h.question.id]?.manual;
+ if(h.stat)state.questions[h.question.id]={...h.stat,manual};else if(manual)state.questions[h.question.id]={...E.empty(),manual:true};else delete state.questions[h.question.id];
+ if(manual&&!h.stat?.manual)state.questions[h.question.id].focusPassed=false;state.sequence=h.sequence;
  if(a.day)state.days[a.day]=h.dayBefore;
  a.seen.pop();a.current={...h.question,selected:[],answered:false,right:false,elapsed:0,shownAt:Date.now()};
  if(!await persist())state=backup;
@@ -151,13 +157,13 @@ function exportProgress(){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ot-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function bind(){
- document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>['study','mistakes'].includes(b.dataset.mode)?showStudy(b.dataset.mode):start(b.dataset.mode)));
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>E.roundMode(b.dataset.mode)?showStudy(b.dataset.mode):start(b.dataset.mode)));
  $('#study-all').onclick=()=>start(catalogueMode);
- $('#study-all-restart').onclick=()=>start('study',0,null,'',true);
- $('#study-restart').onclick=()=>start('study',0,[...state.active.order],state.active.studyLabel||'',true);
+ $('#study-all-restart').onclick=()=>start(catalogueMode,0,null,'',true);
+ $('#study-restart').onclick=()=>start(state.active.mode,0,[...state.active.order],state.active.studyLabel||'',true);
  $('#resume').onclick=async()=>{if(!state.active.current)await advance();else{state.active.current.shownAt=Date.now();renderQuestion();}};
  $('#confirm-answer').onclick=answer;$('#next').onclick=advance;$('#previous').onclick=undo;
- $('#hard').onclick=async()=>{if(busy)return;const q=state.active.current.id;state.questions[q]||=E.empty();const s=state.questions[q];s.manual=!s.manual;if(s.manual){s.mastered=false;s.dueStep=state.sequence+state.settings.gap;s.dueAt=Date.now()+5*60000;}await persist();renderQuestion();};
+ $('#hard').onclick=async()=>{if(busy)return;const q=state.active.current.id;state.questions[q]||=E.empty();const s=state.questions[q];const backup=structuredClone(state);s.manual=!s.manual;if(s.manual){s.focusPassed=false;s.mastered=false;s.dueStep=state.sequence+state.settings.gap;s.dueAt=Date.now()+5*60000;}if(!await persist())state=backup;if(state.active.mode==='focus'&&!state.active.current.answered&&!state.questions[q]?.manual)await advance();else renderQuestion();};
  $('#exit').onclick=async()=>{if(busy)return;cancelTimer();const c=state.active?.current;if(c&&!c.answered){c.elapsed+=Math.max(0,Date.now()-c.shownAt);c.shownAt=Date.now();}await persist();home();};
  $('#again').onclick=async()=>{lastMode=state.active.mode;lastDay=state.active.day;const ids=[...state.active.order],label=state.active.studyLabel||'';state.active=null;await start(lastMode,lastDay,ids,label);};$('#to-home').onclick=home;
  $('#stats-open').onclick=statistics;document.querySelectorAll('.home-button').forEach(b=>b.onclick=home);
@@ -198,7 +204,7 @@ try{
  if(data.schemaVersion!==1||!bank.length)throw Error('Неподдерживаемая база вопросов');
  if(saved&&saved.schemaVersion!==1)throw Error('Эта версия сайта не поддерживает сохранённый прогресс. Данные оставлены без изменений.');
  state=saved||E.fresh();state.settings={...E.defaults,...state.settings};state.bankVersion=data.version;
- if(state.active){state.active.order=state.active.order.filter(id=>byId.has(id));if(state.active.current&&(!byId.has(state.active.current.id)||(state.active.mode==='study'&&!state.active.current.answered&&E.studyPassed(state.questions[state.active.current.id]))))state.active.current=null;}
+ if(state.active){state.active.order=state.active.order.filter(id=>byId.has(id));if(state.active.current&&(!byId.has(state.active.current.id)||(E.roundMode(state.active.mode)&&!state.active.current.answered&&!E.roundPending(state.active.mode,state.questions[state.active.current.id]))))state.active.current=null;}
  await bind();$('#loading').hidden=true;$('#app').hidden=false;home();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:'./'}).then(async registration=>{
   await navigator.serviceWorker.ready;

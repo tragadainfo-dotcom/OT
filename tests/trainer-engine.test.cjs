@@ -91,7 +91,7 @@ test('existing correct answers migrate without resetting statistics; other modes
  const before=structuredClone(s.questions[q.id]);E.record(s,q,[],1000,'a',100000,'study');s.questions[q.id]=before;assert(E.studyPassed(s.questions[q.id]));
  const other=E.fresh();E.record(other,q,q.correct,1000,'a',100000,'reinforce');assert(!E.studyPassed(other.questions[q.id]));
 });
-test('mistake review includes only study mistakes and retains questions after correction',()=>{
+test('mistake review keeps history but excludes correct answers until an explicit restart',()=>{
  const s=E.fresh(),qs=bank.slice(0,5);
  E.record(s,qs[0],qs[0].correct,1000,'study1',100000,'study');
  E.record(s,qs[1],[],1000,'study1',100001,'study');
@@ -103,7 +103,8 @@ test('mistake review includes only study mistakes and retains questions after co
  E.record(s,qs[1],qs[1].correct,1000,'review',100004,'mistakes');
  assert.equal(E.studyErrors(s.questions[qs[1].id]),1);
  a.seen.push(qs[1].id);assert.equal(E.pick(bank,s,a),null);
- a.seen=[];assert.equal(E.pick(bank,s,a),qs[1].id);
+ a.seen=[];assert.equal(E.pick(bank,s,a),null);
+ E.resetRound(s,[qs[1].id],'mistakes');assert.equal(E.pick(bank,s,a),qs[1].id);
  const before=structuredClone(s.questions[qs[0].id]);E.record(s,qs[0],[],1000,'study3',100005,'study');
  assert.equal(E.studyErrors(s.questions[qs[0].id]),1);s.questions[qs[0].id]=before;
  assert.equal(E.studyErrors(s.questions[qs[0].id]),0);
@@ -131,4 +132,25 @@ test('60 accumulated study mistakes are all reached across batches even in origi
   }
  }
  assert.equal(new Set(visited).size,60);assert(scope.every(q=>E.studyErrors(s.questions[q.id])===1));
+});
+test('manual work is independent of study/errors, excludes successes, and restarts only its own round',()=>{
+ const s=E.fresh(),a={mode:'focus',order:bank.slice(0,3).map(q=>q.id),seen:[]};
+ s.questions[q.id]={...E.empty(),manual:true};
+ assert.equal(E.pick(bank,s,a),q.id);const snapshot=structuredClone(s.questions[q.id]);
+ E.record(s,q,q.correct,1000,'manual',100000,'focus');assert.equal(E.pick(bank,s,a),null);
+ assert.equal(E.studyErrors(s.questions[q.id]),0);assert(!E.studyPassed(s.questions[q.id]));
+ assert(s.questions[q.id].focusPassed);assert(s.questions[q.id].manual);
+ E.resetRound(s,[q.id],'mistakes');assert.equal(E.pick(bank,s,a),null);
+ E.resetRound(s,[q.id],'focus');assert.equal(E.pick(bank,s,a),q.id);assert.equal(s.questions[q.id].correct,1);
+ const imported=E.validateProgress(JSON.parse(JSON.stringify(s)));assert.equal(imported.questions[q.id].focusPassed,false);
+ s.questions[q.id]=snapshot;assert.equal(E.pick(bank,s,a),q.id);
+ s.questions[q.id].manual=false;assert.equal(E.pick(bank,s,a),null);
+});
+test('18 correct mistake answers stay out while 2 failed questions remain across sessions',()=>{
+ const s=E.fresh(),scope=bank.slice(0,20),a={mode:'mistakes',order:scope.map(q=>q.id),seen:[]};
+ for(const [i,q] of scope.entries()){E.record(s,q,[],1000,'study',100000,'study');E.record(s,q,i<18?q.correct:[],1000,'review',200000,'mistakes');}
+ assert.equal(E.pick(bank,s,a),scope[18].id);a.seen.push(scope[18].id);assert.equal(E.pick(bank,s,a),scope[19].id);a.seen.push(scope[19].id);assert.equal(E.pick(bank,s,a),null);
+ const saved=E.validateProgress(JSON.parse(JSON.stringify(s)));assert.equal(scope.filter(q=>E.roundPending('mistakes',saved.questions[q.id])).length,2);
+ E.resetRound(saved,[scope[0].id],'mistakes');assert.equal(scope.filter(q=>E.roundPending('mistakes',saved.questions[q.id])).length,3);
+ assert.equal(saved.questions[scope[0].id].errors,s.questions[scope[0].id].errors);
 });
