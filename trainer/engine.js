@@ -3,7 +3,8 @@
 'use strict';
 const defaults={questionOrder:'random',answerOrder:'original',gap:7,successGap:18,errorPause:0,successPause:900,sessionSize:20};
 function fresh(){return {schemaVersion:1,questions:{},settings:{...defaults},sequence:0,days:{1:[],2:[],3:[],4:[]},active:null};}
-function empty(){return {studyPassed:false,presentations:0,shows:0,correct:0,errors:0,streak:0,lastAt:0,lastMs:0,totalMs:0,fastStreak:0,manual:false,mastered:false,sessions:[],delayedSuccess:0,dueAt:0,dueStep:0};}
+function empty(){return {mistakeReviews:0,studyErrors:0,studyPassed:false,presentations:0,shows:0,correct:0,errors:0,streak:0,lastAt:0,lastMs:0,totalMs:0,fastStreak:0,manual:false,mastered:false,sessions:[],delayedSuccess:0,dueAt:0,dueStep:0};}
+function studyErrors(s){return s?.studyErrors??s?.errors??0;}
 function studyPassed(s){return typeof s?.studyPassed==='boolean'?s.studyPassed:(s?.correct||0)>0;}
 function resetStudy(state,ids){for(const id of ids)if(state.questions[id])state.questions[id].studyPassed=false;}
 function speedLimit(q){const length=q.text.length+q.options.reduce((s,o)=>s+o.text.length,0);return Math.min(45000,Math.max(6000,3000+length*22+q.correct.length*700));}
@@ -12,6 +13,8 @@ function isDue(s,state,now){return !!s?.shows&&(s.dueStep<=state.sequence||s.due
 function record(state,q,selected,elapsed,sessionId,now,mode){
  const old=state.questions[q.id]||empty(),s={...old,sessions:[...old.sessions]};
  const right=q.correct.length===selected.length&&q.correct.every(id=>selected.includes(id));
+ s.mistakeReviews=(old.mistakeReviews||0)+(mode==='mistakes'?1:0);
+ s.studyErrors=studyErrors(old);if(mode==='study'&&!right)s.studyErrors++;
  s.studyPassed=studyPassed(old);if(mode==='study'&&right)s.studyPassed=true;
  s.shows++;s.lastMs=Math.max(0,elapsed);s.totalMs+=s.lastMs;s.lastAt=now;
  state.sequence++;
@@ -32,6 +35,10 @@ function shuffle(list,random=Math.random){const a=[...list];for(let i=a.length-1
 function pick(bank,state,session,now=Date.now()){
  const byId=new Map(bank.map(q=>[q.id,q]));
  const ordered=session.order.filter(id=>byId.has(id));
+ if(session.mode==='mistakes'){
+  const pending=ordered.filter(id=>studyErrors(state.questions[id])>0&&!session.seen.includes(id));
+  return pending.reduce((best,id)=>best===null||(state.questions[id]?.mistakeReviews||0)<(state.questions[best]?.mistakeReviews||0)?id:best,null);
+ }
  if(session.mode==='study'||session.day===1){
   const pending=ordered.filter(id=>!studyPassed(state.questions[id])&&!session.seen.includes(id));
   return pending.find(id=>!state.questions[id]?.shows)||pending[0]||null;
@@ -76,6 +83,8 @@ function validateProgress(data){
   if(typeof value.manual!=='boolean'||typeof value.mastered!=='boolean'||!Array.isArray(value.sessions)||value.sessions.some(x=>typeof x!=='string'||x.length>100))throw Error('Повреждена история');
   if(value.presentations!==undefined&&(!Number.isSafeInteger(value.presentations)||value.presentations<0))throw Error('Повреждено число показов');s.presentations=value.presentations??s.shows;
   if(value.studyPassed!==undefined&&typeof value.studyPassed!=='boolean')throw Error('Повреждён прогресс изучения');s.studyPassed=studyPassed(value);
+  if(value.studyErrors!==undefined&&(!Number.isSafeInteger(value.studyErrors)||value.studyErrors<0||value.studyErrors>s.errors))throw Error('Повреждена история ошибок изучения');s.studyErrors=studyErrors(value);
+  if(value.mistakeReviews!==undefined&&(!Number.isSafeInteger(value.mistakeReviews)||value.mistakeReviews<0||value.mistakeReviews>s.shows))throw Error('Повреждён счётчик повторения ошибок');s.mistakeReviews=value.mistakeReviews||0;
   s.manual=value.manual;s.mastered=value.mastered;s.sessions=value.sessions.slice(-16);clean.questions[id]=s;
  }
  const settings=data.settings||{};
@@ -86,7 +95,7 @@ function validateProgress(data){
  for(let day=1;day<=4;day++){const ids=data.days?.[day]||[];if(!Array.isArray(ids)||ids.some(id=>!/^q-\d+$/.test(id)))throw Error('Повреждены этапы');clean.days[day]=[...new Set(ids)];}
  return clean;
 }
-const api={studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
+const api={studyErrors,studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
 if(typeof module==='object'&&module.exports)module.exports=api;else root.TrainerEngine=api;
 })(typeof globalThis==='object'?globalThis:this);
 

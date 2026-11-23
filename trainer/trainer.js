@@ -1,8 +1,8 @@
 (async function(){
 'use strict';
 const E=TrainerEngine,S=TrainerStorage,$=s=>document.querySelector(s);
-let state,bank,byId,timer,busy=false,lastMode='study',lastDay=0,pausedAt=0;
-const labels={study:'Изучение',reinforce:'Закрепление',automatic:'Автоматизм'};
+let state,bank,byId,timer,busy=false,lastMode='study',lastDay=0,pausedAt=0,catalogueMode='study';
+const labels={mistakes:'Работа над ошибками',study:'Изучение',reinforce:'Закрепление',automatic:'Автоматизм'};
 const levels={new:'Новый',learning:'Изучается',hard:'Сложный',mastered:'Освоен'};
 const dayNames=['Знакомство','Запоминание','Закрепление','Автоматизм'];
 function say(message){$('#notice').textContent=message;}
@@ -13,6 +13,7 @@ function refreshHome(){
  const s=E.summary(bank,state);$('.bank-total').textContent=s.total;$('#known').textContent=s.mastered;$('#mastery').max=s.total;$('#mastery').value=s.mastered;
  $('#overview-note').textContent=`Изучено ${s.seen} · Сложных ${s.hard} · Пора повторить ${s.due}`;
  $('#resume').hidden=!state.active;
+ $('#mistakes-count').textContent='Вопросов с ошибками: '+bank.filter(q=>E.studyErrors(state.questions[q.id])>0).length;
  $('#days').replaceChildren();dayNames.forEach((name,i)=>{
   const day=i+1,done=state.days[day].filter(id=>byId.has(id)).length;
   const b=document.createElement('button');b.className='day';b.type='button';
@@ -24,17 +25,24 @@ function refreshHome(){
  $('#plan-remaining').textContent=`Осталось изучить: ${s.total-s.seen}. Требуют закрепления: ${s.seen-s.mastered}. Этап выполнен после охвата всего банка; освоение оценивается отдельно.`;
 }
 function home(){view('home');refreshHome();}
-function showStudy(){
- view('study');$('#study-groups').replaceChildren();
+function showStudy(mode='study'){
+ catalogueMode=mode;const mistakes=mode==='mistakes';
+ view('study');
+ $('#catalogue-title').textContent=mistakes?'Работа над ошибками':'Изучение по темам и НТД';
+ $('#catalogue-description').textContent=mistakes?'Только вопросы, в которых вы ошибались при изучении. Они остаются здесь после верного ответа — повторяйте столько, сколько нужно. Ранее сохранённые ошибки также включены: в старой версии режим ошибки не записывался.':'Выберите тему или нормативный документ. Верно отвеченные вопросы не повторяются до нажатия «Изучить заново».';
+ $('#study-all').textContent=mistakes?'Повторить все ошибки':'Изучать весь банк';
+ $('#study-all').disabled=mistakes&&!bank.some(q=>E.studyErrors(state.questions[q.id])>0);
+ $('#study-all-restart').hidden=mistakes;$('#study-groups').replaceChildren();
  function groupButton(label,ids,theme=false){
+  if(mistakes)ids=ids.filter(id=>E.studyErrors(state.questions[id])>0);
   const b=document.createElement('button');b.className=theme?'study-theme':'study-document';b.type='button';
   const name=document.createElement('b');name.textContent=theme?'Вся тема':label;
   const note=document.createElement('span');const done=ids.filter(id=>E.studyPassed(state.questions[id])).length;
-  const hard=ids.filter(id=>E.level(state.questions[id])==='hard').length;
-  note.textContent=`Верно ${done} из ${ids.length} · Осталось ${ids.length-done}`;
-  b.append(name,note);b.onclick=()=>start('study',0,ids,label);
+  const reviewed=ids.filter(id=>(state.questions[id]?.mistakeReviews||0)>0).length;
+  note.textContent=mistakes?(ids.length?'Вопросов с ошибками: '+ids.length+' · Повторяли: '+reviewed:'Ошибок в этой группе пока нет'):`Верно ${done} из ${ids.length} · Осталось ${ids.length-done}`;
+  b.append(name,note);b.disabled=mistakes&&!ids.length;b.onclick=()=>start(mode,0,ids,label);
   const wrapper=document.createElement('div');wrapper.className='study-group';wrapper.append(b);
-  if(done){const reset=document.createElement('button');reset.className='study-group-restart';reset.textContent='Изучить заново';reset.onclick=()=>start('study',0,ids,label,true);wrapper.append(reset);}
+  if(!mistakes&&done){const reset=document.createElement('button');reset.className='study-group-restart';reset.textContent='Изучить заново';reset.onclick=()=>start('study',0,ids,label,true);wrapper.append(reset);}
   return wrapper;
  }
  for(const topic of E.studyGroups(bank)){
@@ -52,6 +60,7 @@ async function start(mode,day=0,filterIds=null,studyLabel="",restart=false){
  if(!restart&&state.active&&!confirm('Начать новое занятие? Все ответы сохранятся, но текущая очередь будет заменена.'))return;
  busy=true;const backup=structuredClone(state);say('');lastMode=mode;lastDay=day;
  let order=filterIds?filterIds.filter(id=>byId.has(id)):bank.map(q=>q.id);if(state.settings.questionOrder==='random')order=E.shuffle(order);
+ if(mode==='mistakes')order=order.filter(id=>E.studyErrors(state.questions[id])>0);
  if(restart)E.resetStudy(state,order);
  const limit=Math.min(state.settings.sessionSize,mode==='study'?order.filter(id=>!E.studyPassed(state.questions[id])).length:order.length);
  state.active={id:crypto.randomUUID(),mode,day,order,studyLabel,limit,seen:[],history:[],current:null};
@@ -118,8 +127,9 @@ async function answer(){
 function finish(){
  const a=state.active;view('finished');
  const remaining=a.order.filter(id=>!E.studyPassed(state.questions[id])).length;
- $('#again').hidden=a.mode==='study'&&!remaining;$('#study-restart').hidden=a.mode!=='study';
- $('#session-result').textContent=a.mode==='study'?`Ответов в занятии: ${a.seen.length}. ${remaining?'Осталось в группе: '+remaining+'. Верно отвеченные вопросы больше не появятся.':'Все вопросы группы изучены. Они появятся снова только после «Изучить заново». '}`:`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
+ $('#again').textContent=a.mode==='mistakes'?'Повторить ошибки ещё раз':'Продолжить подготовку';
+ $('#again').hidden=(a.mode==='study'&&!remaining)||(a.mode==='mistakes'&&!a.order.length);$('#study-restart').hidden=a.mode!=='study';
+ $('#session-result').textContent=a.mode==='mistakes'?`Ответов в занятии: ${a.seen.length}. В выбранной группе ${a.order.length} вопросов с ошибками из изучения. Они остаются доступными для повторения.`:a.mode==='study'?`Ответов в занятии: ${a.seen.length}. ${remaining?'Осталось в группе: '+remaining+'. Верно отвеченные вопросы больше не появятся.':'Все вопросы группы изучены. Они появятся снова только после «Изучить заново». '}`:`Ответов в занятии: ${a.seen.length}. Прогресс сохранён. Всего изучено: ${E.summary(bank,state).seen} из ${bank.length}.`;
  // Keep the last answer available for undo via Resume, even after completion.
 }
 async function undo(){
@@ -141,8 +151,8 @@ function exportProgress(){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ot-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function bind(){
- document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>b.dataset.mode==='study'?showStudy():start(b.dataset.mode)));
- $('#study-all').onclick=()=>start('study');
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>['study','mistakes'].includes(b.dataset.mode)?showStudy(b.dataset.mode):start(b.dataset.mode)));
+ $('#study-all').onclick=()=>start(catalogueMode);
  $('#study-all-restart').onclick=()=>start('study',0,null,'',true);
  $('#study-restart').onclick=()=>start('study',0,[...state.active.order],state.active.studyLabel||'',true);
  $('#resume').onclick=async()=>{if(!state.active.current)await advance();else{state.active.current.shownAt=Date.now();renderQuestion();}};

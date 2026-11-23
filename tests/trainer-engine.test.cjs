@@ -91,3 +91,44 @@ test('existing correct answers migrate without resetting statistics; other modes
  const before=structuredClone(s.questions[q.id]);E.record(s,q,[],1000,'a',100000,'study');s.questions[q.id]=before;assert(E.studyPassed(s.questions[q.id]));
  const other=E.fresh();E.record(other,q,q.correct,1000,'a',100000,'reinforce');assert(!E.studyPassed(other.questions[q.id]));
 });
+test('mistake review includes only study mistakes and retains questions after correction',()=>{
+ const s=E.fresh(),qs=bank.slice(0,5);
+ E.record(s,qs[0],qs[0].correct,1000,'study1',100000,'study');
+ E.record(s,qs[1],[],1000,'study1',100001,'study');
+ E.record(s,qs[1],qs[1].correct,1000,'study2',100002,'study');
+ E.record(s,qs[2],[],1000,'other',100003,'reinforce');
+ s.questions[qs[3].id]={...E.empty(),manual:true};
+ const a={mode:'mistakes',order:qs.map(q=>q.id),seen:[]};
+ assert.equal(E.pick(bank,s,a),qs[1].id);
+ E.record(s,qs[1],qs[1].correct,1000,'review',100004,'mistakes');
+ assert.equal(E.studyErrors(s.questions[qs[1].id]),1);
+ a.seen.push(qs[1].id);assert.equal(E.pick(bank,s,a),null);
+ a.seen=[];assert.equal(E.pick(bank,s,a),qs[1].id);
+ const before=structuredClone(s.questions[qs[0].id]);E.record(s,qs[0],[],1000,'study3',100005,'study');
+ assert.equal(E.studyErrors(s.questions[qs[0].id]),1);s.questions[qs[0].id]=before;
+ assert.equal(E.studyErrors(s.questions[qs[0].id]),0);
+ E.resetStudy(s,qs.map(q=>q.id));assert.equal(E.studyErrors(s.questions[qs[1].id]),1);
+ const restored=E.validateProgress(JSON.parse(JSON.stringify(s)));assert.equal(E.studyErrors(restored.questions[qs[1].id]),1);
+ assert.equal(E.studyErrors(restored.questions[qs[2].id]),0);
+ assert.throws(()=>E.validateProgress({...s,questions:{[qs[0].id]:{...s.questions[qs[0].id],studyErrors:99}}}));
+});
+test('legacy mistakes are retained with missing mode provenance; new non-study mistakes are excluded',()=>{
+ const old={...E.empty(),shows:1,errors:1};delete old.studyErrors;
+ assert.equal(E.studyErrors(old),1);
+ const s=E.fresh();s.questions[q.id]=old;
+ assert.equal(E.studyErrors(E.validateProgress(JSON.parse(JSON.stringify(s))).questions[q.id]),1);
+ E.record(s,q,q.correct,1000,'review',100000,'mistakes');assert.equal(s.questions[q.id].studyErrors,1);
+ const modern=E.fresh();E.record(modern,q,[],1000,'other',100000,'automatic');assert.equal(E.studyErrors(modern.questions[q.id]),0);
+});
+test('60 accumulated study mistakes are all reached across batches even in original order',()=>{
+ const s=E.fresh(),scope=bank.slice(0,60);for(const q of scope)E.record(s,q,[],1000,'study',100000,'study');
+ const visited=[];
+ for(let batch=0;batch<3;batch++){
+  const a={mode:'mistakes',order:scope.map(q=>q.id),seen:[]};
+  for(let i=0;i<20;i++){
+   const id=E.pick(bank,s,a);assert(!visited.includes(id));const question=scope.find(q=>q.id===id);
+   E.record(s,question,question.correct,1000,'review'+batch,200000+i,'mistakes');a.seen.push(id);visited.push(id);
+  }
+ }
+ assert.equal(new Set(visited).size,60);assert(scope.every(q=>E.studyErrors(s.questions[q.id])===1));
+});
