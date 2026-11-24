@@ -41,6 +41,14 @@ function record(state,q,selected,elapsed,sessionId,now,mode){
 function shuffle(list,random=Math.random){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function upgradeAnswerOrder(state){state.settings={...defaults,...state.settings};if(state.answerShuffleVersion===1)return false;state.settings.answerOrder='random';state.answerShuffleVersion=1;return true;}
 function shuffledAnswers(ids,previous=ids){const result=shuffle(ids);if(result.length>1&&result.every((id,i)=>id===previous?.[i]))[result[0],result[1]]=[result[1],result[0]];return result;}
+function searchText(text){
+ const lookalikes={a:'а',b:'в',c:'с',e:'е',h:'н',k:'к',m:'м',o:'о',p:'р',t:'т',x:'х',y:'у'};
+ return String(text).normalize('NFKC').toLocaleLowerCase('ru').replace(/ё/g,'е').replace(/[a-zа-я]+/g,word=>/[а-я]/.test(word)?word.replace(/[abcehkmoptxy]/g,c=>lookalikes[c]):word).replace(/[^a-zа-я0-9]+/g,' ').trim();
+}
+function searchQuestions(bank,query){
+ const normalized=searchText(query);if(normalized.length<2)return [];
+ const terms=normalized.split(/\s+/);return bank.map((q,index)=>({q,index,text:searchText(q.text)})).filter(item=>terms.every(term=>item.text.includes(term))).sort((a,b)=>Number(b.text.includes(normalized))-Number(a.text.includes(normalized))||a.index-b.index).map(item=>item.q);
+}
 function pick(bank,state,session,now=Date.now()){
  const byId=new Map(bank.map(q=>[q.id,q]));
  const ordered=session.order.filter(id=>byId.has(id));
@@ -108,7 +116,7 @@ function validateProgress(data){
  clean.answerShuffleVersion=data.answerShuffleVersion===1?1:0;upgradeAnswerOrder(clean);
  return clean;
 }
-const api={upgradeAnswerOrder,shuffledAnswers,roundMode,roundIncluded,roundPassed,roundPending,resetRound,studyErrors,studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
+const api={searchText,searchQuestions,upgradeAnswerOrder,shuffledAnswers,roundMode,roundIncluded,roundPassed,roundPending,resetRound,studyErrors,studyPassed,resetStudy,defaults,fresh,empty,speedLimit,level,isDue,record,shuffle,pick,summary,validateProgress};
 if(typeof module==='object'&&module.exports)module.exports=api;else root.TrainerEngine=api;
 })(typeof globalThis==='object'?globalThis:this);
 

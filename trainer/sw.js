@@ -1,6 +1,6 @@
 'use strict';
-const CACHE='ot-trainer-v6';
-const SHELL=['./','index.html','trainer.css?v=5','trainer.js?v=6','engine.js?v=6','storage.js','questions.json','manifest.webmanifest','icon.svg','import-report.html','import-report.json'];
+const CACHE='ot-trainer-v7';
+const SHELL=['./','index.html','trainer.css?v=7','trainer.js?v=7','engine.js?v=7','storage.js','questions.json','manifest.webmanifest','icon.svg','import-report.html','import-report.json'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('ot-trainer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
 // Shared navigation is cached explicitly because it lives outside this worker's scope.

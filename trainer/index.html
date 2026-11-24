@@ -5,8 +5,8 @@
 <meta name="theme-color" content="#d9480f"><meta name="description" content="Тренажёр запоминания вопросов по охране труда, пожарной безопасности и эксплуатации электроустановок.">
 <title>Тренажёр — Охрана труда</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="trainer.css?v=5"><link rel="stylesheet" href="../site-nav.css?v=1">
-<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=6" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=6" defer></script>
+<link rel="stylesheet" href="trainer.css?v=7"><link rel="stylesheet" href="../site-nav.css?v=1">
+<script src="../site-nav.js?v=2" defer></script><script src="engine.js?v=7" defer></script><script src="storage.js" defer></script><script src="trainer.js?v=7" defer></script>
 </head>
 <body>
 <main>
@@ -21,12 +21,18 @@
   <button class="mode-card" data-mode="study"><span class="mode-number">01</span><b>Изучение</b><span>Выберите тему и нормативный документ</span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="mistakes"><span class="mode-number">02</span><b>Работа над ошибками</b><span>Только ошибки из изучения, по темам и НТД</span><span id="mistakes-count"></span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="focus"><span class="mode-number">★</span><b>Дополнительная проработка</b><span>Вопросы, которые вы отметили сами</span><span id="focus-count"></span><span class="arrow" aria-hidden="true">→</span></button>
+  <button class="mode-card" id="question-search-open"><span class="mode-number">⌕</span><b>Поиск по вопросам</b><span>Найдите вопрос по фрагменту и посмотрите правильные ответы</span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="reinforce"><span class="mode-number">03</span><b>Закрепление</b><span>Ошибки возвращаются через несколько вопросов</span><span class="arrow" aria-hidden="true">→</span></button>
   <button class="mode-card" data-mode="automatic"><span class="mode-number">04</span><b>Автоматизм</b><span>Точное узнавание без таймера и спешки</span><span class="arrow" aria-hidden="true">→</span></button>
  </div>
  <section class="panel plan"><div class="section-heading"><h2>Подготовка за 4 дня</h2><span class="tag">В своём темпе</span></div><p class="muted">Четыре этапа, а не даты. Каждый доступен в любое время.</p><div id="days" class="days"></div><p id="plan-remaining" class="muted"></p></section>
  <div class="toolbar"><button id="stats-open">Статистика</button><button id="settings-open">Настройки</button></div>
  <p class="footnote">Только подтверждённые вопросы из PDF. <a href="import-report.html">Отчёт импорта</a>. Прогресс хранится в этом браузере — сохраняйте резервную копию.</p>
+</section>
+<section id="question-search" hidden aria-label="Поиск по вопросам">
+ <div class="section-heading"><h2>Поиск по вопросам</h2><button class="home-button">← К режимам</button></div>
+ <form id="question-search-form"><label for="question-search-input">Часть формулировки вопроса</label><input id="question-search-input" type="search" placeholder="Например: периодичность проведения тренировок" autocomplete="off" enterkeyhint="search"></form>
+ <p id="question-search-status" class="muted" role="status" aria-live="polite"></p><div id="question-search-results"></div>
 </section>
 <section id="study" hidden aria-label="Темы изучения">
  <div class="section-heading"><h2 id="catalogue-title">Изучение по темам и НТД</h2><button class="home-button">← К режимам</button></div>

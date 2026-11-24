@@ -26,6 +26,21 @@ function refreshHome(){
  $('#plan-remaining').textContent=`Осталось изучить: ${s.total-s.seen}. Требуют закрепления: ${s.seen-s.mastered}. Этап выполнен после охвата всего банка; освоение оценивается отдельно.`;
 }
 function home(){view('home');refreshHome();}
+function renderQuestionSearch(){
+ const query=$('#question-search-input').value;
+ const results=E.searchQuestions(bank,query);$('#question-search-results').replaceChildren();
+ $('#question-search-status').textContent=E.searchText(query).length<2?'Введите хотя бы два символа из вопроса.':results.length?'Найдено вопросов: '+results.length:'Ничего не найдено. Попробуйте другую часть формулировки.';
+ for(const q of results){
+  const article=document.createElement('article');article.className='panel search-question';article.dataset.questionId=q.id;
+  const topic=document.createElement('p');topic.className='muted';topic.textContent=q.topic;
+  const heading=document.createElement('h3');heading.textContent=q.text;
+  const label=document.createElement('p');label.className='search-answer-label';label.textContent=q.correct.length>1?'Правильные ответы':'Правильный ответ';
+  const answers=document.createElement('ul');answers.className='search-correct-answers';
+  q.options.filter(option=>q.correct.includes(option.id)).forEach(option=>{const li=document.createElement('li');li.textContent=option.text;answers.append(li);});
+  const source=q.sources[0],link=document.createElement('a');link.className='source';link.target='_blank';link.rel='noopener';link.href='sources/'+source.file+'#page='+source.page;link.textContent='Сверить с PDF · '+source.file+' · вопрос № '+source.number+' · стр. '+source.page;
+  article.append(topic,heading,label,answers,link);$('#question-search-results').append(article);
+ }
+}
 function showStudy(mode='study'){
  catalogueMode=mode;const filtered=mode!=='study';
  view('study');
@@ -157,6 +172,9 @@ function exportProgress(){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ot-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function bind(){
+ $('#question-search-open').onclick=()=>{view('question-search');renderQuestionSearch();$('#question-search-input').focus();};
+ $('#question-search-input').addEventListener('input',renderQuestionSearch);
+ $('#question-search-form').onsubmit=event=>{event.preventDefault();renderQuestionSearch();};
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>E.roundMode(b.dataset.mode)?showStudy(b.dataset.mode):start(b.dataset.mode)));
  $('#study-all').onclick=()=>start(catalogueMode);
  $('#study-all-restart').onclick=()=>start(catalogueMode,0,null,'',true);

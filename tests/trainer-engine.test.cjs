@@ -164,3 +164,13 @@ test('answers shuffle by default, upgrade existing settings once, and differ on 
  const backup=E.fresh();delete backup.answerShuffleVersion;backup.settings.answerOrder='original';
  assert.equal(E.validateProgress(backup).settings.answerOrder,'random');
 });
+test('question search matches fragments, punctuation, case, ё/е and mixed PDF letters',()=>{
+ const questions=[{id:'a',text:'Допускается ли пеpесечение ВЛ выше 1000 В?'},{id:'b',text:'Учёт средств: какие требования?'},{id:'c',text:'Периодичность проведения контрольных тренировок'}];
+ assert.deepEqual(E.searchQuestions(questions,'ПЕРЕСЕЧЕНИЕ'),[questions[0]]);
+ assert.deepEqual(E.searchQuestions(questions,'учет средств'),[questions[1]]);
+ assert.deepEqual(E.searchQuestions(questions,'периодичность тренировок'),[questions[2]]);
+ assert.deepEqual(E.searchQuestions(questions,'выше 1000'),[questions[0]]);
+ assert.deepEqual(E.searchQuestions(questions,'не найдено'),[]);
+ assert.deepEqual(E.searchQuestions(questions,' '),[]);
+ const snapshot=JSON.stringify(bank);E.searchQuestions(bank,'напряжени');assert.equal(JSON.stringify(bank),snapshot);
+});
