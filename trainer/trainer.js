@@ -34,7 +34,7 @@ async function toggleFocus(id){
 }
 function focusButtonLabel(button,id){const selected=!!state.questions[id]?.manual;button.setAttribute('aria-pressed',String(selected));button.textContent=selected?'★ На проработке':'☆ На проработку';}
 function renderQuestionSearch(){
- const query=$('#question-search-input').value;
+ const query=$('#question-search-input').value;$('#question-search-clear').hidden=!query.length;
  const results=E.searchQuestions(bank,query);$('#question-search-results').replaceChildren();
  $('#question-search-status').textContent=E.searchText(query).length<2?'Введите хотя бы два символа из вопроса.':results.length?'Найдено вопросов: '+results.length:'Ничего не найдено. Попробуйте другую часть формулировки.';
  for(const q of results){
@@ -184,6 +184,7 @@ function exportProgress(){
 async function bind(){
  $('#question-search-open').onclick=()=>{view('question-search');renderQuestionSearch();$('#question-search-input').focus();};
  $('#question-search-input').addEventListener('input',renderQuestionSearch);
+ $('#question-search-clear').onclick=()=>{$('#question-search-input').value='';renderQuestionSearch();$('#question-search-input').focus();};
  $('#question-search-form').onsubmit=event=>{event.preventDefault();renderQuestionSearch();};
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>E.roundMode(b.dataset.mode)?showStudy(b.dataset.mode):start(b.dataset.mode)));
  $('#study-all').onclick=()=>start(catalogueMode);
