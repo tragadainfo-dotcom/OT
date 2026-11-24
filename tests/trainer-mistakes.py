@@ -9,7 +9,7 @@ with sync_playwright() as p:
  expect(page.locator('.study-topic')).to_have_count(3)
  expect(page.locator('#study-all')).to_be_disabled()
  assert all(not page.locator('.study-document').nth(i).is_enabled() for i in range(page.locator('.study-document').count()))
- page.locator('.home-button').first.click()
+ page.locator('.home-button:visible').first.click()
  fixture=page.evaluate('''async()=>{
   const b=(await(await fetch('questions.json')).json()).questions,s=TrainerEngine.fresh();
   s.settings.questionOrder='original';s.settings.successPause=3000;

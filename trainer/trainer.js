@@ -26,6 +26,13 @@ function refreshHome(){
  $('#plan-remaining').textContent=`Осталось изучить: ${s.total-s.seen}. Требуют закрепления: ${s.seen-s.mastered}. Этап выполнен после охвата всего банка; освоение оценивается отдельно.`;
 }
 function home(){view('home');refreshHome();}
+async function toggleFocus(id){
+ if(busy)return false;busy=true;const backup=structuredClone(state);
+ state.questions[id]||=E.empty();const stat=state.questions[id];stat.manual=!stat.manual;
+ if(stat.manual){stat.focusPassed=false;stat.mastered=false;stat.dueStep=state.sequence+state.settings.gap;stat.dueAt=Date.now()+5*60000;}
+ const saved=await persist();if(!saved)state=backup;busy=false;return saved;
+}
+function focusButtonLabel(button,id){const selected=!!state.questions[id]?.manual;button.setAttribute('aria-pressed',String(selected));button.textContent=selected?'★ На проработке':'☆ На проработку';}
 function renderQuestionSearch(){
  const query=$('#question-search-input').value;
  const results=E.searchQuestions(bank,query);$('#question-search-results').replaceChildren();
@@ -38,7 +45,10 @@ function renderQuestionSearch(){
   const answers=document.createElement('ul');answers.className='search-correct-answers';
   q.options.filter(option=>q.correct.includes(option.id)).forEach(option=>{const li=document.createElement('li');li.textContent=option.text;answers.append(li);});
   const source=q.sources[0],link=document.createElement('a');link.className='source';link.target='_blank';link.rel='noopener';link.href='sources/'+source.file+'#page='+source.page;link.textContent='Сверить с PDF · '+source.file+' · вопрос № '+source.number+' · стр. '+source.page;
-  article.append(topic,heading,label,answers,link);$('#question-search-results').append(article);
+  const mark=document.createElement('button');mark.type='button';mark.className='search-focus';focusButtonLabel(mark,q.id);
+  mark.onclick=async()=>{mark.disabled=true;await toggleFocus(q.id);focusButtonLabel(mark,q.id);mark.disabled=false;};
+  const actions=document.createElement('div');actions.className='search-actions';actions.append(mark,link);
+  article.append(topic,heading,label,answers,actions);$('#question-search-results').append(article);
  }
 }
 function showStudy(mode='study'){
@@ -181,7 +191,7 @@ async function bind(){
  $('#study-restart').onclick=()=>start(state.active.mode,0,[...state.active.order],state.active.studyLabel||'',true);
  $('#resume').onclick=async()=>{if(!state.active.current)await advance();else{state.active.current.shownAt=Date.now();renderQuestion();}};
  $('#confirm-answer').onclick=answer;$('#next').onclick=advance;$('#previous').onclick=undo;
- $('#hard').onclick=async()=>{if(busy)return;const q=state.active.current.id;state.questions[q]||=E.empty();const s=state.questions[q];const backup=structuredClone(state);s.manual=!s.manual;if(s.manual){s.focusPassed=false;s.mastered=false;s.dueStep=state.sequence+state.settings.gap;s.dueAt=Date.now()+5*60000;}if(!await persist())state=backup;if(state.active.mode==='focus'&&!state.active.current.answered&&!state.questions[q]?.manual)await advance();else renderQuestion();};
+ $('#hard').onclick=async()=>{const id=state.active.current.id;if(!await toggleFocus(id))return;if(state.active.mode==='focus'&&!state.active.current.answered&&!state.questions[id]?.manual)await advance();else renderQuestion();};
  $('#exit').onclick=async()=>{if(busy)return;cancelTimer();const c=state.active?.current;if(c&&!c.answered){c.elapsed+=Math.max(0,Date.now()-c.shownAt);c.shownAt=Date.now();}await persist();home();};
  $('#again').onclick=async()=>{lastMode=state.active.mode;lastDay=state.active.day;const ids=[...state.active.order],label=state.active.studyLabel||'';state.active=null;await start(lastMode,lastDay,ids,label);};$('#to-home').onclick=home;
  $('#stats-open').onclick=statistics;document.querySelectorAll('.home-button').forEach(b=>b.onclick=home);

@@ -7,7 +7,7 @@ with sync_playwright() as p:
  page.goto('http://127.0.0.1:8000/trainer/');expect(page.locator('#home')).to_be_visible()
  page.evaluate("async()=>{const s=TrainerEngine.fresh();s.settings.questionOrder='original';s.settings.successPause=3000;await TrainerStorage.save(s)}")
  page.reload();page.locator('[data-mode=focus]').click();expect(page.locator('#study-all')).to_be_disabled();expect(page.locator('.study-topic')).to_have_count(3)
- page.locator('.home-button').first.click();page.locator('[data-mode=study]').click();page.locator('#study-all').click()
+ page.locator('.home-button:visible').first.click();page.locator('[data-mode=study]').click();page.locator('#study-all').click()
  def question():
   page.wait_for_function('TrainerStorage.load().then(s=>!!s.active?.current&&!s.active.current.answered)')
   return page.evaluate("async()=>{const a=(await TrainerStorage.load()).active,b=(await(await fetch('questions.json')).json()).questions;return b.find(q=>q.id===a.current.id)}")

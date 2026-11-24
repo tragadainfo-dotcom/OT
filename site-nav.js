@@ -4,6 +4,11 @@ if(document.getElementById('ot-site-nav'))return;
 var script=document.currentScript;
 if(!script)return;
 var base=new URL('.',script.src);
+// All site sections belong to the same standalone app scope.
+if(!document.querySelector('link[rel="manifest"]')){var manifest=document.createElement('link');manifest.rel='manifest';manifest.href=new URL('manifest.webmanifest',base).href;document.head.appendChild(manifest);}
+['apple-mobile-web-app-capable','mobile-web-app-capable'].forEach(function(name){if(!document.querySelector('meta[name="'+name+'"]')){var meta=document.createElement('meta');meta.name=name;meta.content='yes';document.head.appendChild(meta);}});
+// iOS home-screen apps can otherwise hand ordinary section links to Safari.
+document.addEventListener('click',function(event){if(!navigator.standalone||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;var a=event.target.closest('a[href]');if(!a||a.hasAttribute('download')||(a.target&&a.target!=='_self'))return;var url=new URL(a.href,location.href);if(url.origin!==base.origin||!url.pathname.startsWith(base.pathname)||!/^https?:$/.test(url.protocol))return;if(url.pathname===location.pathname&&url.search===location.search&&url.hash)return;event.preventDefault();location.assign(url.href);});
 var sections=[
 ['1-pod-napryazheniem','Работа под напряжением','наведенное напряжение уравнивание потенциалов провод'],
 ['2-rabota-na-vysote','Работа на высоте','страховка лестницы падение'],
