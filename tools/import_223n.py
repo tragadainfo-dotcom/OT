@@ -59,6 +59,13 @@ def extract():
    current={'id':scope+'-'+match[1],'scope':scope,'number':match[1],'title':('Форма № ' if scope=='forms' else 'Пункт ')+match[1],'chapter':chapter,'blocks':[]};entries.append(current)
   if scope=='order' and t=='Министр':current=None
   if current:current['blocks'].append(index)
+ used={i for e in entries for i in e['blocks']};context=[]
+ for i,b in enumerate(blocks):
+  if i not in used:context.append(i)
+  elif context:
+   if any(flatten(blocks[j]).strip() for j in context):entries.append({'id':'context-'+str(context[0]),'scope':'context','number':'','title':'Текст документа','chapter':'','blocks':context})
+   context=[]
+ if context and any(flatten(blocks[j]).strip() for j in context):entries.append({'id':'context-'+str(context[0]),'scope':'context','number':'','title':'Текст документа','chapter':'','blocks':context})
  for e in entries:e['searchText']='\n'.join(flatten(blocks[i]) for i in e['blocks'])
  points=[e['number'] for e in entries if e['scope']=='regulation'];parents=[p for p in points if '.' not in p]
  assert parents==[str(i) for i in range(1,39)],parents

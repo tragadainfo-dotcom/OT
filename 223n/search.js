@@ -1,6 +1,6 @@
 (function(root){
 function normalize(q){return String(q).toLocaleLowerCase('ru').replace(/ё/g,'е').replace(/\s+/g,' ').trim();}
-function find(entries,input,scope='regulation'){
+function find(entries,input,scope='all'){
  let query=normalize(input).replace(/^(?:пункт(?:а|ы)?|пп?)\.?\s*(?=\d)/,'').trim();
  if(!query)return [];
  const numbered=/^\d+(?:[.,]\d+)*\.?$/.test(query);if(numbered)query=query.replace(/,/g,'.').replace(/\.$/,'');

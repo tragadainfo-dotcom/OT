@@ -120,10 +120,11 @@ with sync_playwright() as p:
     page.locator('#exit').click()
     page.evaluate('navigator.serviceWorker.ready.then(()=>true)')
     page.wait_for_function('navigator.serviceWorker.controller !== null')
-    page.wait_for_function("caches.open('ot-trainer-v10').then(c=>c.match('../site-nav.js?v=4')).then(Boolean)")
+    page.wait_for_function("caches.open('ot-trainer-v11').then(c=>c.match('../site-nav.js?v=5')).then(Boolean)")
     context.set_offline(True);page.reload();ready(page)
     page.locator('#resume').click();expect(page.locator('#options button').first).to_be_visible()
     assert page.locator('.ot-bar').is_visible()
+    page.locator('.ot-search').click();page.locator('#ot-doc-query').fill('20.4');expect(page.locator('[data-entry-id="regulation-20.4"]')).to_be_visible();page.keyboard.press('Escape')
     print('PASS service worker offline reload with question bank, shared navigation and progress')
     context.set_offline(False)
     # A second tab cannot overwrite the active tab's IndexedDB state.
