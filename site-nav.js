@@ -25,11 +25,12 @@ var sections=[
 ['13-elektrozashchitnye-sredstva','Электрозащитные средства','перчатки штанги боты указатель испытания'],
 ['14-trebovaniya-v-gruppa','Требования к V группе по электробезопасности','пятая группа 5 стаж знания'],
 ['15-pervaya-pomoshch','Оказание первой помощи','слр реанимация обморожение перегрев электротравма вынос'],
-['trainer','Тренажёр','экзамен подготовка вопросы запоминание повторение ошибки автоматизм']
+['trainer','Тренажёр','экзамен подготовка вопросы запоминание повторение ошибки автоматизм'],
+['223n','Поиск по пунктам приказа № 223н','расследование несчастных случаев 223н положение документы']
 ];
 function icon(name){var paths={menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'};return '<svg viewBox="0 0 24 24" aria-hidden="true">'+paths[name]+'</svg>';}
 var root=document.createElement('div');root.id='ot-site-nav';
-root.innerHTML='<div class="ot-shade" hidden></div><div class="ot-menu" id="ot-nav-menu" role="dialog" aria-modal="true" aria-labelledby="ot-nav-title" hidden><div class="ot-heading"><h2 id="ot-nav-title">Все разделы</h2><button type="button" class="ot-close" aria-label="Закрыть меню">×</button></div><label for="ot-nav-query">Поиск по разделам и темам</label><input id="ot-nav-query" type="search" placeholder="Например: СЛР, наряд, заземление" autocomplete="off"><div class="ot-results"></div><div class="ot-status" role="status" aria-live="polite"></div></div><nav class="ot-bar" aria-label="Быстрая навигация"><button type="button" class="ot-sections" aria-expanded="false" aria-controls="ot-nav-menu">'+icon('menu')+'<span>Разделы</span></button><a class="ot-home">'+icon('home')+'<span>Домой</span></a><button type="button" class="ot-search" aria-expanded="false" aria-controls="ot-nav-menu">'+icon('search')+'<span>Поиск</span></button></nav>';
+root.innerHTML='<div class="ot-shade" hidden></div><div class="ot-menu" id="ot-nav-menu" role="dialog" aria-modal="true" aria-labelledby="ot-nav-title" hidden><div class="ot-heading"><h2 id="ot-nav-title">Все разделы</h2><button type="button" class="ot-close" aria-label="Закрыть меню">×</button></div><label for="ot-nav-query">Поиск по разделам и темам</label><input id="ot-nav-query" type="search" placeholder="Например: СЛР, наряд, заземление" autocomplete="off"><div class="ot-results"></div><div class="ot-status" role="status" aria-live="polite"></div></div><nav class="ot-bar" aria-label="Быстрая навигация"><button type="button" class="ot-sections" aria-expanded="false" aria-controls="ot-nav-menu">'+icon('menu')+'<span>Разделы</span></button><a class="ot-home">'+icon('home')+'<span>Домой</span></a><button type="button" class="ot-search" aria-label="Поиск по пунктам приказа № 223н">'+icon('search')+'<span>Поиск</span></button></nav>';
 document.body.appendChild(root);
 document.body.style.setProperty('--ot-nav-page-bottom',Math.max(84,parseFloat(getComputedStyle(document.body).paddingBottom)||0)+'px');
 document.body.classList.add('ot-nav-enabled');
@@ -45,11 +46,11 @@ root.querySelector('.ot-status').textContent=count?'Разделов: '+count+' 
 var blocked=[],oldOverflow='';
 function setOpen(open,focusSearch){
 if(open===!menu.hidden){if(open&&focusSearch)query.focus();return;}
-menu.hidden=!open;shade.hidden=!open;sectionsButton.setAttribute('aria-expanded',String(open));searchButton.setAttribute('aria-expanded',String(open&&focusSearch));
-if(open){returnFocus=focusSearch?searchButton:sectionsButton;render();oldOverflow=document.body.style.overflow;document.body.style.overflow='hidden';blocked=Array.from(document.body.children).filter(function(el){return el!==root&&!el.inert;});blocked.forEach(function(el){el.inert=true;});(focusSearch?query:close).focus();}
+menu.hidden=!open;shade.hidden=!open;sectionsButton.setAttribute('aria-expanded',String(open));
+if(open){returnFocus=sectionsButton;render();oldOverflow=document.body.style.overflow;document.body.style.overflow='hidden';blocked=Array.from(document.body.children).filter(function(el){return el!==root&&!el.inert;});blocked.forEach(function(el){el.inert=true;});(focusSearch?query:close).focus();}
 else{document.body.style.overflow=oldOverflow;blocked.forEach(function(el){el.inert=false;});blocked=[];returnFocus.focus();}
 }
-sectionsButton.addEventListener('click',function(){if(menu.hidden){query.value='';setOpen(true,false);}else setOpen(false,false);});searchButton.addEventListener('click',function(){setOpen(true,true);});close.addEventListener('click',function(){setOpen(false,false);});shade.addEventListener('click',function(){setOpen(false,false);});query.addEventListener('input',render);
+sectionsButton.addEventListener('click',function(){if(menu.hidden){query.value='';setOpen(true,false);}else setOpen(false,false);});searchButton.addEventListener('click',function(){var url=new URL('223n/index.html',base);if(cleanPath(location.pathname)===cleanPath(url.pathname)){var field=document.getElementById('clause-query');if(field){window.scrollTo(0,0);field.focus();}}else location.assign(url.href);});close.addEventListener('click',function(){setOpen(false,false);});shade.addEventListener('click',function(){setOpen(false,false);});query.addEventListener('input',render);
 document.addEventListener('keydown',function(e){if(menu.hidden)return;if(e.key==='Escape'){e.preventDefault();setOpen(false,false);}if(e.key==='Tab'){var focusable=Array.from(menu.querySelectorAll('a[href],button,input')).filter(function(el){return !el.disabled;}),first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 window.addEventListener('pageshow',function(){if(!menu.hidden)setOpen(false,false);});
 })();

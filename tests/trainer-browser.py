@@ -114,13 +114,13 @@ with sync_playwright() as p:
 
     # Shared navigation remains in its approved order and searches the trainer.
     assert page.locator('.ot-bar').inner_text().splitlines()==['Разделы','Домой','Поиск']
-    page.locator('.ot-search').click();page.locator('#ot-nav-query').fill('тренажёр')
+    page.locator('.ot-sections').click();page.locator('#ot-nav-query').fill('тренажёр')
     expect(page.locator('.ot-results a')).to_have_count(1)
     page.keyboard.press('Escape');expect(page.locator('.ot-menu')).to_be_hidden()
     page.locator('#exit').click()
     page.evaluate('navigator.serviceWorker.ready.then(()=>true)')
     page.wait_for_function('navigator.serviceWorker.controller !== null')
-    page.wait_for_function("caches.open('ot-trainer-v9').then(c=>c.match('../site-nav.js?v=3')).then(Boolean)")
+    page.wait_for_function("caches.open('ot-trainer-v10').then(c=>c.match('../site-nav.js?v=4')).then(Boolean)")
     context.set_offline(True);page.reload();ready(page)
     page.locator('#resume').click();expect(page.locator('#options button').first).to_be_visible()
     assert page.locator('.ot-bar').is_visible()
